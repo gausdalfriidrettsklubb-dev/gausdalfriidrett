@@ -31,7 +31,7 @@ window.GFIK = {
   kontakt: {
     leder: "Harri Olkinuora",
     rolle: "Styreleder",
-    epost: "harri@netlife.no",
+    epost: "gausdalfriidrettsklubb@gmail.com",
     telefon: "982 28 336",
     facebook: "https://www.facebook.com/groups/436427656385045/",
     instagram: "https://www.instagram.com/gausdal_friidrett/"

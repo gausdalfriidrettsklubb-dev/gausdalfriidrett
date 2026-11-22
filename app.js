@@ -256,7 +256,11 @@
     finnAlle("[data-epost]").forEach(function (el) {
       if (!kontakt.epost) { el.hidden = true; return; }
       el.href = "mailto:" + kontakt.epost;
-      el.textContent = kontakt.epost;
+      // Lange adresser får lov til å dele seg foran @, ikke midt i et ord.
+      var deler = kontakt.epost.split("@");
+      tom(el);
+      el.appendChild(document.createTextNode(deler[0]));
+      if (deler[1]) { el.appendChild(document.createElement("wbr")); el.appendChild(document.createTextNode("@" + deler[1])); }
       el.setAttribute("translate", "no");
     });
     finnAlle("[data-epostlenke]").forEach(function (el) {
