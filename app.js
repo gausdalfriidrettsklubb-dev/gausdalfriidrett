@@ -377,7 +377,7 @@
     var sender = false;
 
     if (nokkelfelt) nokkelfelt.value = nokkel();
-    if (!adresse && knappetekst) knappetekst.textContent = "Lag e-post til klubben";
+    if (knappetekst) knappetekst.textContent = adresse ? "Send til klubben" : "Lag e-post til klubben";
     var notis = finn("[data-skjemanotis]", skjema);
     if (notis && adresse) {
       var tjeneste = "";

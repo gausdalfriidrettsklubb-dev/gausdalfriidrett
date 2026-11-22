@@ -24,12 +24,11 @@ window.GFIK = {
   },
 
   /* --- Skjema ----------------------------------------------------------- */
-  // Skjemaene sendes hit, og tjenesten videresender til klubbens e-post.
-  // FormSubmit trenger ingen konto: adressen er formsubmit.co/ajax/ + e-postadressen.
-  // Bytter klubben e-post, må adressen byttes her også, og den nye må aktiveres
-  // ved å sende skjemaet én gang og klikke på lenken FormSubmit sender.
   // Står feltet tomt, åpner skjemaene en ferdig utfylt e-post hos avsenderen.
-  skjemaAdresse: "https://formsubmit.co/ajax/gausdalfriidrettsklubb@gmail.com",
+  // E-posten går til adressen i kontakt.epost under.
+  // Vil klubben heller ha en skjematjeneste, limes adressen til tjenesten inn her,
+  // for eksempel "https://formsubmit.co/ajax/" + klubbens e-postadresse.
+  skjemaAdresse: "",
 
   /* --- Kontakt ---------------------------------------------------------- */
   kontakt: {
