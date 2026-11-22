@@ -190,7 +190,8 @@ a:hover > .pil { transform: translateX(3px); }
 .meny a:hover { background: var(--rod-lys); color: var(--rod-dyp); }
 .meny a[aria-current="page"] { color: var(--rod-mork); box-shadow: inset 0 -2px 0 var(--rod); border-radius: 8px 8px 0 0; }
 
-.topp .knapp { min-height: 44px; padding: 8px 18px; font-size: 1rem; }
+.topp .knapp { min-height: 44px; padding: 8px 18px; font-size: 1rem; white-space: nowrap; }
+.meny a { white-space: nowrap; }
 
 .menyknapp {
   display: none; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px;
@@ -209,7 +210,7 @@ a:hover > .pil { transform: translateX(3px); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::before { transform: translateY(6px) rotate(45deg); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::after { transform: translateY(-6px) rotate(-45deg); }
 
-@media (max-width: 1020px) {
+@media (max-width: 1140px) {
   .js .menyknapp { display: inline-flex; order: 3; }
   .topp__inn { flex-wrap: wrap; gap: 10px; }
   .topp .knapp { order: 2; }
