@@ -216,7 +216,7 @@ window.GFIK = {
   klubbrekorder: {
     menn: [
       { ovelse: "100 m", navn: "Osazee Parkson", resultat: "11,34", aar: 2019 },
-      { ovelse: "200 m", navn: "Erik Ring", resultat: "22,89", aar: 2016 },
+      { ovelse: "200 m", navn: "Vegard Kyseth", resultat: "22,15", aar: 2025 },
       { ovelse: "400 m", navn: "Erik Ring", resultat: "50,67", aar: 2016 },
       { ovelse: "800 m", navn: "Tor Åge Rønningen", resultat: "1.54,8", aar: 1964 },
       { ovelse: "1500 m", navn: "Torgeir Fjerdrumsmoen", resultat: "3.50,5", aar: 1977 },

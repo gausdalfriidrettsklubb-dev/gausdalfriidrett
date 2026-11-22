@@ -250,7 +250,7 @@
           ]),
           lag("td", { class: "rekord__navn", translate: "no", text: x.navn }),
           lag("td", { class: "rekord__resultat", text: x.resultat.replace(/ /g, NBSP) }),
-          lag("td", { class: "rekord__aar", text: String(x.aar) })
+          lag("td", { class: "rekord__aar", text: x.aar ? String(x.aar) : "" })
         ]));
       });
       rot.appendChild(lag("div", {}, [
