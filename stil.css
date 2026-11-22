@@ -272,13 +272,15 @@ a:hover > .pil { transform: translateX(3px); }
   .hero__fakta div:nth-child(3) { grid-column: 1 / -1; padding-left: 0; border-left: 0; }
 }
 
-.kollasj { display: grid; grid-template-columns: 0.82fr 1fr; grid-template-rows: auto auto; gap: 12px; }
+.kollasj { display: grid; grid-template-columns: 1.05fr 1fr; grid-template-rows: auto auto; gap: 12px; }
 .kollasj figure { margin: 0; overflow: hidden; border-radius: var(--radius); background: var(--rod-dyp); box-shadow: 0 2px 4px rgba(60, 0, 4, 0.25), 0 24px 48px -18px rgba(60, 0, 4, 0.6); border: 1px solid rgba(255, 255, 255, 0.22); }
 .kollasj img { width: 100%; height: 100%; object-fit: cover; }
-.kollasj .k1 { grid-row: 1 / 3; aspect-ratio: 3 / 4.25; }
+.kollasj .k1 { grid-row: 1 / 3; position: relative; min-height: 0; }
+.kollasj .k1 img { position: absolute; inset: 0; }
 .kollasj .k2 { aspect-ratio: 4 / 3; }
 .kollasj .k3 { aspect-ratio: 4 / 3; }
-.kollasj .k3 img { object-position: 50% 30%; }
+.kollasj .k1 img { object-position: 25% 35%; }
+.kollasj .k3 img { object-position: 50% 50%; }
 
 /* ---------- Seksjoner ---------- */
 .del { padding-block: clamp(64px, 9vw, 116px); }
