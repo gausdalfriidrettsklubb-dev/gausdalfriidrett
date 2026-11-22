@@ -214,6 +214,16 @@ window.GFIK = {
     { navn: "Lene Nicolaysen Sjue", rolle: "Styremedlem" }
   ],
 
+  /* --- Grasrotandelen --------------------------------------------------- */
+  // Tallene står på klubbens side hos Norsk Tipping (lenken under).
+  // Oppdater dem et par ganger i året. Tomt felt i "givere" skjuler setningen.
+  grasrot: {
+    lenke: "https://www.norsk-tipping.no/grasrotandelen/mottaker/913738365",
+    givere: 12,
+    belop: 6730,
+    per: "22. november 2026"
+  },
+
   /* --- Klubbrekorder ---------------------------------------------------- */
   // Hentet fra klubbens rekordliste, med rettelsene som er ført inn for hånd
   // til og med 2019. Blir en rekord slått, bytter du navn, resultat og år

@@ -268,6 +268,18 @@
     });
   }
 
+  /* ---------- Grasrotandelen ---------- */
+  function visGrasrot() {
+    var g = data.grasrot || {};
+    finnAlle("[data-grasrotlenke]").forEach(function (a) { if (g.lenke) a.href = g.lenke; });
+    finnAlle("[data-grasrottall]").forEach(function (p) {
+      if (!g.givere || !g.belop) return;
+      p.textContent = "Klubben har " + fmtTall.format(g.givere) + NBSP + "grasrotgivere, og de har gitt " +
+        kroner(g.belop) + " så langt i år" + (g.per ? " (per " + g.per + ")" : "") + ".";
+      p.hidden = false;
+    });
+  }
+
   /* ---------- Kvalifiseringskrav ---------- */
   function visKrav() {
     var rot = finn("[data-krav]");
@@ -671,6 +683,7 @@
   visStyret();
   visRekorder();
   visKrav();
+  visGrasrot();
   visSponsorer();
   visKontakt();
   settOppMeny();
