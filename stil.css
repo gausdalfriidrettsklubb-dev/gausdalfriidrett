@@ -192,6 +192,7 @@ a:hover > .pil { transform: translateX(3px); }
 
 .topp .knapp { min-height: 44px; padding: 8px 18px; font-size: 1rem; white-space: nowrap; }
 .meny a { white-space: nowrap; }
+@media (min-width: 1200px) { .meny a { padding-inline: 8px; font-size: 0.95rem; } }
 
 .menyknapp {
   display: none; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px;
@@ -210,7 +211,7 @@ a:hover > .pil { transform: translateX(3px); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::before { transform: translateY(6px) rotate(45deg); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::after { transform: translateY(-6px) rotate(-45deg); }
 
-@media (max-width: 1219px) {
+@media (max-width: 1199px) {
   .js .menyknapp { display: inline-flex; order: 3; }
   .topp__inn { flex-wrap: wrap; gap: 10px; }
   .topp .knapp { order: 2; }
@@ -502,6 +503,9 @@ a:hover > .pil { transform: translateX(3px); }
 .terminliste tr[hidden] { display: none; }
 .terminliste__vis { margin-top: 22px; }
 .terminfot { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 26px; }
+.framhev { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin-top: 30px; }
+.framhev h3 { margin-bottom: 6px; }
+.framhev p { margin: 0; color: var(--blekk-2); max-width: 56ch; }
 
 /* ---------- Klubbrekorder ---------- */
 .rekorder { display: grid; gap: clamp(36px, 5vw, 64px); align-items: start; }
@@ -555,6 +559,17 @@ a:hover > .pil { transform: translateX(3px); }
   background-repeat: no-repeat; background-position: right 15px center;
 }
 .felt__hjelp { margin: 6px 0 0; font-size: 0.95rem; color: var(--blekk-2); }
+.kalkvalg { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-bottom: 24px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
+.kalkvalg a { display: flex; align-items: baseline; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 5px; color: var(--blekk); font-weight: 600; text-decoration: none; transition: background-color 0.15s ease, color 0.15s ease; }
+.kalkvalg a small { font-weight: 400; font-size: 0.92rem; color: var(--blekk-2); }
+.kalkvalg a:hover { background: var(--rod-lys); color: var(--rod-dyp); }
+.kalkvalg a[aria-current="page"] { background: var(--blekk); color: #fff; }
+.kalkvalg a[aria-current="page"] small { color: rgba(255, 255, 255, 0.78); }
+@media (max-width: 480px) {
+  .kalkvalg { display: flex; flex-wrap: nowrap; }
+  .kalkvalg a { flex: 1; justify-content: center; padding-inline: 10px; }
+  .kalkvalg a small { display: none; }
+}
 .tyrving { display: grid; gap: clamp(24px, 4vw, 56px); align-items: start; }
 @media (min-width: 900px) { .tyrving { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .tyrving__skjema { margin-top: 0; }
@@ -592,6 +607,17 @@ a:hover > .pil { transform: translateX(3px); }
 .vipps__side { flex: 1 1 150px; min-width: 0; }
 .stott .kolonner .vipps__hjelp { margin: 0 0 10px; font-size: 0.97rem; color: var(--blekk-2); }
 .stott .kolonner .vippsnr { margin: 0; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; background: var(--flate); border: 1px solid var(--linje); }
+
+/* ---------- Øvelsene i friidrett ---------- */
+.ovelsesliste { display: grid; gap: 0; margin: 0; border-top: 1px solid var(--linje-sterk); }
+.ovelsesliste > div { display: grid; gap: 4px 28px; padding: 16px 0; border-bottom: 1px solid var(--linje); }
+@media (min-width: 620px) { .ovelsesliste > div { grid-template-columns: 11em minmax(0, 1fr); align-items: baseline; } }
+.ovelsesliste dt { font: 700 1.45rem/1.15 var(--font-tittel); letter-spacing: 0.02em; text-transform: uppercase; }
+.ovelsesliste dd { margin: 0; font-size: 1.0625rem; max-width: 58ch; }
+.redskap { width: 100%; max-width: 760px; min-width: 520px; border-collapse: collapse; font-size: 1.0625rem; font-variant-numeric: tabular-nums; }
+.redskap th, .redskap td { padding: 10px 14px 10px 0; text-align: left; border-bottom: 1px solid var(--linje); white-space: nowrap; }
+.redskap thead th { padding-block: 0 10px; border-bottom: 2px solid var(--blekk); font: 600 0.85rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--blekk-2); }
+.redskap tbody th { font-weight: 600; }
 
 /* ---------- Kvalifiseringskrav ---------- */
 .kravvalg { display: inline-flex; gap: 4px; margin-bottom: 22px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
