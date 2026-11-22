@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tyrvingkalkulator | Gausdal Friidrettsklubb</title>
+  <meta name="description" content="Regn om et friidrettsresultat til poeng etter Tyrvingtabellen, for gutter og jenter fra 10 til 19 år.">
+  <meta name="theme-color" content="#fffcfa">
+  <link rel="canonical" href="https://gausdalfriidrett.no/tyrving.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="nb_NO">
+  <meta property="og:site_name" content="Gausdal Friidrettsklubb">
+  <meta property="og:title" content="Tyrvingkalkulator">
+  <meta property="og:description" content="Regn om et resultat til Tyrvingpoeng for gutter og jenter fra 10 til 19 år.">
+  <meta property="og:url" content="https://gausdalfriidrett.no/tyrving.html">
+  <meta property="og:image" content="https://gausdalfriidrett.no/bilder/klubbhopp.jpg">
+  <link rel="icon" href="bilder/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="bilder/ikon-180.png">
+  <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="stil.css?v=202611222002">
+  <script>document.documentElement.className += " js";</script>
+</head>
+<body>
+  <a class="hopp" href="#innhold">Hopp til innholdet</a>
+
+  <header class="topp">
+    <div class="ramme topp__inn">
+      <a class="merkevare" href="index.html" translate="no">
+        <img src="bilder/logo.svg" width="50" height="50" alt="">
+        <span class="merkevare__navn">Gausdal Friidrettsklubb <span>Stiftet 1898</span></span>
+      </a>
+      <button class="menyknapp" type="button" aria-expanded="false" aria-controls="meny">
+        <span class="menyknapp__ikon" aria-hidden="true"></span>
+        <span class="menyknapp__tekst">Meny</span>
+      </button>
+      <nav class="meny" id="meny" aria-label="Hovedmeny">
+        <ul>
+          <li><a href="index.html#trening">Trening</a></li>
+          <li><a href="sponsorer.html">Sponsorer</a></li>
+          <li><a href="index.html#aktuelt">Aktuelt</a></li>
+          <li><a href="index.html#terminliste">Terminliste</a></li>
+          <li><a href="index.html#om">Om klubben</a></li>
+          <li><a href="index.html#trener">Bli trener</a></li>
+          <li><a href="index.html#stott">Støtt klubben</a></li>
+        </ul>
+      </nav>
+      <a class="knapp knapp--rod" href="index.html#bli-medlem">Bli medlem</a>
+    </div>
+  </header>
+
+  <main id="innhold">
+    <section class="sidehode" aria-labelledby="side-tittel">
+      <svg class="hero__baner" viewBox="0 0 5200 700" preserveAspectRatio="xMinYMid slice" aria-hidden="true" focusable="false">
+        <g fill="none" stroke="#fff" stroke-opacity="0.34" stroke-width="5"><circle cx="1000" cy="4200" r="3400"/><circle cx="1000" cy="4200" r="3500"/><circle cx="1000" cy="4200" r="3600"/><circle cx="1000" cy="4200" r="3700"/><circle cx="1000" cy="4200" r="3800"/><circle cx="1000" cy="4200" r="3900"/><circle cx="1000" cy="4200" r="4000"/><circle cx="1000" cy="4200" r="4100"/><circle cx="1000" cy="4200" r="4200"/><circle cx="1000" cy="4200" r="4300"/><circle cx="1000" cy="4200" r="4400"/><circle cx="1000" cy="4200" r="4500"/><circle cx="1000" cy="4200" r="4600"/><circle cx="1000" cy="4200" r="4700"/><circle cx="1000" cy="4200" r="4800"/><circle cx="1000" cy="4200" r="4900"/><circle cx="1000" cy="4200" r="5000"/><circle cx="1000" cy="4200" r="5100"/><circle cx="1000" cy="4200" r="5200"/><circle cx="1000" cy="4200" r="5300"/><circle cx="1000" cy="4200" r="5400"/><circle cx="1000" cy="4200" r="5500"/><circle cx="1000" cy="4200" r="5600"/><circle cx="1000" cy="4200" r="5700"/><circle cx="1000" cy="4200" r="5800"/><circle cx="1000" cy="4200" r="5900"/><circle cx="1000" cy="4200" r="6000"/></g>
+        <g class="hero__banetall" fill="#fff" fill-opacity="0.4" font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="700" font-size="66" text-anchor="middle"><text transform="translate(103 661.9) rotate(-14.23)" dy="23">1</text><text transform="translate(103 558.9) rotate(-13.84)" dy="23">2</text><text transform="translate(103 456.0) rotate(-13.47)" dy="23">3</text><text transform="translate(103 353.2) rotate(-13.13)" dy="23">4</text><text transform="translate(103 250.6) rotate(-12.8)" dy="23">5</text><text transform="translate(103 148.1) rotate(-12.48)" dy="23">6</text><text transform="translate(103 45.7) rotate(-12.18)" dy="23">7</text></g>
+      </svg>
+      <div class="ramme">
+        <h1 id="side-tittel">Tyrving&shy;kalkulator</h1>
+        <p>Regn om et resultat til poeng etter Tyrvingtabellen. Tabellen gjør det mulig å sammenligne resultater på tvers av øvelser og alder, for utøvere fra 10 til 19&nbsp;år.</p>
+      </div>
+    </section>
+
+    <section class="del" aria-labelledby="regn-tittel">
+      <div class="ramme">
+        <h2 class="skjult-visuelt" id="regn-tittel">Regn ut poeng</h2>
+        <noscript><p class="tomt">Slå på JavaScript for å bruke kalkulatoren.</p></noscript>
+        <div class="tyrving">
+          <form class="kort skjema tyrving__skjema" data-tyrving novalidate>
+            <fieldset class="tyrving__kjonn">
+              <legend>Kjønn</legend>
+              <label><input type="radio" name="kjonn" value="gutter" checked><span>Gutter</span></label>
+              <label><input type="radio" name="kjonn" value="jenter"><span>Jenter</span></label>
+            </fieldset>
+            <div class="felt">
+              <label for="t-alder">Alder <small>(året utøveren fyller i år)</small></label>
+              <select id="t-alder" name="alder" autocomplete="off"><option value="10">10 år</option><option value="11">11 år</option><option value="12">12 år</option><option value="13">13 år</option><option value="14" selected>14 år</option><option value="15">15 år</option><option value="16">16 år</option><option value="17">17 år</option><option value="18">18 år</option><option value="19">19 år</option></select>
+            </div>
+            <div class="felt">
+              <label for="t-ovelse">Øvelse</label>
+              <select id="t-ovelse" name="ovelse" autocomplete="off"></select>
+            </div>
+            <div class="felt">
+              <label for="t-resultat">Resultat</label>
+              <input id="t-resultat" name="resultat" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" maxlength="16" placeholder="7,85…" aria-describedby="t-hint">
+              <p class="felt__hjelp" id="t-hint" data-tyrving-hint>sekunder, for eksempel 7,85</p>
+              <p class="felt__feil" id="t-feil" data-tyrving-feil hidden></p>
+            </div>
+            <label class="tyrving__manuell" data-tyrving-manuell hidden>
+              <input type="checkbox" name="manuell">
+              <span>Manuell tidtaking <small data-tyrving-manuelltekst></small></span>
+            </label>
+          </form>
+
+          <div class="tyrving__svar">
+            <div class="tyrving__poeng" aria-live="polite" aria-atomic="true">
+              <strong class="tall" data-tyrving-poeng>–</strong>
+              <span data-tyrving-enhet>Skriv inn et resultat</span>
+            </div>
+            <div class="tyrving__linjer" data-tyrving-linjer></div>
+            <table class="tyrving__nivaa">
+              <caption data-tyrving-nivaatittel>Krav</caption>
+              <thead class="skjult-visuelt"><tr><th scope="col">Poeng</th><th scope="col">Resultat</th></tr></thead>
+              <tbody data-tyrving-nivaa></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="del del--sand" aria-labelledby="slik-tittel">
+      <div class="ramme">
+        <div class="delhode">
+          <h2 id="slik-tittel">Slik regnes poengene</h2>
+          <p>For hver øvelse og alder har tabellen et resultat som gir 1000&nbsp;poeng. Er du bedre, får du flere poeng. Er du svakere, får du færre.</p>
+        </div>
+        <div class="kolonner kolonner--tre">
+          <div>
+            <h3>Løp</h3>
+            <p>På distanser til og med 400&nbsp;meter teller hvert hundredel. På lengre løp teller hvert tidel, og hundredelene strykes.</p>
+            <p>Tabellen forutsetter elektronisk tidtaking. Ved manuell tid legges det til 0,24&nbsp;sekunder på 100, 110 og 200&nbsp;meter, 0,20 på 60, 80 og 300&nbsp;meter og 0,14 på 400&nbsp;meter.</p>
+          </div>
+          <div>
+            <h3>Hopp</h3>
+            <p>I høyde, lengde og tresteg teller hver centimeter like mye, uansett hvor langt eller høyt du hopper.</p>
+            <p>Stav regnes i tre trinn, som kastøvelsene.</p>
+          </div>
+          <div>
+            <h3>Kast og stav</h3>
+            <p>Her er det tre trinn. Over 1000&nbsp;poeng teller hver centimeter minst. Fra 1000&nbsp;poeng og ned til 80&nbsp;prosent av det resultatet teller den mer, og under det mest.</p>
+            <p>Redskapet følger alderen, så kalkulatoren viser bare vektene som gjelder for klassen.</p>
+          </div>
+        </div>
+        <p class="tyrving__kilde">Poengsummen rundes alltid ned til nærmeste hele tall. Kalkulatoren bruker 2014-utgaven av <a href="https://www.friidrett.no/arrangement/arrangementshjelp/poengtabeller/tyrvingtabellen/" rel="noopener">Tyrvingtabellen</a>, som eies av Norges Friidrettsforbund. Arrangørens resultatliste gjelder hvis tallene skulle avvike.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bunn">
+    <div class="ramme">
+      <div class="bunn__inn">
+        <div class="bunn__merke">
+          <img src="bilder/logo.svg" width="64" height="64" alt="" loading="lazy">
+          <div>
+            <strong translate="no">Gausdal Friidrettsklubb</strong>
+            Linflåa idrettspark, 2651 Østre Gausdal<br>
+            Org.nr. <span class="tall">913&nbsp;738&nbsp;365</span>
+          </div>
+        </div>
+        <nav aria-label="Snarveier">
+          <h2>Snarveier</h2>
+          <ul>
+            <li><a href="index.html#trening">Treningstider</a></li>
+            <li><a href="index.html#bli-medlem">Bli medlem</a></li>
+            <li><a href="index.html#trener">Bli trener</a></li>
+            <li><a href="index.html#stott">Støtt klubben</a></li>
+            <li><a href="index.html#terminliste">Terminliste</a></li>
+            <li><a href="forste-stevne.html">Første gang på stevne</a></li>
+            <li><a href="tyrving.html">Tyrvingkalkulator</a></li>
+            <li><a href="sponsorer.html">Sponsorer</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h2>Følg oss</h2>
+          <ul>
+            <li><a data-facebook href="https://www.facebook.com/groups/436427656385045/" rel="noopener">Facebook</a></li>
+            <li><a data-instagram href="https://www.instagram.com/gausdal_friidrett/" rel="noopener">Instagram</a></li>
+            <li><a data-spondnett href="https://www.spond.com/no/" rel="noopener">Spond</a></li>
+            <li><a href="bilder/logo.svg" download="gausdal-friidrettsklubb-logo.svg">Last ned logoen (SVG)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bunn__slutt">
+        <span>© <span data-aar>2026</span> <span translate="no">Gausdal Friidrettsklubb</span></span>
+        <a href="#innhold">Til toppen</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="tyrving-data.js?v=202611222002"></script>
+  <script src="tyrving.js?v=202611222002"></script>
+  <script src="innhold.js?v=202611222002"></script>
+  <script src="app.js?v=202611222002"></script>
+</body>
+</html>

@@ -432,7 +432,7 @@ a:hover > .pil { transform: translateX(3px); }
 @media (min-width: 560px) { .skjema__rad { grid-template-columns: 1fr 1fr; } }
 .felt label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 1rem; }
 .felt label small { font-weight: 400; color: var(--blekk-2); font-size: 0.92rem; }
-.felt input, .felt textarea {
+.felt input, .felt textarea, .felt select {
   width: 100%; min-height: 50px; padding: 12px 14px;
   border: 1px solid var(--linje-sterk); border-radius: var(--radius-s);
   background: #fff; color: var(--blekk);
@@ -441,8 +441,8 @@ a:hover > .pil { transform: translateX(3px); }
 }
 .felt textarea { min-height: 112px; resize: vertical; }
 .felt input::placeholder, .felt textarea::placeholder { color: #8b7d79; opacity: 1; }
-.felt input:hover, .felt textarea:hover { border-color: var(--blekk-2); }
-.felt input:focus-visible, .felt textarea:focus-visible { outline: 3px solid var(--blekk); outline-offset: 1px; border-color: var(--blekk); border-radius: var(--radius-s); }
+.felt input:hover, .felt textarea:hover, .felt select:hover { border-color: var(--blekk-2); }
+.felt input:focus-visible, .felt textarea:focus-visible, .felt select:focus-visible { outline: 3px solid var(--blekk); outline-offset: 1px; border-color: var(--blekk); border-radius: var(--radius-s); }
 .felt [aria-invalid="true"] { border-color: var(--rod-mork); box-shadow: inset 0 0 0 1px var(--rod-mork); }
 .felt__feil { display: flex; gap: 6px; margin: 6px 0 0; color: var(--rod-dyp); font-size: 0.95rem; font-weight: 600; }
 .felt__feil::before { content: "!"; flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; background: var(--rod-dyp); color: #fff; font-size: 0.78rem; line-height: 1; }
@@ -548,6 +548,41 @@ a:hover > .pil { transform: translateX(3px); }
 .bildepar img { aspect-ratio: 4 / 5; object-fit: cover; }
 .kreditt { margin-top: 28px; font-size: 0.97rem; color: rgba(255, 255, 255, 0.72); }
 
+/* ---------- Tyrvingkalkulator ---------- */
+.felt select {
+  appearance: none; -webkit-appearance: none; padding-right: 42px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%231c1413' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 15px center;
+}
+.felt__hjelp { margin: 6px 0 0; font-size: 0.95rem; color: var(--blekk-2); }
+.tyrving { display: grid; gap: clamp(24px, 4vw, 56px); align-items: start; }
+@media (min-width: 900px) { .tyrving { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.tyrving__skjema { margin-top: 0; }
+.tyrving__kjonn { display: flex; gap: 4px; margin: 0; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
+.tyrving__kjonn legend { float: left; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.tyrving__kjonn label { flex: 1; position: relative; cursor: pointer; }
+.tyrving__kjonn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.tyrving__kjonn span { display: grid; place-items: center; min-height: 44px; padding: 8px 18px; border-radius: 5px; font-weight: 600; transition: background-color 0.15s ease, color 0.15s ease; }
+.tyrving__kjonn label:hover span { background: var(--rod-lys); color: var(--rod-dyp); }
+.tyrving__kjonn input:checked + span { background: var(--blekk); color: #fff; }
+.tyrving__kjonn input:focus-visible + span { outline: 3px solid var(--blekk); outline-offset: 2px; }
+.tyrving__manuell { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+.tyrving__manuell[hidden] { display: none; }
+.tyrving__manuell input { width: 22px; height: 22px; flex: none; accent-color: var(--rod); }
+.tyrving__manuell span { font-weight: 600; }
+.tyrving__manuell small { font-weight: 400; color: var(--blekk-2); font-size: 0.92rem; }
+.tyrving__poeng { padding-top: 22px; border-top: 2px solid var(--blekk); }
+.tyrving__poeng strong { display: block; font: 700 clamp(4.4rem, 12vw, 7.2rem)/0.9 var(--font-tittel); letter-spacing: 0.01em; color: var(--rod-mork); }
+.tyrving__poeng span { display: block; margin-top: 8px; font-size: 1.12rem; color: var(--blekk-2); }
+.tyrving__linjer { margin-top: 22px; }
+.tyrving__linjer p { margin: 0 0 6px; font-size: 1.0625rem; }
+.tyrving__nivaa { width: 100%; max-width: 420px; margin-top: 28px; border-collapse: collapse; font-size: 1.0625rem; font-variant-numeric: tabular-nums; }
+.tyrving__nivaa caption { padding-bottom: 10px; text-align: left; font: 600 0.85rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--blekk-2); border-bottom: 2px solid var(--blekk); }
+.tyrving__nivaa th, .tyrving__nivaa td { padding: 10px 0; border-bottom: 1px solid var(--linje); text-align: left; font-weight: 400; }
+.tyrving__nivaa td { text-align: right; font-weight: 600; }
+.tyrving__nivaa .er-tusen th { font-weight: 600; color: var(--rod-mork); }
+.tyrving__kilde { margin-top: 32px; max-width: 78ch; font-size: 1rem; color: var(--blekk-2); }
+
 /* ---------- Støtt klubben ---------- */
 .stott .kolonner > div { display: flex; flex-direction: column; align-items: flex-start; }
 .stott .kolonner p:last-of-type { margin-bottom: 22px; }
@@ -556,7 +591,7 @@ a:hover > .pil { transform: translateX(3px); }
 .vipps__qr { flex: none; width: 132px; height: 132px; border: 1px solid var(--linje); border-radius: var(--radius-s); background: #fff; }
 .vipps__side { flex: 1 1 150px; min-width: 0; }
 .stott .kolonner .vipps__hjelp { margin: 0 0 10px; font-size: 0.97rem; color: var(--blekk-2); }
-.stott .kolonner .vippsnr { margin: 0; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; }
+.stott .kolonner .vippsnr { margin: 0; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; background: var(--flate); border: 1px solid var(--linje); }
 
 /* ---------- Kvalifiseringskrav ---------- */
 .kravvalg { display: inline-flex; gap: 4px; margin-bottom: 22px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }

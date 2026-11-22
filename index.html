@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611221919">
+  <link rel="stylesheet" href="stil.css?v=202611222002">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SportsOrganization","name":"Gausdal Friidrettsklubb","alternateName":"Gausdal FIK","sport":"Friidrett","url":"https://gausdalfriidrett.no/","logo":"https://gausdalfriidrett.no/bilder/ikon-512.png","foundingDate":"1898-05-06","address":{"@type":"PostalAddress","streetAddress":"Linflåa idrettspark, Baklivegen 1460","postalCode":"2651","addressLocality":"Østre Gausdal","addressCountry":"NO"},"sameAs":["https://www.facebook.com/groups/436427656385045/","https://www.instagram.com/gausdal_friidrett/"]}
   </script>
@@ -235,6 +235,43 @@
       </div>
     </section>
 
+    <!-- ===================== STØTT KLUBBEN ===================== -->
+    <section class="del del--sand stott" id="stott" aria-labelledby="stott-tittel">
+      <div class="ramme">
+        <div class="delhode">
+          <h2 id="stott-tittel">Støtt klubben</h2>
+        </div>
+        <div class="kolonner kolonner--tre">
+          <div>
+            <h3>Grasrotandelen</h3>
+            <p>Spiller du hos Norsk Tipping, kan du gi 7&nbsp;prosent av innsatsen din til klubben. Det koster deg ingenting, og premien din blir den samme.</p>
+            <p data-grasrottall hidden></p>
+            <p>Du kan også oppgi organisasjonsnummeret vårt, <span class="tall">913&nbsp;738&nbsp;365</span>, der du leverer spill.</p>
+            <a class="knapp knapp--rod" data-grasrotlenke href="https://www.norsk-tipping.no/grasrotandelen/mottaker/913738365" rel="noopener">Velg oss som grasrotmottaker <span class="pil" aria-hidden="true">→</span></a>
+          </div>
+          <div>
+            <h3>Gi et bidrag med Vipps</h3>
+            <p>Du kan gi et bidrag til klubben med Vipps, og beløpet velger du selv.</p>
+            <p>Pengene går til startkontingent, mesterskap og treningsleirer for utøverne.</p>
+            <div class="vipps">
+              <img class="vipps__qr" src="bilder/vipps-qr.svg" width="164" height="164" loading="lazy" alt="QR-kode som åpner en gave til Gausdal Friidrettsklubb i Vipps">
+              <div class="vipps__side">
+                <p class="vipps__hjelp">Skann koden med mobilkameraet, eller bruk nummeret i Vipps.</p>
+                <p class="spondkode vippsnr">Vipps-nummer <strong class="tall" translate="no">46961</strong></p>
+              </div>
+            </div>
+            <a class="knapp knapp--stille" href="https://qr.vipps.no/donations/46961" rel="noopener">Åpne i Vipps <span class="pil" aria-hidden="true">→</span></a>
+          </div>
+          <div>
+            <h3>Hjelp oss å finne sponsorer</h3>
+            <p>Kjenner du en bedrift som kan tenke seg å støtte friidretten i Gausdal? Gi oss et tips, eller ta den første praten selv.</p>
+            <p>Vi tar kontakt med bedriften og sender informasjon om sponsoravtalene. Se <a href="sponsorer.html">sponsorene vi har i dag</a>.</p>
+            <a class="knapp knapp--stille" data-epostlenke data-emne="Tips om sponsor" href="#kontakt">Tips oss om en bedrift</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== AKTUELT ===================== -->
     <section class="del" id="aktuelt" aria-labelledby="aktuelt-tittel">
       <div class="ramme">
@@ -269,6 +306,7 @@
           <a class="lenke-pil" href="https://www.friidrett.no/contentassets/bbfd843acdcb486b8905cad3816ef3ef/terminliste-innlandet-2027-hostmote-_-.pdf" rel="noopener">Hele terminlista for Innlandet 2027 (PDF) <span class="pil" aria-hidden="true">→</span></a>
           <a class="lenke-pil" href="https://www.friidrett.no/kretser/innlandet/" rel="noopener">Innlandet friidrettskrets <span class="pil" aria-hidden="true">→</span></a>
           <a class="lenke-pil" href="#krav">Krav til UM og NM <span class="pil" aria-hidden="true">→</span></a>
+          <a class="lenke-pil" href="tyrving.html">Tyrvingkalkulator <span class="pil" aria-hidden="true">→</span></a>
         </p>
       </div>
     </section>
@@ -365,6 +403,7 @@
         <div data-krav>
           <noscript><p class="tomt">Slå på JavaScript for å se kvalifiseringskravene.</p></noscript>
         </div>
+        <p class="terminfot"><a class="lenke-pil" href="tyrving.html">Regn ut Tyrvingpoeng for et resultat <span class="pil" aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -394,45 +433,8 @@
       </div>
     </section>
 
-    <!-- ===================== STØTT KLUBBEN ===================== -->
-    <section class="del stott" id="stott" aria-labelledby="stott-tittel">
-      <div class="ramme">
-        <div class="delhode">
-          <h2 id="stott-tittel">Støtt klubben</h2>
-        </div>
-        <div class="kolonner kolonner--tre">
-          <div>
-            <h3>Grasrotandelen</h3>
-            <p>Spiller du hos Norsk Tipping, kan du gi 7&nbsp;prosent av innsatsen din til klubben. Det koster deg ingenting, og premien din blir den samme.</p>
-            <p data-grasrottall hidden></p>
-            <p>Du kan også oppgi organisasjonsnummeret vårt, <span class="tall">913&nbsp;738&nbsp;365</span>, der du leverer spill.</p>
-            <a class="knapp knapp--rod" data-grasrotlenke href="https://www.norsk-tipping.no/grasrotandelen/mottaker/913738365" rel="noopener">Velg oss som grasrotmottaker <span class="pil" aria-hidden="true">→</span></a>
-          </div>
-          <div>
-            <h3>Gi et bidrag med Vipps</h3>
-            <p>Du kan gi et bidrag til klubben med Vipps, og beløpet velger du selv.</p>
-            <p>Pengene går til startkontingent, mesterskap og treningsleirer for utøverne.</p>
-            <div class="vipps">
-              <img class="vipps__qr" src="bilder/vipps-qr.svg" width="164" height="164" loading="lazy" alt="QR-kode som åpner en gave til Gausdal Friidrettsklubb i Vipps">
-              <div class="vipps__side">
-                <p class="vipps__hjelp">Skann koden med mobilkameraet, eller bruk nummeret i Vipps.</p>
-                <p class="spondkode vippsnr">Vipps-nummer <strong class="tall" translate="no">46961</strong></p>
-              </div>
-            </div>
-            <a class="knapp knapp--stille" href="https://qr.vipps.no/donations/46961" rel="noopener">Åpne i Vipps <span class="pil" aria-hidden="true">→</span></a>
-          </div>
-          <div>
-            <h3>Hjelp oss å finne sponsorer</h3>
-            <p>Kjenner du en bedrift som kan tenke seg å støtte friidretten i Gausdal? Gi oss et tips, eller ta den første praten selv.</p>
-            <p>Vi tar kontakt med bedriften og sender informasjon om sponsoravtalene. Se <a href="sponsorer.html">sponsorene vi har i dag</a>.</p>
-            <a class="knapp knapp--stille" data-epostlenke data-emne="Tips om sponsor" href="#kontakt">Tips oss om en bedrift</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ===================== KONTAKT ===================== -->
-    <section class="del del--sand" id="kontakt" aria-labelledby="kontakt-tittel">
+    <section class="del" id="kontakt" aria-labelledby="kontakt-tittel">
       <div class="ramme">
         <div class="delhode">
           <h2 id="kontakt-tittel">Ta kontakt med klubben</h2>
@@ -498,6 +500,7 @@
             <li><a href="#stott">Støtt klubben</a></li>
             <li><a href="#terminliste">Terminliste</a></li>
             <li><a href="forste-stevne.html">Første gang på stevne</a></li>
+            <li><a href="tyrving.html">Tyrvingkalkulator</a></li>
             <li><a href="#skeikampen-opp">Skeikampen Opp</a></li>
             <li><a href="#klubbrekorder">Klubbrekorder</a></li>
             <li><a href="#krav">Krav til UM og NM</a></li>
@@ -521,7 +524,7 @@
     </div>
   </footer>
 
-  <script src="innhold.js?v=202611221919"></script>
-  <script src="app.js?v=202611221919"></script>
+  <script src="innhold.js?v=202611222002"></script>
+  <script src="app.js?v=202611222002"></script>
 </body>
 </html>
