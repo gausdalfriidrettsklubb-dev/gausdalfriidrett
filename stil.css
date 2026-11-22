@@ -297,6 +297,7 @@ a:hover > .pil { transform: translateX(3px); }
 .kollasj .k3 { aspect-ratio: 4 / 3; }
 .kollasj .k1 img { object-position: 50% 40%; }
 .kollasj .k3 img { object-position: 50% 50%; }
+.kollasj .k2 img { transform: scale(1.15); transform-origin: 49% 50%; }
 
 /* ---------- Seksjoner ---------- */
 .del { padding-block: clamp(64px, 9vw, 116px); }
