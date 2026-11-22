@@ -531,6 +531,33 @@ a:hover > .pil { transform: translateX(3px); }
   .rekord__navn-smal { display: block; }
 }
 
+/* ---------- Første gang på stevne ---------- */
+.kolonner { display: grid; gap: 28px clamp(28px, 4vw, 56px); }
+@media (min-width: 720px) { .kolonner--to { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 900px) { .kolonner--tre { grid-template-columns: repeat(3, 1fr); } }
+.kolonner > div { padding-top: 18px; border-top: 1px solid var(--linje-sterk); }
+.morkdel .kolonner > div { border-top-color: rgba(255, 255, 255, 0.3); }
+.kolonner h3, .stevnedel__tekst h3 { margin: 0 0 10px; font-size: 1.6rem; text-transform: uppercase; }
+.kolonner p, .stevnedel__tekst p { font-size: 1.0625rem; max-width: 62ch; }
+.morkdel .kolonner p { color: rgba(255, 255, 255, 0.9); }
+.kolonner p:last-child { margin-bottom: 0; }
+.stevnedel { display: grid; gap: clamp(28px, 5vw, 64px); align-items: start; }
+@media (min-width: 900px) { .stevnedel { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); } }
+.stevnedel__tekst h3 { margin-top: 30px; }
+.stevnedel__tekst h3:first-child { margin-top: 0; }
+.startrekke { display: grid; gap: 0; margin: 18px 0 0; padding: 0; list-style: none; counter-reset: start; border-top: 1px solid var(--linje-sterk); }
+.startrekke li { position: relative; padding: 14px 0 14px 52px; border-bottom: 1px solid var(--linje); font-size: 1.0625rem; counter-increment: start; }
+.startrekke li::before { content: counter(start); position: absolute; left: 0; top: 10px; width: 34px; font: 700 2rem/1 var(--font-tittel); color: var(--rod); font-variant-numeric: tabular-nums; }
+.startrekke strong { display: block; font-weight: 600; }
+.stevnedel__bilder { display: grid; gap: 20px; }
+.figur { margin: 0; }
+.figur img { width: 100%; border-radius: var(--radius); }
+.figur figcaption { margin-top: 8px; font-size: 0.97rem; color: var(--blekk-2); }
+.stevnedel__bilder .figur:last-child img { aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 45%; }
+.bildepar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: clamp(32px, 5vw, 56px); max-width: 860px; }
+.bildepar img { aspect-ratio: 4 / 5; object-fit: cover; }
+.kreditt { margin-top: 28px; font-size: 0.97rem; color: rgba(255, 255, 255, 0.72); }
+
 /* ---------- Kvalifiseringskrav ---------- */
 .kravvalg { display: inline-flex; gap: 4px; margin-bottom: 22px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
 .kravvalg__knapp { min-height: 44px; padding: 8px 18px; border: 0; border-radius: 5px; background: none; color: var(--blekk); font: 600 1rem/1.2 var(--font); cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease; }
