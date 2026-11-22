@@ -259,6 +259,10 @@
       el.textContent = kontakt.epost;
       el.setAttribute("translate", "no");
     });
+    finnAlle("[data-epostlenke]").forEach(function (el) {
+      if (!kontakt.epost) { el.hidden = true; return; }
+      el.href = "mailto:" + kontakt.epost + "?subject=" + encodeURIComponent(el.getAttribute("data-emne") || "");
+    });
     finnAlle("[data-facebook]").forEach(function (el) { if (kontakt.facebook) el.href = kontakt.facebook; });
     finnAlle("[data-instagram]").forEach(function (el) { if (kontakt.instagram) el.href = kontakt.instagram; });
     finnAlle("[data-aar]").forEach(function (el) { el.textContent = String(new Date().getFullYear()); });

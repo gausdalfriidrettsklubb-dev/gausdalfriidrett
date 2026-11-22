@@ -507,6 +507,15 @@ a:hover > .pil { transform: translateX(3px); }
 .ombilde { margin: 0 0 24px; }
 .ombilde img { width: 100%; border-radius: var(--radius); }
 
+/* ---------- Bli trener ---------- */
+.trener { display: grid; gap: clamp(24px, 4vw, 56px); align-items: center; }
+@media (min-width: 900px) { .trener { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); } }
+.trener__bilde { margin: 0; }
+.trener__bilde img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 42%; border-radius: var(--radius); }
+.trener .punkter { margin-top: 0; font-size: 1.12rem; }
+.trener__valg { margin-top: 28px; }
+.trener__valg span a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; white-space: nowrap; }
+
 /* ---------- Sponsorer ---------- */
 .sponsorstripe { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 12px; }
 .sponsor {
