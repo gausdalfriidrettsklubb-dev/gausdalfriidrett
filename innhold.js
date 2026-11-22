@@ -83,6 +83,7 @@ window.GFIK = {
   terminliste: [
     { dato: "2026-12-05", tittel: "Låvefesten", sted: "Nes Arena", tekst: "Passer for alle, også som første stevne." },
     { dato: "2026-12-12", tittel: "SLR AS-stevnet", sted: "Søndre Land-hallen", tekst: "Hopp uten tilløp." },
+    { dato: "2026-12-17", tittel: "Julestevnet", sted: "Håkons Hall, Lillehammer", tekst: "Starter kl. 18.00. 2 × 60 m, 150 m og lengde uten tilløp." },
     { dato: "2027-01-16", slutt: "2027-01-17", tittel: "NM og UM i mangekamp", sted: "Oslo", mesterskap: true },
     { dato: "2027-01-30", slutt: "2027-01-31", tittel: "Norgeslekene", sted: "Nes Arena" },
     { dato: "2027-02-06", tittel: "Bassen Sprint", sted: "Bærum" },
