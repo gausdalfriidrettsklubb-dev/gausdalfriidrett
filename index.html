@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611221131">
+  <link rel="stylesheet" href="stil.css?v=202611221154">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SportsOrganization","name":"Gausdal Friidrettsklubb","alternateName":"Gausdal FIK","sport":"Friidrett","url":"https://gausdalfriidrett.no/","logo":"https://gausdalfriidrett.no/bilder/ikon-512.png","foundingDate":"1898-05-06","address":{"@type":"PostalAddress","streetAddress":"Linflåa idrettspark, Baklivegen 1460","postalCode":"2651","addressLocality":"Østre Gausdal","addressCountry":"NO"},"sameAs":["https://www.facebook.com/groups/436427656385045/","https://www.instagram.com/gausdal_friidrett/"]}
   </script>
@@ -44,6 +44,7 @@
           <li><a href="#aktuelt">Aktuelt</a></li>
           <li><a href="#terminliste">Terminliste</a></li>
           <li><a href="#om">Om klubben</a></li>
+          <li><a href="#trener">Bli trener</a></li>
           <li><a href="#kontakt">Kontakt</a></li>
         </ul>
       </nav>
@@ -221,7 +222,10 @@
               <p>Last ned Spond-appen, lag en bruker og tast inn gruppekoden. Gruppa heter <span data-spondgruppe translate="no">Gausdal Friidrett trening</span>.</p>
             </div>
             <p class="spondkode" data-spondkodelinje hidden>Gruppekode <strong class="tall" data-spondkode translate="no"></strong></p>
-            <a class="knapp knapp--rod" data-spond href="#" rel="noopener" hidden>Åpne gruppa i Spond <span class="pil" aria-hidden="true">→</span></a>
+            <div class="knapperad spondstripe__valg">
+              <a class="knapp knapp--rod" data-spond href="#" rel="noopener" hidden>Åpne gruppa i Spond <span class="pil" aria-hidden="true">→</span></a>
+              <a class="knapp knapp--stille" data-spondnett href="https://www.spond.com/no/" rel="noopener">Gå til Spond</a>
+            </div>
           </div>
         </div>
       </div>
@@ -234,7 +238,10 @@
           <div>
             <h2 id="aktuelt-tittel">Siste nytt fra klubben</h2>
           </div>
-          <a class="lenke-pil" data-facebook href="https://www.facebook.com/groups/436427656385045/" rel="noopener">Se mer i Facebook-gruppa <span class="pil" aria-hidden="true">→</span></a>
+          <div class="knapperad">
+            <a class="knapp knapp--stille" data-facebook href="https://www.facebook.com/groups/436427656385045/" rel="noopener">Facebook-gruppa</a>
+            <a class="knapp knapp--stille" data-instagram href="https://www.instagram.com/gausdal_friidrett/" rel="noopener">Instagram</a>
+          </div>
         </div>
         <div class="nyheter" data-nyheter>
           <noscript><p class="tomt">Slå på JavaScript for å se nyhetene, eller følg klubben på Facebook.</p></noscript>
@@ -352,10 +359,11 @@
           </div>
           <div class="kort">
             <h3>Følg klubben</h3>
-            <p class="dempet">Resultater, bilder og beskjeder legger vi ut i Facebook-gruppa.</p>
+            <p class="dempet">Resultater og bilder legger vi ut på Facebook og Instagram. Oppmøte og beskjeder går i Spond.</p>
             <div class="kontaktlenker">
               <a data-facebook href="https://www.facebook.com/groups/436427656385045/" rel="noopener">Facebook-gruppa <span class="pil" aria-hidden="true">→</span></a>
               <a data-instagram href="https://www.instagram.com/gausdal_friidrett/" rel="noopener">Instagram <span class="pil" aria-hidden="true">→</span></a>
+              <a data-spondnett href="https://www.spond.com/no/" rel="noopener">Spond <span class="pil" aria-hidden="true">→</span></a>
             </div>
           </div>
         </div>
@@ -389,6 +397,7 @@
           <ul>
             <li><a data-facebook href="https://www.facebook.com/groups/436427656385045/" rel="noopener">Facebook</a></li>
             <li><a data-instagram href="https://www.instagram.com/gausdal_friidrett/" rel="noopener">Instagram</a></li>
+            <li><a data-spondnett href="https://www.spond.com/no/" rel="noopener">Spond</a></li>
             <li><a href="bilder/logo.svg" download="gausdal-friidrettsklubb-logo.svg">Last ned logoen (SVG)</a></li>
           </ul>
         </div>
@@ -400,7 +409,7 @@
     </div>
   </footer>
 
-  <script src="innhold.js?v=202611221131"></script>
-  <script src="app.js?v=202611221131"></script>
+  <script src="innhold.js?v=202611221154"></script>
+  <script src="app.js?v=202611221154"></script>
 </body>
 </html>

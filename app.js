@@ -267,6 +267,7 @@
       if (!kontakt.epost) { el.hidden = true; return; }
       el.href = "mailto:" + kontakt.epost + "?subject=" + encodeURIComponent(el.getAttribute("data-emne") || "");
     });
+    finnAlle("[data-spondnett]").forEach(function (el) { if (data.spond && data.spond.nettsted) el.href = data.spond.nettsted; });
     finnAlle("[data-facebook]").forEach(function (el) { if (kontakt.facebook) el.href = kontakt.facebook; });
     finnAlle("[data-instagram]").forEach(function (el) { if (kontakt.instagram) el.href = kontakt.instagram; });
     finnAlle("[data-aar]").forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
@@ -302,7 +303,22 @@
       meny.classList.toggle("er-apen", apen);
     }
     knapp.addEventListener("click", function () { sett(knapp.getAttribute("aria-expanded") !== "true"); });
-    meny.addEventListener("click", function (e) { if (e.target.closest("a")) sett(false); });
+    meny.addEventListener("click", function (e) {
+      var lenke = e.target.closest("a");
+      if (!lenke) return;
+      var varApen = knapp.getAttribute("aria-expanded") === "true";
+      sett(false);
+      // Når menyen lukker seg, flytter innholdet seg oppover. Da må vi rulle til
+      // målet etter at menyen er lukket, ellers havner siden for høyt.
+      var mal = lenke.getAttribute("href") || "";
+      if (!varApen || mal.charAt(0) !== "#" || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      var seksjon = document.getElementById(mal.slice(1));
+      if (!seksjon) return;
+      e.preventDefault();
+      void meny.offsetHeight; // tving nettleseren til å regne ut siden på nytt med lukket meny
+      seksjon.scrollIntoView({ block: "start" });
+      if (window.history && history.pushState) history.pushState(null, "", mal);
+    });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && knapp.getAttribute("aria-expanded") === "true") { sett(false); knapp.focus(); }
     });

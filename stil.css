@@ -210,7 +210,7 @@ a:hover > .pil { transform: translateX(3px); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::before { transform: translateY(6px) rotate(45deg); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::after { transform: translateY(-6px) rotate(-45deg); }
 
-@media (max-width: 1140px) {
+@media (max-width: 1160px) {
   .js .menyknapp { display: inline-flex; order: 3; }
   .topp__inn { flex-wrap: wrap; gap: 10px; }
   .topp .knapp { order: 2; }
@@ -295,7 +295,6 @@ a:hover > .pil { transform: translateX(3px); }
 .del { padding-block: clamp(64px, 9vw, 116px); }
 .del--sand { background: var(--sand); }
 .del--tett { padding-block: clamp(48px, 6vw, 76px); }
-.del [id], .del[id] { scroll-margin-top: calc(var(--topp) + 20px); }
 
 .delhode { margin-bottom: clamp(28px, 4vw, 48px); padding-top: 22px; border-top: 2px solid currentColor; }
 .delhode > h2, .delhode > p { max-width: 760px; }
@@ -408,11 +407,14 @@ a:hover > .pil { transform: translateX(3px); }
 .spondstripe { display: grid; gap: 18px 28px; align-items: center; }
 .spondstripe[hidden], .spondstripe [hidden] { display: none; }
 .spondstripe h3 { margin-bottom: 6px; }
+.spondstripe__valg { gap: 10px; }
+.spondstripe .spondstripe__valg[hidden] { display: none; }
 .spondstripe__tekst p { margin: 0; color: var(--blekk-2); max-width: 52ch; }
 .spondkode { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; margin: 0; padding: 14px 20px; border-radius: var(--radius-s); background: var(--sand); color: var(--blekk); white-space: nowrap; }
 .spondkode strong { font: 700 2rem/1 var(--font-tittel); letter-spacing: 0.14em; }
 @media (min-width: 900px) {
   .spondstripe { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) auto auto; }
+  .spondstripe__valg { flex-wrap: nowrap; }
 }
 
 /* ---------- Skjema ---------- */

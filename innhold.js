@@ -18,7 +18,9 @@ window.GFIK = {
     // Står begge tomme, viser siden bare interesseskjemaet.
     gruppe: "Gausdal Friidrett trening",
     kode: "FOEXN",
-    lenke: "https://group.spond.com/FOEXN"
+    lenke: "https://group.spond.com/FOEXN",
+    // Adressen til Spond selv, for dem som skal laste ned appen eller logge inn.
+    nettsted: "https://www.spond.com/no/"
   },
 
   /* --- Skjema ----------------------------------------------------------- */
