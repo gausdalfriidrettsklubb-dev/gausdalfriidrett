@@ -117,34 +117,47 @@
     var fmtKortDag = new Intl.DateTimeFormat("nb-NO", { weekday: "short" });
     var kropp = lag("tbody");
     var forrige = "";
+    var rader = [];
+    var mndRad = null;
+    var FORST = 10;
 
     kommende.forEach(function (s) {
       var start = dato(s.dato);
       var slutt = s.slutt ? dato(s.slutt) : null;
       var maaned = storForbokstav(fmtMaaned.format(start));
       if (maaned !== forrige) {
-        kropp.appendChild(lag("tr", { class: "terminliste__mnd" }, [lag("th", { colspan: "3", scope: "colgroup", text: maaned })]));
+        mndRad = lag("tr", { class: "terminliste__mnd" }, [lag("th", { colspan: "3", scope: "colgroup", text: maaned })]);
+        kropp.appendChild(mndRad);
         forrige = maaned;
       }
-      var dagtekst = slutt && slutt.getMonth() === start.getMonth()
-        ? start.getDate() + ".–" + slutt.getDate() + "."
-        : fmtKortDag.format(start).replace(/\.$/, "") + ". " + start.getDate() + ".";
+      var dagtekst;
+      if (!slutt) {
+        dagtekst = fmtKortDag.format(start).replace(/\.$/, "") + ". " + start.getDate() + ".";
+      } else if (slutt.getMonth() === start.getMonth()) {
+        dagtekst = start.getDate() + ".–" + slutt.getDate() + ".";
+      } else {
+        // Stevner som går over et månedsskifte, f.eks. 30.7.–1.8.
+        dagtekst = start.getDate() + "." + (start.getMonth() + 1) + ".–" + slutt.getDate() + "." + (slutt.getMonth() + 1) + ".";
+      }
       var lesbar = slutt
         ? fmtLang.format(start) + " til " + fmtLang.format(slutt)
         : storForbokstav(fmtUkedag.format(start)) + " " + fmtLang.format(start);
 
-      kropp.appendChild(lag("tr", { class: s.hjemme ? "er-hjemme" : null }, [
+      var rad = lag("tr", { class: s.hjemme ? "er-hjemme" : null }, [
         lag("td", { class: "terminliste__dato tall" }, [
           lag("time", { datetime: s.dato, "aria-label": lesbar }, [lag("span", { "aria-hidden": "true", text: dagtekst })])
         ]),
         lag("td", { class: "terminliste__stevne" }, [
           lag("strong", { text: s.tittel }),
           s.hjemme ? lag("span", { class: "merke merke--hjemme", text: "Hjemmestevne" }) : null,
+          s.mesterskap ? lag("span", { class: "merke merke--mesterskap", text: "Mesterskap" }) : null,
           s.tekst ? lag("small", { text: s.tekst }) : null,
           lag("span", { class: "terminliste__sted-smal", text: s.sted })
         ]),
         lag("td", { class: "terminliste__sted", text: s.sted })
-      ]));
+      ]);
+      rader.push({ rad: rad, mnd: mndRad, hjemme: !!s.hjemme });
+      kropp.appendChild(rad);
     });
 
     boks.appendChild(lag("table", { class: "terminliste" }, [
@@ -156,6 +169,27 @@
       ])]),
       kropp
     ]));
+
+    if (rader.length <= FORST) return;
+    var knapp = lag("button", { class: "knapp knapp--stille terminliste__vis", type: "button", "aria-controls": "terminliste-alle" });
+    function sett(alle) {
+      // De ti første vises alltid. Klubbens egne stevner vises også når lista er kort.
+      rader.forEach(function (r) { r.mnd.hidden = true; });
+      rader.forEach(function (r, n) {
+        r.rad.hidden = !alle && n >= FORST && !r.hjemme;
+        if (!r.rad.hidden) r.mnd.hidden = false;
+      });
+      knapp.setAttribute("aria-expanded", alle ? "true" : "false");
+      knapp.textContent = alle ? "Vis færre stevner" : "Vis alle " + rader.length + " stevner";
+    }
+    knapp.addEventListener("click", function () {
+      var alle = knapp.getAttribute("aria-expanded") !== "true";
+      sett(alle);
+      if (window.history && history.replaceState) history.replaceState(null, "", alle ? "#terminliste-alle" : "#terminliste");
+      if (!alle) boks.scrollIntoView({ block: "start" });
+    });
+    boks.appendChild(knapp);
+    sett(window.location.hash === "#terminliste-alle");
   }
 
   /* ---------- Aktuelt ---------- */
@@ -344,6 +378,12 @@
 
     if (nokkelfelt) nokkelfelt.value = nokkel();
     if (!adresse && knappetekst) knappetekst.textContent = "Lag e-post til klubben";
+    var notis = finn("[data-skjemanotis]", skjema);
+    if (notis && adresse) {
+      var tjeneste = "";
+      try { tjeneste = new URL(adresse).hostname.replace(/^www\./, ""); } catch (e) { tjeneste = ""; }
+      if (tjeneste) notis.textContent += " Skjemaet sendes til klubbens e-post via " + tjeneste + ".";
+    }
 
     function felter() {
       return finnAlle("input, textarea", skjema).filter(function (f) {
@@ -478,8 +518,17 @@
         window.setTimeout(function () { spinner.hidden = true; lasting(false); fn(); }, vent);
       }
 
-      var last = { _subject: skjema.getAttribute("data-emne") || "Henvendelse fra nettsiden", nokkel: nokkelfelt ? nokkelfelt.value : "" };
-      Object.keys(v).forEach(function (k) { last[k] = v[k]; });
+      // E-posten klubben får, viser feltene med samme navn som i skjemaet.
+      var last = {};
+      felter().forEach(function (f) {
+        if (!v[f.name]) return;
+        var etikett = finn('label[for="' + f.id + '"]', skjema);
+        last[etikett ? etikett.firstChild.textContent.trim() : f.name] = v[f.name];
+      });
+      last._subject = skjema.getAttribute("data-emne") || "Henvendelse fra nettsiden";
+      last._template = "table";
+      last._captcha = "false";
+      if (v.epost) last._replyto = v.epost; // svar i Gmail går rett til avsenderen
 
       fetch(adresse, {
         method: "POST",
@@ -487,6 +536,10 @@
         body: JSON.stringify(last)
       }).then(function (svar) {
         if (!svar.ok) throw new Error("Status " + svar.status);
+        return svar.json().catch(function () { return {}; });
+      }).then(function (json) {
+        // Skjematjenesten kan svare 200 og likevel melde at innsendingen ikke gikk gjennom.
+        if (json && String(json.success) === "false") throw new Error(json.message || "Avvist");
         ferdig(function () {
           endret = false;
           skjema.reset();

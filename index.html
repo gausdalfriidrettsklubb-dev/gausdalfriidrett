@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611221154">
+  <link rel="stylesheet" href="stil.css?v=202611221302">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SportsOrganization","name":"Gausdal Friidrettsklubb","alternateName":"Gausdal FIK","sport":"Friidrett","url":"https://gausdalfriidrett.no/","logo":"https://gausdalfriidrett.no/bilder/ikon-512.png","foundingDate":"1898-05-06","address":{"@type":"PostalAddress","streetAddress":"Linflåa idrettspark, Baklivegen 1460","postalCode":"2651","addressLocality":"Østre Gausdal","addressCountry":"NO"},"sameAs":["https://www.facebook.com/groups/436427656385045/","https://www.instagram.com/gausdal_friidrett/"]}
   </script>
@@ -56,8 +56,8 @@
 
     <!-- ===================== HERO ===================== -->
     <section class="hero" id="topp" aria-labelledby="hero-tittel">
-      <svg class="hero__baner" viewBox="0 0 1600 700" preserveAspectRatio="xMinYMid slice" aria-hidden="true" focusable="false">
-        <g fill="none" stroke="#fff" stroke-opacity="0.34" stroke-width="5"><circle cx="1000" cy="4200" r="3700"/><circle cx="1000" cy="4200" r="3800"/><circle cx="1000" cy="4200" r="3900"/><circle cx="1000" cy="4200" r="4000"/><circle cx="1000" cy="4200" r="4100"/><circle cx="1000" cy="4200" r="4200"/><circle cx="1000" cy="4200" r="4300"/></g>
+      <svg class="hero__baner" viewBox="0 0 2600 700" preserveAspectRatio="xMinYMid slice" aria-hidden="true" focusable="false">
+        <g fill="none" stroke="#fff" stroke-opacity="0.34" stroke-width="5"><circle cx="1000" cy="4200" r="3400"/><circle cx="1000" cy="4200" r="3500"/><circle cx="1000" cy="4200" r="3600"/><circle cx="1000" cy="4200" r="3700"/><circle cx="1000" cy="4200" r="3800"/><circle cx="1000" cy="4200" r="3900"/><circle cx="1000" cy="4200" r="4000"/><circle cx="1000" cy="4200" r="4100"/><circle cx="1000" cy="4200" r="4200"/><circle cx="1000" cy="4200" r="4300"/><circle cx="1000" cy="4200" r="4400"/><circle cx="1000" cy="4200" r="4500"/></g>
         <g class="hero__banetall" fill="#fff" fill-opacity="0.4" font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="700" font-size="66" text-anchor="middle"><text transform="translate(85 563.3) rotate(-14.12)" dy="23">1</text><text transform="translate(85 460.3) rotate(-13.75)" dy="23">2</text><text transform="translate(85 357.4) rotate(-13.39)" dy="23">3</text><text transform="translate(85 254.7) rotate(-13.06)" dy="23">4</text><text transform="translate(85 152.1) rotate(-12.74)" dy="23">5</text><text transform="translate(85 49.7) rotate(-12.43)" dy="23">6</text></g>
       </svg>
       <div class="ramme hero__inn">
@@ -210,7 +210,7 @@
                   <span class="spinner" hidden aria-hidden="true"></span>
                   <span data-knappetekst>Send til klubben</span>
                 </button>
-                <small>Vi bruker opplysningene bare til å svare deg.</small>
+                <small data-skjemanotis>Vi bruker opplysningene bare til å svare deg.</small>
               </div>
               <p class="skjema__status" role="status" aria-live="polite" tabindex="-1"></p>
             </form>
@@ -254,12 +254,13 @@
       <div class="ramme">
         <div class="delhode">
           <h2 id="termin-tittel">Terminliste</h2>
-          <p>Et utvalg stevner fra terminlista til Innlandet friidrettskrets. Klubben betaler startkontingenten for medlemmene.</p>
+          <p>Stevnene er hentet fra terminlista til Innlandet friidrettskrets for 2027 og fra iSonen, forbundets stevnekalender. Klubben betaler startkontingenten for medlemmene. Klubbmesterskapet og Skeikampen Opp kommer i tillegg når datoene er klare.</p>
         </div>
-        <div data-terminliste>
+        <div data-terminliste id="terminliste-alle">
           <noscript><p class="tomt">Slå på JavaScript for å se terminlista.</p></noscript>
         </div>
         <p class="terminfot">
+          <a class="lenke-pil" href="https://isonen.friidrett.no/?location=Innlandet" rel="noopener">Påmelding og alle stevner i iSonen <span class="pil" aria-hidden="true">→</span></a>
           <a class="lenke-pil" href="https://www.friidrett.no/contentassets/bbfd843acdcb486b8905cad3816ef3ef/terminliste-innlandet-2027-hostmote-_-.pdf" rel="noopener">Hele terminlista for Innlandet 2027 (PDF) <span class="pil" aria-hidden="true">→</span></a>
           <a class="lenke-pil" href="https://www.friidrett.no/kretser/innlandet/" rel="noopener">Innlandet friidrettskrets <span class="pil" aria-hidden="true">→</span></a>
         </p>
@@ -409,7 +410,7 @@
     </div>
   </footer>
 
-  <script src="innhold.js?v=202611221154"></script>
-  <script src="app.js?v=202611221154"></script>
+  <script src="innhold.js?v=202611221302"></script>
+  <script src="app.js?v=202611221302"></script>
 </body>
 </html>

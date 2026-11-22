@@ -338,6 +338,7 @@ a:hover > .pil { transform: translateX(3px); }
 }
 .merke--inne { background: var(--blekk); border-color: var(--blekk); color: #fff; }
 .merke--hjemme { background: var(--rod); border-color: var(--rod); color: #fff; }
+.merke--mesterskap { background: var(--blekk); border-color: var(--blekk); color: #fff; }
 
 .sidebilde { margin: 0; }
 .sidebilde img { width: 100%; border-radius: var(--radius); }
@@ -490,6 +491,8 @@ a:hover > .pil { transform: translateX(3px); }
   .terminliste th, .terminliste td { padding-right: 10px; }
   .terminliste__dato { width: 5.4em; }
 }
+.terminliste tr[hidden] { display: none; }
+.terminliste__vis { margin-top: 22px; }
 .terminfot { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 26px; }
 
 /* ---------- Om klubben ---------- */
