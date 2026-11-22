@@ -237,13 +237,22 @@ a:hover > .pil { transform: translateX(3px); }
 }
 
 /* ---------- Hero ---------- */
+.hero, .sidehode {
+  --bane: #c7392b;
+  /* Gummidekke: finkornet støy lagt over banefargen. */
+  background-color: var(--bane);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.25  0 0 0 0 0  0 0 0 0 0  0 0 0 0.34 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
 .hero {
   --fokus: #fff;
   position: relative; isolation: isolate; overflow: hidden;
-  background: var(--rod);
   color: #fff;
 }
-.hero__baner { position: absolute; z-index: -1; right: -18%; bottom: -62%; width: min(1500px, 150vw); height: auto; pointer-events: none; }
+.hero__baner { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hero__baner circle { vector-effect: non-scaling-stroke; stroke-width: 4px; }
+.hero__banetall { display: none; }
+@media (min-width: 1400px) { .hero__banetall { display: inline; } }
 .hero__inn {
   display: grid; gap: clamp(32px, 5vw, 64px); align-items: center;
   padding-block: clamp(44px, 7vw, 92px) clamp(52px, 8vw, 104px);
@@ -522,10 +531,9 @@ a.sponsor:hover { border-color: var(--linje-sterk); box-shadow: var(--skygge); c
 .sponsorkort p { margin: 0; color: var(--blekk-2); font-size: 1rem; }
 .sponsorkort .lenke-pil { margin-top: auto; padding-top: 8px; }
 
-.sidehode { --fokus: #fff; position: relative; isolation: isolate; overflow: hidden; background: var(--rod); color: #fff; padding-block: clamp(44px, 7vw, 84px); }
+.sidehode { --fokus: #fff; position: relative; isolation: isolate; overflow: hidden; color: #fff; padding-block: clamp(44px, 7vw, 84px); }
 .sidehode h1 { font-size: clamp(3rem, 8.5vw, 5.4rem); text-transform: uppercase; line-height: 0.92; }
 .sidehode p { max-width: 54ch; margin-top: 20px; font-size: clamp(1.12rem, 1.8vw, 1.3rem); line-height: 1.45; }
-.sidehode .hero__baner { bottom: -120%; }
 
 .todelt { display: grid; gap: clamp(24px, 4vw, 56px); align-items: start; }
 @media (min-width: 900px) { .todelt { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); } }
