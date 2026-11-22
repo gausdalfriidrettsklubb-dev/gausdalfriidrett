@@ -192,7 +192,6 @@ a:hover > .pil { transform: translateX(3px); }
 
 .topp .knapp { min-height: 44px; padding: 8px 18px; font-size: 1rem; white-space: nowrap; }
 .meny a { white-space: nowrap; }
-@media (min-width: 1200px) { .meny a { padding-inline: 8px; font-size: 0.95rem; } }
 
 .menyknapp {
   display: none; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px;
@@ -211,7 +210,7 @@ a:hover > .pil { transform: translateX(3px); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::before { transform: translateY(6px) rotate(45deg); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::after { transform: translateY(-6px) rotate(-45deg); }
 
-@media (max-width: 1199px) {
+@media (max-width: 1160px) {
   .js .menyknapp { display: inline-flex; order: 3; }
   .topp__inn { flex-wrap: wrap; gap: 10px; }
   .topp .knapp { order: 2; }
@@ -504,16 +503,6 @@ a:hover > .pil { transform: translateX(3px); }
 .terminliste__vis { margin-top: 22px; }
 .terminfot { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 26px; }
 
-/* ---------- Velkommen ---------- */
-.del--velkommen { padding-bottom: 0; }
-.velkommen { display: grid; gap: 20px clamp(32px, 5vw, 72px); padding-top: 22px; border-top: 2px solid currentColor; }
-@media (min-width: 900px) { .velkommen { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); } }
-.velkommen h2 { font-size: clamp(2.4rem, 5.6vw, 3.9rem); text-transform: uppercase; line-height: 0.95; }
-.velkommen__tekst { max-width: 62ch; }
-.velkommen__tekst p { font-size: 1.15rem; }
-.velkommen__tekst p:first-child { margin-top: 0; }
-.velkommen__tekst p:last-child { margin-bottom: 0; }
-
 /* ---------- Klubbrekorder ---------- */
 .rekorder { display: grid; gap: clamp(36px, 5vw, 64px); align-items: start; }
 @media (min-width: 1000px) { .rekorder { grid-template-columns: 1fr 1fr; } }
@@ -579,10 +568,6 @@ a:hover > .pil { transform: translateX(3px); }
 .kravtabell tbody tr:first-child.krav__gruppe th { padding-top: 16px; }
 .kravtabell .krav__gruppe th { position: static; box-shadow: none; }
 .kravtabell .krav__gruppe span { position: sticky; left: 0; display: inline-block; }
-.kravnoter { display: grid; gap: 6px; margin-top: 26px; max-width: 78ch; font-size: 1rem; color: var(--blekk-2); }
-.kravnoter li { position: relative; padding-left: 18px; }
-.kravnoter li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 2px; background: currentColor; }
-.kravfot { margin-top: 18px; max-width: 78ch; font-size: 1rem; color: var(--blekk-2); }
 
 /* ---------- Skeikampen Opp ---------- */
 .skeikampen { display: grid; gap: clamp(32px, 5vw, 72px); align-items: start; }
