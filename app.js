@@ -232,6 +232,42 @@
     });
   }
 
+  /* ---------- Klubbrekorder ---------- */
+  function visRekorder() {
+    var rot = finn("[data-klubbrekorder]");
+    var r = data.klubbrekorder;
+    if (!rot || !r) return;
+    tom(rot);
+    [["Menn", r.menn], ["Kvinner", r.kvinner]].forEach(function (gruppe) {
+      var rader = gruppe[1] || [];
+      if (!rader.length) return;
+      var kropp = lag("tbody");
+      rader.forEach(function (x) {
+        kropp.appendChild(lag("tr", {}, [
+          lag("th", { scope: "row", class: "rekord__ovelse" }, [
+            x.ovelse.replace(/(\d) (\d|m\b)/g, "$1" + NBSP + "$2"),
+            lag("span", { class: "rekord__navn-smal", translate: "no", text: x.navn })
+          ]),
+          lag("td", { class: "rekord__navn", translate: "no", text: x.navn }),
+          lag("td", { class: "rekord__resultat", text: x.resultat.replace(/ /g, NBSP) }),
+          lag("td", { class: "rekord__aar", text: String(x.aar) })
+        ]));
+      });
+      rot.appendChild(lag("div", {}, [
+        lag("table", { class: "rekordtabell" }, [
+          lag("caption", { text: gruppe[0] }),
+          lag("thead", {}, [lag("tr", {}, [
+            lag("th", { scope: "col", text: "Øvelse" }),
+            lag("th", { scope: "col", class: "rekord__navn", text: "Utøver" }),
+            lag("th", { scope: "col", class: "rekord__resultat", text: "Resultat" }),
+            lag("th", { scope: "col", class: "rekord__aar", text: "År" })
+          ])]),
+          kropp
+        ])
+      ]));
+    });
+  }
+
   /* ---------- Sponsorer ---------- */
   function sponsorLogo(s) {
     if (!s.logo) return lag("span", { class: "sponsor__navn", translate: "no", text: s.navn });
@@ -563,6 +599,7 @@
   visTerminliste();
   visNyheter();
   visStyret();
+  visRekorder();
   visSponsorer();
   visKontakt();
   settOppMeny();

@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611221320">
+  <link rel="stylesheet" href="stil.css?v=202611221732">
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SportsOrganization","name":"Gausdal Friidrettsklubb","alternateName":"Gausdal FIK","sport":"Friidrett","url":"https://gausdalfriidrett.no/","logo":"https://gausdalfriidrett.no/bilder/ikon-512.png","foundingDate":"1898-05-06","address":{"@type":"PostalAddress","streetAddress":"Linflåa idrettspark, Baklivegen 1460","postalCode":"2651","addressLocality":"Østre Gausdal","addressCountry":"NO"},"sameAs":["https://www.facebook.com/groups/436427656385045/","https://www.instagram.com/gausdal_friidrett/"]}
   </script>
@@ -66,7 +66,7 @@
           <h1 id="hero-tittel">Løp, hopp og kast med oss</h1>
           <p class="hero__ingress">Gausdal Friidrettsklubb er en breddeklubb. Vi trener mandag og torsdag ved Gausdal Arena, og den første måneden er gratis.</p>
           <div class="hero__valg">
-            <a class="knapp knapp--hvit" href="#bli-medlem">Prøv gratis første måneden</a>
+            <a class="knapp knapp--hvit" data-spond href="https://group.spond.com/FOEXN" rel="noopener">Registrer deg i Spond <span class="pil" aria-hidden="true">→</span></a>
             <a class="knapp knapp--omriss" href="#trening">Se treningstider</a>
           </div>
           <dl class="hero__fakta">
@@ -76,7 +76,7 @@
           </dl>
         </div>
         <div class="kollasj">
-          <figure class="k1"><img src="bilder/sprint-mesterskap.jpg" width="558" height="820" alt="Sprinter i Gausdal-drakt i full fart på oppløpet under et mesterskap" fetchpriority="high"></figure>
+          <figure class="k1"><img src="bilder/sprint-mesterskap.jpg" width="380" height="559" alt="Sprinter i Gausdal-drakt i full fart på oppløpet under et mesterskap" fetchpriority="high"></figure>
           <figure class="k2"><img src="bilder/klubbhopp.jpg" width="640" height="480" alt="Fem utøvere i klubbjakker hopper samtidig på gresset ved Linflåa"></figure>
           <figure class="k3"><img src="bilder/unge-utovere.jpg" width="750" height="1000" alt="To av klubbens yngste utøvere i røde klubbjakker ved friidrettsbanen"></figure>
         </div>
@@ -100,12 +100,26 @@
       </div>
     </section>
 
+    <!-- ===================== VELKOMMEN ===================== -->
+    <section class="del del--velkommen" id="velkommen" aria-labelledby="velkommen-tittel">
+      <div class="ramme">
+        <div class="velkommen">
+          <h2 id="velkommen-tittel">Velkommen til <span translate="no">Gausdal Friidrettsklubb</span>!</h2>
+          <div class="velkommen__tekst">
+            <p><span translate="no">Gausdal Friidrettsklubb</span> er en aktiv og inkluderende klubb med plass til alle som har lyst til å drive med friidrett. Våre utøvere deltar jevnlig på stevner og representerer klubben med stor idrettsglede og engasjement.</p>
+            <p>Hos oss kan du prøve deg på mange ulike friidrettsøvelser – alt fra løping og hopp til kast. Vi har dyktige og engasjerte trenere med god kompetanse som hjelper deg med å utvikle deg, uansett nivå og ambisjoner.</p>
+            <p>Har du lyst til å prøve friidrett? Du er hjertelig velkommen til å bli med på trening hos oss! Det er helt uforpliktende å prøve, og vi gleder oss til å ønske nye utøvere velkommen!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== TRENING ===================== -->
     <section class="del" id="trening" aria-labelledby="trening-tittel">
       <div class="ramme">
         <div class="delhode">
           <h2 id="trening-tittel">To faste treninger i uka</h2>
-          <p>Vi trener ute på mandager og inne på torsdager. I sommerhalvåret bruker vi friidrettsbanen på Linflåa, og der holder vi på til snøen legger seg.</p>
+          <p>Vi trener ute på mandager og inne på torsdager i vinterhalvåret. I sommerhalvåret bruker vi friidrettsbanen på Linflåa, og der holder vi på til snøen legger seg.</p>
         </div>
         <div class="trening">
           <div>
@@ -299,8 +313,21 @@
       </div>
     </section>
 
+    <!-- ===================== KLUBBREKORDER ===================== -->
+    <section class="del del--sand" id="klubbrekorder" aria-labelledby="rekord-tittel">
+      <div class="ramme">
+        <div class="delhode">
+          <h2 id="rekord-tittel">Klubbrekorder</h2>
+          <p>De beste resultatene i klubbens historie. Mangler det en rekord, eller er en av dem slått? <a data-epostlenke data-emne="Klubbrekorder" href="#kontakt">Send en e-post til klubben</a>, så retter vi lista.</p>
+        </div>
+        <div class="rekorder" data-klubbrekorder>
+          <noscript><p class="tomt">Slå på JavaScript for å se klubbrekordene.</p></noscript>
+        </div>
+      </div>
+    </section>
+
     <!-- ===================== BLI TRENER ===================== -->
-    <section class="del del--sand" id="trener" aria-labelledby="trener-tittel">
+    <section class="del" id="trener" aria-labelledby="trener-tittel">
       <div class="ramme">
         <div class="delhode">
           <h2 id="trener-tittel">Lyst til å bli trener?</h2>
@@ -326,7 +353,7 @@
     </section>
 
     <!-- ===================== KONTAKT ===================== -->
-    <section class="del" id="kontakt" aria-labelledby="kontakt-tittel">
+    <section class="del del--sand" id="kontakt" aria-labelledby="kontakt-tittel">
       <div class="ramme">
         <div class="delhode">
           <h2 id="kontakt-tittel">Ta kontakt med klubben</h2>
@@ -410,7 +437,7 @@
     </div>
   </footer>
 
-  <script src="innhold.js?v=202611221320"></script>
-  <script src="app.js?v=202611221320"></script>
+  <script src="innhold.js?v=202611221732"></script>
+  <script src="app.js?v=202611221732"></script>
 </body>
 </html>

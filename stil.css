@@ -294,7 +294,7 @@ a:hover > .pil { transform: translateX(3px); }
 .kollasj .k1 img { position: absolute; inset: 0; }
 .kollasj .k2 { aspect-ratio: 4 / 3; }
 .kollasj .k3 { aspect-ratio: 4 / 3; }
-.kollasj .k1 img { object-position: 25% 35%; }
+.kollasj .k1 img { object-position: 50% 40%; }
 .kollasj .k3 img { object-position: 50% 50%; }
 
 /* ---------- Seksjoner ---------- */
@@ -500,6 +500,34 @@ a:hover > .pil { transform: translateX(3px); }
 .terminliste tr[hidden] { display: none; }
 .terminliste__vis { margin-top: 22px; }
 .terminfot { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 26px; }
+
+/* ---------- Velkommen ---------- */
+.del--velkommen { padding-bottom: 0; }
+.velkommen { display: grid; gap: 20px clamp(32px, 5vw, 72px); padding-top: 22px; border-top: 2px solid currentColor; }
+@media (min-width: 900px) { .velkommen { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); } }
+.velkommen h2 { font-size: clamp(2.4rem, 5.6vw, 3.9rem); text-transform: uppercase; line-height: 0.95; }
+.velkommen__tekst { max-width: 62ch; }
+.velkommen__tekst p { font-size: 1.15rem; }
+.velkommen__tekst p:first-child { margin-top: 0; }
+.velkommen__tekst p:last-child { margin-bottom: 0; }
+
+/* ---------- Klubbrekorder ---------- */
+.rekorder { display: grid; gap: clamp(36px, 5vw, 64px); align-items: start; }
+@media (min-width: 1000px) { .rekorder { grid-template-columns: 1fr 1fr; } }
+.rekordtabell { width: 100%; border-collapse: collapse; font-size: 1.0625rem; font-variant-numeric: tabular-nums; }
+.rekordtabell caption { padding-bottom: 14px; text-align: left; font: 700 1.6rem/1.1 var(--font-tittel); letter-spacing: 0.04em; text-transform: uppercase; color: var(--rod-mork); }
+.rekordtabell th, .rekordtabell td { padding: 11px 14px 11px 0; text-align: left; vertical-align: baseline; border-bottom: 1px solid var(--linje); }
+.rekordtabell thead th { padding-block: 0 10px; border-bottom: 2px solid var(--blekk); font: 600 0.85rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--blekk-2); }
+.rekordtabell tbody th { font-weight: 600; white-space: nowrap; }
+.rekordtabell .rekord__navn { color: var(--blekk-2); }
+.rekordtabell .rekord__resultat { text-align: right; white-space: nowrap; }
+.rekordtabell tbody .rekord__resultat { font-weight: 600; color: var(--blekk); }
+.rekordtabell .rekord__aar { width: 3.4em; padding-right: 0; text-align: right; color: var(--blekk-2); }
+.rekord__navn-smal { display: none; margin-top: 2px; font-weight: 400; font-size: 0.97rem; color: var(--blekk-2); white-space: normal; }
+@media (max-width: 560px) {
+  .rekordtabell .rekord__navn { display: none; }
+  .rekord__navn-smal { display: block; }
+}
 
 /* ---------- Om klubben ---------- */
 .om { display: grid; gap: clamp(28px, 5vw, 64px); align-items: start; }

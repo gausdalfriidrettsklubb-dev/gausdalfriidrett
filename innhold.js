@@ -207,5 +207,57 @@ window.GFIK = {
     { navn: "Jørn Joakim Gundersen", rolle: "Styremedlem" },
     { navn: "Håkon Granum Haug", rolle: "Styremedlem" },
     { navn: "Lene Nicolaysen Sjue", rolle: "Styremedlem" }
-  ]
+  ],
+
+  /* --- Klubbrekorder ---------------------------------------------------- */
+  // Hentet fra klubbens rekordliste, med rettelsene som er ført inn for hånd
+  // til og med 2019. Blir en rekord slått, bytter du navn, resultat og år
+  // på linja for øvelsen. Tider skrives som 11,34 eller 1.54,8 (min.sek,tidel).
+  klubbrekorder: {
+    menn: [
+      { ovelse: "100 m", navn: "Osazee Parkson", resultat: "11,34", aar: 2019 },
+      { ovelse: "200 m", navn: "Erik Ring", resultat: "22,89", aar: 2016 },
+      { ovelse: "400 m", navn: "Erik Ring", resultat: "50,67", aar: 2016 },
+      { ovelse: "800 m", navn: "Tor Åge Rønningen", resultat: "1.54,8", aar: 1964 },
+      { ovelse: "1500 m", navn: "Torgeir Fjerdrumsmoen", resultat: "3.50,5", aar: 1977 },
+      { ovelse: "3000 m", navn: "Torgeir Fjerdrumsmoen", resultat: "8.09,5", aar: 1978 },
+      { ovelse: "5000 m", navn: "Torgeir Fjerdrumsmoen", resultat: "14.18,0", aar: 1978 },
+      { ovelse: "10 000 m", navn: "Torgeir Fjerdrumsmoen", resultat: "31.18,3", aar: 1978 },
+      { ovelse: "110 m hekk", navn: "Einar Bjørnhaug", resultat: "16,4", aar: 1972 },
+      { ovelse: "400 m hekk", navn: "Tor Åge Rønningen", resultat: "59,2", aar: 1964 },
+      { ovelse: "2000 m hinder", navn: "Hans Fjerdrumsmoen", resultat: "6.44,6", aar: 1971 },
+      { ovelse: "3000 m hinder", navn: "Olav Volehaugen", resultat: "9.55,8", aar: 1971 },
+      { ovelse: "1 engelsk mil", navn: "Torgeir Fjerdrumsmoen", resultat: "4.24,5", aar: 1980 },
+      { ovelse: "Halvmaraton", navn: "Jon Hanestad", resultat: "1.08.22", aar: 1993 },
+      { ovelse: "Maraton", navn: "Arne Flugstad", resultat: "2.32.31", aar: 1986 },
+      { ovelse: "Høyde", navn: "Erik Ring", resultat: "1,85", aar: 2016 },
+      { ovelse: "Stav", navn: "Einar Bjørnhaug", resultat: "3,60", aar: 1973 },
+      { ovelse: "Lengde", navn: "Einar Bjørnhaug", resultat: "6,58", aar: 1972 },
+      { ovelse: "Tresteg", navn: "Einar Bjørnhaug", resultat: "12,85", aar: 1971 },
+      { ovelse: "Kule", navn: "Johnny Lien", resultat: "12,59", aar: 1977 },
+      { ovelse: "Diskos", navn: "Johnny Lien", resultat: "45,68", aar: 1977 },
+      { ovelse: "Slegge", navn: "Johnny Lien", resultat: "41,08", aar: 1977 },
+      { ovelse: "Spyd", navn: "Einar Bjørnhaug", resultat: "47,66", aar: 1973 },
+      { ovelse: "Tikamp", navn: "Einar Bjørnhaug", resultat: "5750 p", aar: 1973 }
+    ],
+    kvinner: [
+      { ovelse: "60 m", navn: "Trine Rugsveen", resultat: "7,9", aar: 1982 },
+      { ovelse: "100 m", navn: "Miriam Pedersen", resultat: "12,56", aar: 2019 },
+      { ovelse: "200 m", navn: "Miriam Pedersen", resultat: "26,03", aar: 2019 },
+      { ovelse: "400 m", navn: "Anne Jorunn Flaten", resultat: "57,3", aar: 1983 },
+      { ovelse: "800 m", navn: "Anne Jorunn Flaten", resultat: "2.06,5", aar: 1984 },
+      { ovelse: "1500 m", navn: "Marit Holtklimpen", resultat: "4.15,11", aar: 1983 },
+      { ovelse: "3000 m", navn: "Marit Holtklimpen", resultat: "9.14,44", aar: 1983 },
+      { ovelse: "10 000 m", navn: "Mette Møller", resultat: "37.57,0", aar: 1982 },
+      { ovelse: "100 m hekk", navn: "Kari Kamstrup", resultat: "20,4", aar: 1971 },
+      { ovelse: "Halvmaraton", navn: "Marthe Flugstad", resultat: "1.18.48", aar: 1989 },
+      { ovelse: "Maraton", navn: "Marthe Flugstad", resultat: "2.46.35", aar: 1989 },
+      { ovelse: "Høyde", navn: "Anne Jorunn Flaten", resultat: "1,55", aar: 1975 },
+      { ovelse: "Stav", navn: "Ronja Thoresen", resultat: "2,00", aar: 2019 },
+      { ovelse: "Lengde", navn: "Kari Kamstrup", resultat: "5,35", aar: 1972 },
+      { ovelse: "Kule", navn: "Bente Langsveen", resultat: "9,25", aar: 1977 },
+      { ovelse: "Diskos", navn: "Mona Haugen", resultat: "26,32", aar: 1973 },
+      { ovelse: "Spyd", navn: "Marit Syversen", resultat: "33,16", aar: 1986 }
+    ]
+  }
 };
