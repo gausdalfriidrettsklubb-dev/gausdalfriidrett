@@ -81,6 +81,7 @@ window.GFIK = {
      - mesterskap: true markerer NM og UM.
      ---------------------------------------------------------------------- */
   terminliste: [
+    { dato: "2026-12-05", tittel: "Låvefesten", sted: "Nes Arena", tekst: "Passer for alle, også som første stevne." },
     { dato: "2026-12-12", tittel: "SLR AS-stevnet", sted: "Søndre Land-hallen", tekst: "Hopp uten tilløp." },
     { dato: "2027-01-16", slutt: "2027-01-17", tittel: "NM og UM i mangekamp", sted: "Oslo", mesterskap: true },
     { dato: "2027-01-30", slutt: "2027-01-31", tittel: "Norgeslekene", sted: "Nes Arena" },
