@@ -43,8 +43,8 @@
   --linje: rgba(88, 30, 24, 0.14);
   --linje-sterk: rgba(88, 30, 24, 0.32);
   --fokus: #1c1413;
-  --radius: 16px;
-  --radius-s: 10px;
+  --radius: 10px;
+  --radius-s: 7px;
   --skygge: 0 1px 2px rgba(60, 20, 16, 0.06), 0 10px 28px -10px rgba(60, 20, 16, 0.18);
   --skygge-loft: 0 2px 4px rgba(60, 20, 16, 0.08), 0 18px 40px -14px rgba(60, 20, 16, 0.28);
   --maks: 1140px;
@@ -286,7 +286,8 @@ a:hover > .pil { transform: translateX(3px); }
 .del--tett { padding-block: clamp(48px, 6vw, 76px); }
 .del [id], .del[id] { scroll-margin-top: calc(var(--topp) + 20px); }
 
-.delhode { max-width: 720px; margin-bottom: clamp(30px, 4.5vw, 52px); }
+.delhode { margin-bottom: clamp(28px, 4vw, 48px); padding-top: 22px; border-top: 2px solid currentColor; }
+.delhode > h2, .delhode > p { max-width: 760px; }
 .delhode h2 { font-size: clamp(2.4rem, 5.6vw, 3.9rem); text-transform: uppercase; line-height: 0.95; }
 .delhode p { margin-top: 18px; font-size: 1.15rem; color: var(--blekk-2); max-width: 60ch; }
 .delhode--rad { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px 32px; max-width: none; }
@@ -300,14 +301,14 @@ a:hover > .pil { transform: translateX(3px); }
 .trening { display: grid; gap: clamp(24px, 4vw, 48px); align-items: start; }
 @media (min-width: 900px) { .trening { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); } }
 
-.okter { display: grid; gap: 16px; }
+.okter { display: grid; gap: 0; border-top: 1px solid var(--linje-sterk); }
 .okt {
   display: grid; grid-template-columns: auto 1fr; gap: 6px 24px; align-items: center;
-  padding: clamp(20px, 3vw, 30px);
-  background: var(--flate); border: 1px solid var(--linje); border-radius: var(--radius); box-shadow: var(--skygge);
+  padding: 22px 0;
+  border-bottom: 1px solid var(--linje-sterk);
 }
-.okt__nar { grid-row: 1 / 3; align-self: stretch; display: flex; flex-direction: column; justify-content: center; min-width: 138px; padding-right: 24px; border-right: 1px solid var(--linje); }
-.okt__dag { font: 700 2.1rem/1 var(--font-tittel); text-transform: uppercase; }
+.okt__nar { grid-row: 1 / 3; align-self: stretch; display: flex; flex-direction: column; justify-content: center; min-width: 168px; padding-right: 24px; border-right: 1px solid var(--linje); }
+.okt__dag { font: 700 2.4rem/1 var(--font-tittel); text-transform: uppercase; }
 .okt__tid { margin-top: 6px; font: 600 1.3rem/1.1 var(--font-tittel); color: var(--rod-mork); letter-spacing: 0.02em; white-space: nowrap; }
 .okt__topp { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .okt h3 { font-size: 1.55rem; line-height: 1.1; }
@@ -329,7 +330,7 @@ a:hover > .pil { transform: translateX(3px); }
 .merke--hjemme { background: var(--rod); border-color: var(--rod); color: #fff; }
 
 .sidebilde { margin: 0; }
-.sidebilde img { width: 100%; border-radius: var(--radius); box-shadow: var(--skygge); border: 1px solid var(--linje); }
+.sidebilde img { width: 100%; border-radius: var(--radius); }
 .sidebilde figcaption { margin-top: 10px; font-size: 0.95rem; color: var(--blekk-2); }
 
 .punkter { display: grid; gap: 14px; margin-top: 24px; }
@@ -341,20 +342,24 @@ a:hover > .pil { transform: translateX(3px); }
 .morkdel .delhode p { color: rgba(255, 255, 255, 0.78); }
 .morkdel a { color: #fff; }
 
-.steg { display: grid; gap: 18px; counter-reset: steg; }
-@media (min-width: 820px) { .steg { grid-template-columns: repeat(3, 1fr); } }
+.steg { display: grid; counter-reset: steg; background: var(--rod); border-radius: var(--radius); overflow: hidden; }
 .steg li {
-  counter-increment: steg; position: relative;
-  padding: 26px 26px 28px; border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.055); border: 1px solid rgba(255, 255, 255, 0.14);
+  counter-increment: steg;
+  display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 6px 20px; align-items: center;
+  padding: 22px clamp(18px, 3vw, 32px);
+  border-top: 3px solid #fff;
 }
+.steg li:first-child { border-top: 0; }
 .steg li::before {
-  content: counter(steg); display: block; margin-bottom: 14px;
-  font: 700 4.4rem/0.8 var(--font-tittel); color: var(--rod);
-  -webkit-text-stroke: 0; font-variant-numeric: tabular-nums;
+  content: counter(steg); grid-row: 1 / 3; align-self: center;
+  font: 700 4.6rem/0.8 var(--font-tittel); color: #fff; font-variant-numeric: tabular-nums;
 }
-.steg h3 { font-size: 1.7rem; text-transform: uppercase; margin-bottom: 10px; }
-.steg p { color: rgba(255, 255, 255, 0.82); font-size: 1.02rem; }
+.steg h3 { font-size: 1.9rem; text-transform: uppercase; }
+.steg p { margin: 0; color: #fff; font-size: 1.05rem; line-height: 1.5; }
+@media (min-width: 820px) {
+  .steg li { grid-template-columns: 84px minmax(0, 0.75fr) minmax(0, 1.5fr); gap: 0 32px; padding-block: 26px; }
+  .steg li::before { grid-row: auto; font-size: 5.4rem; }
+}
 
 .innmelding { display: grid; gap: 18px; margin-top: 18px; align-items: stretch; }
 .innmelding > .kort:not(.spondstripe) { display: flex; flex-direction: column; }
@@ -367,9 +372,9 @@ a:hover > .pil { transform: translateX(3px); }
   --fokus: #1c1413;
   background: var(--flate); color: var(--blekk);
   border-radius: var(--radius); border: 1px solid var(--linje);
-  padding: clamp(22px, 3.2vw, 34px); box-shadow: var(--skygge);
+  padding: clamp(22px, 3.2vw, 34px);
 }
-.morkdel .kort { border-color: transparent; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 24px 48px -20px rgba(0, 0, 0, 0.7); }
+.morkdel .kort { border-color: transparent; }
 .morkdel .kort a { color: var(--rod-mork); }
 .morkdel .kort a.knapp--rod, .morkdel .kort a.knapp--rod:hover { color: #fff; }
 .kort h3 { font-size: 1.9rem; text-transform: uppercase; margin-bottom: 8px; }
@@ -432,7 +437,7 @@ a:hover > .pil { transform: translateX(3px); }
 .nyheter { display: grid; gap: 20px; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .nyheter { grid-template-columns: repeat(2, 1fr); } .nyhet--topp { grid-column: span 2; } }
 @media (min-width: 960px) { .nyheter { grid-template-columns: repeat(3, 1fr); } }
-.nyhet--topp.nyhet--uten-bilde { --fokus: #fff; justify-content: flex-end; background: var(--rod); border-color: var(--rod); color: #fff; }
+.nyhet--topp.nyhet--uten-bilde { --fokus: #fff; justify-content: flex-end; min-height: 300px; background: var(--rod) repeating-radial-gradient(circle at 100% 0, transparent 0 58px, rgba(255, 255, 255, 0.2) 58px 60px); border-color: var(--rod); color: #fff; }
 .nyhet--topp.nyhet--uten-bilde .nyhet__tekst { padding: clamp(24px, 3.4vw, 40px); max-width: 60ch; }
 .nyhet--topp.nyhet--uten-bilde time { color: #fff; }
 .nyhet--topp.nyhet--uten-bilde h3 { font-size: clamp(2rem, 4vw, 2.9rem); text-transform: uppercase; line-height: 0.98; margin: 12px 0 14px; }
@@ -443,7 +448,7 @@ a:hover > .pil { transform: translateX(3px); }
   .nyhet--topp:not(.nyhet--uten-bilde) .nyhet__tekst { align-self: center; padding: clamp(22px, 3vw, 36px); }
   .nyhet--topp:not(.nyhet--uten-bilde) h3 { font-size: 2.1rem; }
 }
-.nyhet { display: flex; flex-direction: column; background: var(--flate); border: 1px solid var(--linje); border-radius: var(--radius); overflow: hidden; box-shadow: var(--skygge); }
+.nyhet { display: flex; flex-direction: column; background: var(--flate); border: 1px solid var(--linje); border-radius: var(--radius); overflow: hidden; }
 .nyhet__bilde { aspect-ratio: 4 / 3; background: var(--sand); overflow: hidden; }
 .nyhet__bilde img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; }
 .nyhet__tekst { padding: 20px 22px 24px; }
@@ -453,20 +458,24 @@ a:hover > .pil { transform: translateX(3px); }
 .tomt { padding: 28px; border: 1px dashed var(--linje-sterk); border-radius: var(--radius); background: var(--flate); color: var(--blekk-2); }
 
 /* ---------- Terminliste ---------- */
-.termin { display: grid; gap: 10px; }
-.stevne {
-  display: grid; grid-template-columns: 96px 1fr auto; gap: 6px 22px; align-items: center;
-  padding: 16px 22px 16px 16px; background: var(--flate); border: 1px solid var(--linje); border-radius: var(--radius);
-}
-.stevne--hjemme { border-color: rgba(216, 35, 42, 0.5); box-shadow: inset 4px 0 0 var(--rod), var(--skygge); }
-.stevne__dato { display: grid; place-items: center; align-content: center; min-height: 72px; padding: 8px 6px; border-radius: var(--radius-s); background: var(--sand); text-align: center; font-variant-numeric: tabular-nums; }
-.stevne__dag { font: 700 1.9rem/1 var(--font-tittel); white-space: nowrap; }
-.stevne__mnd { margin-top: 3px; font: 600 0.8rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--rod-mork); }
-.stevne h3 { font-size: 1.55rem; line-height: 1.1; overflow-wrap: anywhere; }
-.stevne p { margin: 4px 0 0; color: var(--blekk-2); font-size: 1rem; line-height: 1.45; }
-@media (max-width: 560px) {
-  .stevne { grid-template-columns: 78px 1fr; padding-right: 16px; }
-  .stevne .merke { grid-column: 2; justify-self: start; }
+.terminliste { width: 100%; border-collapse: collapse; font-size: 1.0625rem; }
+.terminliste th, .terminliste td { padding: 13px 16px 13px 0; text-align: left; vertical-align: baseline; border-bottom: 1px solid var(--linje); }
+.terminliste thead th { padding-block: 0 10px; border-bottom: 2px solid var(--blekk); font: 600 0.85rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--blekk-2); }
+.terminliste__mnd th { padding: 26px 0 8px; border-bottom: 1px solid var(--linje-sterk); font: 700 1.25rem/1.1 var(--font-tittel); letter-spacing: 0.04em; text-transform: uppercase; color: var(--rod-mork); }
+.terminliste tbody tr:first-child th { padding-top: 16px; }
+.terminliste__dato { width: 6.2em; white-space: nowrap; font-weight: 600; }
+.terminliste__stevne strong { font-weight: 600; margin-right: 10px; }
+.terminliste__stevne small { display: block; margin-top: 2px; font-size: 0.97rem; color: var(--blekk-2); }
+.terminliste__stevne .merke { vertical-align: 2px; }
+.terminliste__sted { width: 32%; color: var(--blekk-2); }
+.terminliste__sted-smal { display: none; margin-top: 2px; font-size: 0.97rem; color: var(--blekk-2); }
+.terminliste .er-hjemme td { background: var(--flate); }
+.terminliste .er-hjemme td:first-child { padding-left: 14px; box-shadow: inset 4px 0 0 var(--rod); }
+@media (max-width: 640px) {
+  .terminliste .terminliste__sted { display: none; }
+  .terminliste__sted-smal { display: block; }
+  .terminliste th, .terminliste td { padding-right: 10px; }
+  .terminliste__dato { width: 5.4em; }
 }
 .terminfot { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 6px 26px; }
 
@@ -501,7 +510,7 @@ a.sponsor:hover { border-color: var(--linje-sterk); box-shadow: var(--skygge); c
 .sponsor__navn { font: 700 1.02rem/1.15 var(--font-tittel); text-transform: uppercase; letter-spacing: 0.02em; hyphens: auto; overflow-wrap: break-word; max-width: 100%; }
 
 .sponsorliste { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
-.sponsorkort { display: flex; flex-direction: column; background: var(--flate); border: 1px solid var(--linje); border-radius: var(--radius); box-shadow: var(--skygge); overflow: hidden; }
+.sponsorkort { display: flex; flex-direction: column; background: var(--flate); border: 1px solid var(--linje); border-radius: var(--radius); overflow: hidden; }
 .sponsorkort__logo { display: grid; place-items: center; min-height: 150px; padding: 28px 32px; background: #fff; border-bottom: 1px solid var(--linje); }
 .sponsorkort__logo img { width: 100%; max-width: 230px; max-height: 84px; object-fit: contain; }
 .sponsorkort__logo img.hvit-logo { filter: brightness(0); }
@@ -525,7 +534,10 @@ a.sponsor:hover { border-color: var(--linje-sterk); box-shadow: var(--skygge); c
 .morkdel .kontaktlenker a { color: #fff; }
 
 /* ---------- Kontakt ---------- */
-.kontakt { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); }
+.kontakt { display: grid; gap: 28px clamp(20px, 3vw, 40px); grid-template-columns: 1fr; }
+@media (min-width: 600px) { .kontakt { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .kontakt { grid-template-columns: repeat(4, 1fr); } }
+.kontakt .kort { padding: 18px 0 0; background: none; border: 0; border-top: 1px solid var(--linje-sterk); border-radius: 0; }
 .kontakt .kort h3 { font-size: 1.6rem; }
 .kontakt address { font-style: normal; }
 .kontakt .kort p { margin-bottom: 6px; color: var(--blekk); }

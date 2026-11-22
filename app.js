@@ -96,16 +96,16 @@
 
   /* ---------- Terminliste ---------- */
   function visTerminliste() {
-    var liste = finn("[data-terminliste]");
-    if (!liste) return;
-    tom(liste);
+    var boks = finn("[data-terminliste]");
+    if (!boks) return;
+    tom(boks);
     var idag = new Date(); idag.setHours(0, 0, 0, 0);
     var kommende = (data.terminliste || [])
       .filter(function (s) { return dato(s.slutt || s.dato) >= idag; })
       .sort(function (a, b) { return dato(a.dato) - dato(b.dato); });
 
     if (!kommende.length) {
-      liste.appendChild(lag("li", { class: "tomt" }, [
+      boks.appendChild(lag("p", { class: "tomt" }, [
         "Ingen stevner er lagt inn akkurat nå. Nye stevner og påmelding legger vi ut i ",
         lag("a", { href: kontakt.facebook || "#kontakt", text: "Facebook-gruppa" }),
         " og i Spond."
@@ -113,30 +113,49 @@
       return;
     }
 
-    var aarNaa = idag.getFullYear();
+    var fmtMaaned = new Intl.DateTimeFormat("nb-NO", { month: "long", year: "numeric" });
+    var fmtKortDag = new Intl.DateTimeFormat("nb-NO", { weekday: "short" });
+    var kropp = lag("tbody");
+    var forrige = "";
+
     kommende.forEach(function (s) {
       var start = dato(s.dato);
       var slutt = s.slutt ? dato(s.slutt) : null;
-      var dag = slutt && slutt.getMonth() === start.getMonth()
-        ? start.getDate() + "–" + slutt.getDate() + "."
-        : start.getDate() + ".";
-      var mnd = (start.getFullYear() === aarNaa ? fmtMnd : fmtMndAar).format(start).replace(/\./g, "");
+      var maaned = storForbokstav(fmtMaaned.format(start));
+      if (maaned !== forrige) {
+        kropp.appendChild(lag("tr", { class: "terminliste__mnd" }, [lag("th", { colspan: "3", scope: "colgroup", text: maaned })]));
+        forrige = maaned;
+      }
+      var dagtekst = slutt && slutt.getMonth() === start.getMonth()
+        ? start.getDate() + ".–" + slutt.getDate() + "."
+        : fmtKortDag.format(start).replace(/\.$/, "") + ". " + start.getDate() + ".";
       var lesbar = slutt
         ? fmtLang.format(start) + " til " + fmtLang.format(slutt)
         : storForbokstav(fmtUkedag.format(start)) + " " + fmtLang.format(start);
 
-      liste.appendChild(lag("li", { class: "stevne" + (s.hjemme ? " stevne--hjemme" : "") }, [
-        lag("time", { class: "stevne__dato", datetime: s.dato, "aria-label": lesbar }, [
-          lag("span", { class: "stevne__dag", "aria-hidden": "true", text: dag }),
-          lag("span", { class: "stevne__mnd", "aria-hidden": "true", text: mnd })
+      kropp.appendChild(lag("tr", { class: s.hjemme ? "er-hjemme" : null }, [
+        lag("td", { class: "terminliste__dato tall" }, [
+          lag("time", { datetime: s.dato, "aria-label": lesbar }, [lag("span", { "aria-hidden": "true", text: dagtekst })])
         ]),
-        lag("div", {}, [
-          lag("h3", { text: s.tittel }),
-          lag("p", { text: s.sted + (s.tekst ? ". " + s.tekst : "") })
+        lag("td", { class: "terminliste__stevne" }, [
+          lag("strong", { text: s.tittel }),
+          s.hjemme ? lag("span", { class: "merke merke--hjemme", text: "Hjemmestevne" }) : null,
+          s.tekst ? lag("small", { text: s.tekst }) : null,
+          lag("span", { class: "terminliste__sted-smal", text: s.sted })
         ]),
-        s.hjemme ? lag("span", { class: "merke merke--hjemme", text: "Hjemmestevne" }) : null
+        lag("td", { class: "terminliste__sted", text: s.sted })
       ]));
     });
+
+    boks.appendChild(lag("table", { class: "terminliste" }, [
+      lag("caption", { class: "skjult-visuelt", text: "Kommende stevner" }),
+      lag("thead", {}, [lag("tr", {}, [
+        lag("th", { scope: "col", text: "Dato" }),
+        lag("th", { scope: "col", text: "Stevne" }),
+        lag("th", { scope: "col", class: "terminliste__sted", text: "Sted" })
+      ])]),
+      kropp
+    ]));
   }
 
   /* ---------- Aktuelt ---------- */
