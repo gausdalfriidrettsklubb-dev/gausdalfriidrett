@@ -144,11 +144,13 @@ window.GFIK = {
     },
     {
       navn: "Arne Nyheim Rørleggerservice AS", bransje: "Rørlegger", sted: "Østre Gausdal", orgnr: "879 956 242",
-      nettside: "", logo: ""
+      nettside: "https://www.bademiljo.no/rorleggere/arne-nyheim-rorleggerservice-as/om-oss",
+      logo: "bilder/sponsorer/arne-nyheim.png", bredde: 987, hoyde: 363
     },
     {
       navn: "Meca Service AS", bransje: "Bilverksted", sted: "", orgnr: "",
-      nettside: "", logo: ""
+      nettside: "",
+      logo: "bilder/sponsorer/meca.svg", bredde: 410, hoyde: 140
     },
     {
       navn: "Gausdal Landhandleri AS", bransje: "Byggevarer og trelast", sted: "Lillehammer", orgnr: "933 735 842",
