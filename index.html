@@ -175,13 +175,6 @@
                 <li>Støtte til treningsleirer</li>
               </ul>
             </div>
-
-            <div class="spondboks" data-spondboks hidden>
-              <h4>Meld deg inn i Spond</h4>
-              <p class="spondkode" data-spondkodelinje hidden>Gruppekode <strong class="tall" data-spondkode translate="no"></strong></p>
-              <p>Last ned Spond-appen, lag en bruker og tast inn gruppekoden. Gruppa heter <span data-spondgruppe translate="no">Gausdal Friidrett trening</span>.</p>
-              <a class="knapp knapp--stille" data-spond href="#" rel="noopener" hidden>Åpne gruppa i Spond <span class="pil" aria-hidden="true">→</span></a>
-            </div>
           </div>
 
           <div class="kort">
@@ -208,7 +201,7 @@
                   <input id="m-utover" name="utover" type="text" autocomplete="off" placeholder="Ola, født 2015…">
                 </div>
               </div>
-              <div class="felt">
+              <div class="felt felt--voks">
                 <label for="m-melding">Melding <small>(valgfritt)</small></label>
                 <textarea id="m-melding" name="melding" rows="3" placeholder="Skriv det du lurer på…"></textarea>
               </div>
@@ -226,6 +219,15 @@
               </div>
               <p class="skjema__status" role="status" aria-live="polite" tabindex="-1"></p>
             </form>
+          </div>
+
+          <div class="kort spondstripe" data-spondboks hidden>
+            <div class="spondstripe__tekst">
+              <h3>Meld deg inn i Spond</h3>
+              <p>Last ned Spond-appen, lag en bruker og tast inn gruppekoden. Gruppa heter <span data-spondgruppe translate="no">Gausdal Friidrett trening</span>.</p>
+            </div>
+            <p class="spondkode" data-spondkodelinje hidden>Gruppekode <strong class="tall" data-spondkode translate="no"></strong></p>
+            <a class="knapp knapp--rod" data-spond href="#" rel="noopener" hidden>Åpne gruppa i Spond <span class="pil" aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
