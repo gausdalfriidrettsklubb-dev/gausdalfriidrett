@@ -257,7 +257,13 @@ a:hover > .pil { transform: translateX(3px); }
   display: grid; gap: clamp(32px, 5vw, 64px); align-items: center;
   padding-block: clamp(44px, 7vw, 92px) clamp(52px, 8vw, 104px);
 }
-@media (min-width: 940px) { .hero__inn { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); } }
+@media (min-width: 940px) {
+  .hero__inn { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); }
+  /* Banen fyller resten av skjermen under topplinja (72px + 1px kant),
+     så neste seksjon ikke titter fram som en smal stripe nederst. */
+  .hero { display: grid; align-content: center; min-height: calc(100vh - var(--topp) - 1px); min-height: calc(100svh - var(--topp) - 1px); }
+  .hero__inn { width: 100%; }
+}
 
 .overtittel {
   display: flex; align-items: center; gap: 12px; margin: 0 0 18px;
