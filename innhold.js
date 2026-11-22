@@ -77,6 +77,7 @@ window.GFIK = {
      Stevner som er passert, skjules av seg selv.
      - slutt brukes for stevner over flere dager.
      - hjemme: true markerer klubbens egne arrangementer.
+     - merke: "Vårt løp" bytter ut teksten «Hjemmestevne» på merkelappen.
      - mesterskap: true markerer NM og UM.
      ---------------------------------------------------------------------- */
   terminliste: [
@@ -123,7 +124,9 @@ window.GFIK = {
     { dato: "2027-09-03", slutt: "2027-09-05", tittel: "UM", sted: "Sandnes", mesterskap: true },
     { dato: "2027-09-11", slutt: "2027-09-12", tittel: "Østlandsmesterskapet", sted: "Bislett, Oslo" },
     { dato: "2027-09-19", tittel: "Brandbustevnet, Mohagen Bil Cup 4", sted: "Brandbu" },
-    { dato: "2027-09-19", tittel: "GK-stevnet", sted: "Lillehammer" }
+    { dato: "2027-09-19", tittel: "GK-stevnet", sted: "Lillehammer" },
+    { dato: "2027-10-02", tittel: "Skeikampen Opp", sted: "Skeikampen", hjemme: true, merke: "Vårt løp",
+      tekst: "Motbakkeløp på 2,8 kilometer og 340 høydemeter." }
   ],
 
   /* --- Aktuelt ----------------------------------------------------------
@@ -215,7 +218,7 @@ window.GFIK = {
   // på linja for øvelsen. Tider skrives som 11,34 eller 1.54,8 (min.sek,tidel).
   klubbrekorder: {
     menn: [
-      { ovelse: "100 m", navn: "Osazee Parkson", resultat: "11,34", aar: 2019 },
+      { ovelse: "100 m", navn: "Osazee Parkson", resultat: "11,20", aar: 2019 },
       { ovelse: "200 m", navn: "Vegard Kyseth", resultat: "22,15", aar: 2025 },
       { ovelse: "400 m", navn: "Erik Ring", resultat: "50,67", aar: 2016 },
       { ovelse: "800 m", navn: "Tor Åge Rønningen", resultat: "1.54,8", aar: 1964 },

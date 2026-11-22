@@ -149,7 +149,7 @@
         ]),
         lag("td", { class: "terminliste__stevne" }, [
           lag("strong", { text: s.tittel }),
-          s.hjemme ? lag("span", { class: "merke merke--hjemme", text: "Hjemmestevne" }) : null,
+          s.hjemme ? lag("span", { class: "merke merke--hjemme", text: s.merke || "Hjemmestevne" }) : null,
           s.mesterskap ? lag("span", { class: "merke merke--mesterskap", text: "Mesterskap" }) : null,
           s.tekst ? lag("small", { text: s.tekst }) : null,
           lag("span", { class: "terminliste__sted-smal", text: s.sted })
