@@ -268,6 +268,76 @@
     });
   }
 
+  /* ---------- Kvalifiseringskrav ---------- */
+  function visKrav() {
+    var rot = finn("[data-krav]");
+    var k = data.kvalifiseringskrav;
+    if (!rot || !k) return;
+    tom(rot);
+    finnAlle("[data-kravsesong]").forEach(function (el) { if (k.sesong) el.textContent = k.sesong; });
+
+    var klasser = k.klasser || [];
+    var grupper = [["jenter", "Jenter og kvinner"], ["gutter", "Gutter og menn"]].filter(function (g) {
+      return (k[g[0]] || []).length;
+    });
+    if (!grupper.length) return;
+
+    function celle(verdi, siste) {
+      var deler = String(verdi || "").split("|");
+      var td = lag("td", { class: siste ? "krav__nm" : null });
+      if (!deler[0]) {
+        td.className = (td.className + " krav__tom").trim();
+        td.appendChild(lag("span", { "aria-hidden": "true", text: "–" }));
+        td.appendChild(lag("span", { class: "skjult-visuelt", text: "Ingen krav" }));
+      } else if (deler[0] === "*") {
+        td.appendChild(document.createTextNode("Fri"));
+      } else {
+        td.appendChild(document.createTextNode(deler[0].replace(/ \/ /g, NBSP + "/" + NBSP)));
+      }
+      if (deler[1]) td.appendChild(lag("small", { text: deler[1].replace(/(\d) (m|cm|kg|g)\b/g, "$1" + NBSP + "$2") }));
+      return td;
+    }
+
+    var valg = lag("div", { class: "kravvalg", role: "group", "aria-label": "Velg kjønn" });
+    var paneler = [];
+
+    grupper.forEach(function (g, nr) {
+      var kropp = lag("tbody");
+      (k[g[0]] || []).forEach(function (rad) {
+        if (typeof rad === "string") {
+          kropp.appendChild(lag("tr", { class: "krav__gruppe" }, [
+            lag("th", { scope: "colgroup", colspan: String(klasser.length + 1) }, [lag("span", { text: rad })])
+          ]));
+          return;
+        }
+        var tr = lag("tr", {}, [lag("th", { scope: "row", text: rad[0].replace(/(\d) m\b/, "$1" + NBSP + "m") })]);
+        klasser.forEach(function (_, i) { tr.appendChild(celle(rad[i + 1], i === klasser.length - 1)); });
+        kropp.appendChild(tr);
+      });
+
+      var hode = lag("tr", {}, [lag("th", { scope: "col", text: "Øvelse" })]);
+      klasser.forEach(function (navn, i) {
+        hode.appendChild(lag("th", { scope: "col", class: i === klasser.length - 1 ? "krav__nm" : null, text: navn.replace(/ /g, NBSP) }));
+      });
+
+      var panel = lag("div", {
+        class: "kravrulle", id: "krav-" + g[0], tabindex: "0", role: "region",
+        "aria-label": "Kvalifiseringskrav, " + g[1].toLowerCase(), hidden: nr > 0
+      }, [lag("table", { class: "kravtabell" }, [lag("caption", { class: "skjult-visuelt", text: g[1] }), lag("thead", {}, [hode]), kropp])]);
+      paneler.push(panel);
+
+      var knapp = lag("button", { type: "button", class: "kravvalg__knapp", "aria-pressed": nr === 0 ? "true" : "false", "aria-controls": panel.id, text: g[1] });
+      knapp.addEventListener("click", function () {
+        paneler.forEach(function (p) { p.hidden = p !== panel; });
+        finnAlle(".kravvalg__knapp", valg).forEach(function (b) { b.setAttribute("aria-pressed", b === knapp ? "true" : "false"); });
+      });
+      valg.appendChild(knapp);
+    });
+
+    if (grupper.length > 1) rot.appendChild(valg);
+    paneler.forEach(function (p) { rot.appendChild(p); });
+  }
+
   /* ---------- Sponsorer ---------- */
   function sponsorLogo(s) {
     if (!s.logo) return lag("span", { class: "sponsor__navn", translate: "no", text: s.navn });
@@ -600,6 +670,7 @@
   visNyheter();
   visStyret();
   visRekorder();
+  visKrav();
   visSponsorer();
   visKontakt();
   settOppMeny();

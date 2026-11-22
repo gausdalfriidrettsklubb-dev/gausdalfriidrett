@@ -192,6 +192,7 @@ a:hover > .pil { transform: translateX(3px); }
 
 .topp .knapp { min-height: 44px; padding: 8px 18px; font-size: 1rem; white-space: nowrap; }
 .meny a { white-space: nowrap; }
+@media (min-width: 1200px) { .meny a { padding-inline: 8px; font-size: 0.95rem; } }
 
 .menyknapp {
   display: none; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px;
@@ -210,7 +211,7 @@ a:hover > .pil { transform: translateX(3px); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::before { transform: translateY(6px) rotate(45deg); }
 .menyknapp[aria-expanded="true"] .menyknapp__ikon::after { transform: translateY(-6px) rotate(-45deg); }
 
-@media (max-width: 1160px) {
+@media (max-width: 1199px) {
   .js .menyknapp { display: inline-flex; order: 3; }
   .topp__inn { flex-wrap: wrap; gap: 10px; }
   .topp .knapp { order: 2; }
@@ -410,6 +411,7 @@ a:hover > .pil { transform: translateX(3px); }
 .dekker { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--linje); }
 .dekker h4 { font: 600 0.9rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--rod-mork); margin-bottom: 12px; }
 .dekker .punkter { margin-top: 0; gap: 9px; }
+.dekker p { margin: 0; }
 
 .spondstripe { display: grid; gap: 18px 28px; align-items: center; }
 .spondstripe[hidden], .spondstripe [hidden] { display: none; }
@@ -528,6 +530,47 @@ a:hover > .pil { transform: translateX(3px); }
   .rekordtabell .rekord__navn { display: none; }
   .rekord__navn-smal { display: block; }
 }
+
+/* ---------- Kvalifiseringskrav ---------- */
+.kravvalg { display: inline-flex; gap: 4px; margin-bottom: 22px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
+.kravvalg__knapp { min-height: 44px; padding: 8px 18px; border: 0; border-radius: 5px; background: none; color: var(--blekk); font: 600 1rem/1.2 var(--font); cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease; }
+.kravvalg__knapp:hover { background: var(--rod-lys); color: var(--rod-dyp); }
+.kravvalg__knapp[aria-pressed="true"] { background: var(--blekk); color: #fff; }
+.kravrulle { position: relative; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.kravrulle[hidden] { display: none; }
+.kravtabell { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 1.0625rem; font-variant-numeric: tabular-nums; }
+.kravtabell th, .kravtabell td { padding: 10px 14px; text-align: right; vertical-align: baseline; border-bottom: 1px solid var(--linje); white-space: nowrap; }
+.kravtabell thead th { padding-block: 0 10px; border-bottom: 2px solid var(--blekk); font: 600 0.85rem/1.2 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: var(--blekk-2); }
+.kravtabell th:first-child { position: sticky; left: 0; z-index: 1; padding-left: 0; text-align: left; background: var(--papir); box-shadow: 1px 0 0 var(--linje); }
+.kravtabell tbody th { font-weight: 600; }
+.kravtabell small { display: block; margin-top: 1px; font-size: 0.84rem; color: var(--blekk-2); }
+.kravtabell .krav__tom { color: var(--blekk-2); }
+.kravtabell .krav__nm { padding-right: 0; }
+.kravtabell tbody .krav__nm { font-weight: 600; }
+.kravtabell .krav__gruppe th { padding: 24px 0 8px; border-bottom: 1px solid var(--linje-sterk); font: 700 1.25rem/1.1 var(--font-tittel); letter-spacing: 0.04em; text-transform: uppercase; color: var(--rod-mork); }
+.kravtabell tbody tr:first-child.krav__gruppe th { padding-top: 16px; }
+.kravtabell .krav__gruppe th { position: static; box-shadow: none; }
+.kravtabell .krav__gruppe span { position: sticky; left: 0; display: inline-block; }
+.kravnoter { display: grid; gap: 6px; margin-top: 26px; max-width: 78ch; font-size: 1rem; color: var(--blekk-2); }
+.kravnoter li { position: relative; padding-left: 18px; }
+.kravnoter li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 8px; height: 2px; background: currentColor; }
+.kravfot { margin-top: 18px; max-width: 78ch; font-size: 1rem; color: var(--blekk-2); }
+
+/* ---------- Skeikampen Opp ---------- */
+.skeikampen { display: grid; gap: clamp(32px, 5vw, 72px); align-items: start; }
+@media (min-width: 900px) { .skeikampen { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); } }
+.skeikampen__tekst p { font-size: 1.12rem; color: rgba(255, 255, 255, 0.9); max-width: 62ch; }
+.skeikampen__tekst > p:first-child { margin-top: 0; }
+.skeikampen__tekst h3 { margin: 28px 0 8px; font-size: 1.6rem; text-transform: uppercase; }
+.skeikampen__tekst h3 + p { margin-top: 0; }
+.skeikampen__valg { margin-top: 28px; }
+.morkdel a.knapp--hvit, .morkdel a.knapp--hvit:hover { color: var(--rod-dyp); }
+.lopstall { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; margin: 0; border-top: 2px solid #fff; }
+.lopstall div { grid-column: 1 / -1; padding: 16px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
+.lopstall div:nth-child(-n+2) { grid-column: auto; }
+.lopstall dt { font: 600 0.82rem/1.3 var(--font-tittel); letter-spacing: 0.13em; text-transform: uppercase; color: rgba(255, 255, 255, 0.72); }
+.lopstall dd { margin: 4px 0 0; font-size: 1.0625rem; }
+.lopstall .lopstall__stort { font: 700 clamp(2.6rem, 5vw, 3.6rem)/1 var(--font-tittel); font-variant-numeric: tabular-nums; }
 
 /* ---------- Om klubben ---------- */
 .om { display: grid; gap: clamp(28px, 5vw, 64px); align-items: start; }
