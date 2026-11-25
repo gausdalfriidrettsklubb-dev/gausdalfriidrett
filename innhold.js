@@ -44,6 +44,15 @@ window.GFIK = {
   treninger: [
     {
       dag: "Mandag",
+      fra: "17.00",
+      til: "18.00",
+      type: "Inne",
+      tittel: "Barnegruppa, 6–10 år",
+      sted: "Gymsalen på Fjerdum barneskole",
+      merknad: "Gjelder i vinter."
+    },
+    {
+      dag: "Mandag",
       fra: "18.30",
       til: "20.00",
       type: "Ute",

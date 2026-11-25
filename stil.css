@@ -506,6 +506,11 @@ a:hover > .pil { transform: translateX(3px); }
 .framhev { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin-top: 30px; }
 .framhev h3 { margin-bottom: 6px; }
 .framhev p { margin: 0; color: var(--blekk-2); max-width: 56ch; }
+.framhev--bilde { justify-content: flex-start; }
+.framhev--bilde img { flex: 0 1 300px; min-width: 0; width: 300px; height: auto; border-radius: var(--radius-s); }
+.framhev--bilde > div { flex: 1 1 260px; }
+.framhev--bilde .knapp { margin-top: 16px; }
+@media (max-width: 620px) { .framhev--bilde img { flex-basis: 100%; width: 100%; } }
 
 /* ---------- Klubbrekorder ---------- */
 .rekorder { display: grid; gap: clamp(36px, 5vw, 64px); align-items: start; }
@@ -607,6 +612,95 @@ a:hover > .pil { transform: translateX(3px); }
 .vipps__side { flex: 1 1 150px; min-width: 0; }
 .stott .kolonner .vipps__hjelp { margin: 0 0 10px; font-size: 0.97rem; color: var(--blekk-2); }
 .stott .kolonner .vippsnr { margin: 0; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px 16px; background: var(--flate); border: 1px solid var(--linje); }
+
+/* ---------- Gausdalsprinten ---------- */
+.del--spill { padding-top: clamp(28px, 4vw, 48px); }
+.spillhode { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 24px; margin-bottom: 18px; }
+.spillhode h1 { font-size: clamp(2.4rem, 6vw, 3.9rem); text-transform: uppercase; line-height: 0.95; }
+.spillhode p { margin: 0; font-size: 1.12rem; color: var(--blekk-2); }
+.spill {
+  --fokus: #fff;
+  position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 82vh; max-height: 82svh;
+  overflow: hidden; border-radius: var(--radius); background: #cfe3f1; color: #fff;
+  -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.spill.er-i-gang { touch-action: none; }
+@media (max-width: 899px) { .spill { aspect-ratio: 4 / 3; } }
+@media (max-width: 700px) { .spill { aspect-ratio: 9 / 14; } }
+.spill__lerret { display: block; width: 100%; height: 100%; outline-offset: -3px; }
+.spill__feil { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; background: var(--natt); text-align: center; font-size: 1.12rem; }
+.spill__feil[hidden] { display: none; }
+.spill__hud { position: absolute; inset: 0; pointer-events: none; font-variant-numeric: tabular-nums; }
+.spill__hud[hidden] { display: none; }
+.spill__topp { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+.spill__maal { min-width: 88px; padding: 8px 12px; border-radius: var(--radius-s); background: rgba(28, 20, 19, 0.78); }
+.spill__maal span { display: block; font: 600 0.7rem/1.2 var(--font-tittel); letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.75); }
+.spill__maal strong { display: block; font: 700 1.7rem/1.05 var(--font-tittel); letter-spacing: 0.01em; white-space: nowrap; }
+.spill__maal strong b { font-weight: 700; }
+.spill__stripe { position: absolute; top: 76px; left: 20px; right: 20px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.55); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25); }
+.spill__stripe::after { content: ""; position: absolute; right: -2px; top: -6px; width: 4px; height: 16px; background: #fff; }
+.spill__prikk { position: absolute; top: -4px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; border: 2px solid rgba(28, 20, 19, 0.85); }
+.spill__prikk.er-spiller { top: -7px; width: 18px; height: 18px; margin-left: -9px; border-color: #fff; z-index: 1; }
+.spill__startliste { position: absolute; top: 96px; left: 12px; margin: 0; padding: 8px 10px; list-style: none; border-radius: var(--radius-s); background: rgba(28, 20, 19, 0.78); font: 600 0.95rem/1.2 var(--font); }
+.spill__startliste[hidden] { display: none; }
+.spill__startliste li { display: flex; align-items: center; gap: 8px; padding: 3px 8px 3px 4px; border-radius: 4px; }
+.spill__startliste li.er-spiller { background: var(--rod); }
+.spill__startliste .spill__nr { width: 1em; font-family: var(--font-tittel); font-weight: 700; text-align: center; }
+.spill__drakt { flex: none; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; }
+@media (max-width: 700px) { .spill__startliste { display: none; } }
+.spill__signal { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); margin: 0; padding: 10px 26px; border-radius: var(--radius-s); background: rgba(28, 20, 19, 0.82); font: 700 clamp(1.8rem, 6vw, 3.4rem)/1 var(--font-tittel); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+.spill__signal[hidden] { display: none; }
+.spill__signal.er-skudd { background: var(--rod); }
+.spill__signal.er-feil { background: #fff; color: var(--rod-dyp); font-size: clamp(1.3rem, 4.4vw, 2.2rem); }
+.spill__rytmefelt { position: absolute; left: 50%; bottom: 18px; width: min(46%, 380px); transform: translateX(-50%); text-align: center; }
+.spill__melding { min-height: 1.5em; margin: 0 0 6px; font: 700 1.25rem/1.2 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55); }
+.spill__rytme { position: relative; height: 14px; border-radius: 7px; background: rgba(28, 20, 19, 0.7); }
+.spill__sone { position: absolute; top: 0; bottom: 0; width: 22%; margin-left: -11%; border-radius: 7px; background: #46c36f; }
+.spill__merke { position: absolute; top: -4px; width: 6px; height: 22px; margin-left: -3px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 2px rgba(28, 20, 19, 0.6); }
+.spill__taster { display: none; }
+@media (pointer: coarse) {
+  .spill__taster:not([hidden]) { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; gap: 12px; padding: 12px; pointer-events: none; }
+  .spill__rytmefelt { bottom: 124px; width: min(72%, 380px); }
+}
+.spill__taster button { pointer-events: auto; width: 31%; max-width: 150px; min-height: 96px; border: 2px solid rgba(255, 255, 255, 0.9); border-radius: 16px; background: rgba(176, 23, 30, 0.82); color: #fff; font: 700 1.3rem/1 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; touch-action: none; }
+.spill__taster button:active { background: #fff; color: var(--rod-dyp); }
+.spill__panel { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(92%, 440px); max-height: 94%; overflow-y: auto; overscroll-behavior: contain; padding: clamp(18px, 3vw, 28px); border-radius: var(--radius); background: rgba(255, 252, 250, 0.96); color: var(--blekk); box-shadow: var(--skygge-loft); --fokus: #1c1413; }
+.spill__panel[hidden] { display: none; }
+@media (min-width: 900px) { .spill__panel { left: auto; right: 3.5%; transform: translateY(-50%); width: min(40%, 420px); } }
+.spill__panel h2 { font-size: clamp(2rem, 5vw, 2.8rem); text-transform: uppercase; line-height: 0.95; }
+.spill__panel p { margin: 10px 0 0; color: var(--blekk-2); }
+.spill__panel .knapp { margin-top: 18px; }
+.spill__panel .knapperad { gap: 10px; }
+.spill__nivaa { display: flex; gap: 4px; margin-top: 16px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
+.spill__nivaa button { flex: 1; min-height: 44px; padding: 8px 6px; border: 0; border-radius: 5px; background: none; color: var(--blekk); font: 600 0.97rem/1.15 var(--font); cursor: pointer; }
+.spill__nivaa button:hover { background: var(--rod-lys); color: var(--rod-dyp); }
+.spill__nivaa button[aria-pressed="true"] { background: var(--blekk); color: #fff; }
+.spill__rekord { font-size: 0.97rem; }
+.spill__liste { margin: 14px 0 0; padding: 0; list-style: none; border-top: 2px solid var(--blekk); font-variant-numeric: tabular-nums; }
+.spill__liste li { display: flex; gap: 10px; padding: 6px 8px; border-bottom: 1px solid var(--linje); }
+.spill__liste li.er-spiller { background: var(--rod); color: #fff; font-weight: 600; border-radius: 4px; }
+.spill__nr { width: 1.6em; }
+.spill__navn { flex: 1; }
+.spill__lyd { position: absolute; top: 12px; right: 12px; min-height: 44px; padding: 8px 14px; border: 0; border-radius: var(--radius-s); background: rgba(28, 20, 19, 0.78); color: #fff; font: 600 0.92rem/1 var(--font); cursor: pointer; }
+.spill__lyd[aria-pressed="false"] { background: rgba(28, 20, 19, 0.5); }
+@media (max-width: 700px) {
+  .spill__maal { min-width: 0; padding: 6px 9px; }
+  .spill__maal strong { font-size: 1.3rem; }
+  .spill__stripe { top: 68px; }
+  .spill__lyd { top: auto; bottom: 12px; left: 50%; right: auto; transform: translateX(-50%); }
+  .spill.er-i-gang .spill__lyd, .spill__panel--resultat:not([hidden]) ~ .spill__lyd { display: none; }
+  .spill__panel { padding: 16px; }
+  .spill__panel h2 { font-size: 1.9rem; }
+  .spill__panel p { margin-top: 6px; font-size: 0.97rem; }
+  .spill__liste { margin-top: 10px; }
+  .spill__liste li { padding: 4px 8px; }
+  .spill__panel .knapp { margin-top: 12px; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .spill { max-height: 96vh; max-height: 96svh; }
+  .spill__taster button { min-height: 72px; }
+  .spill__rytmefelt { bottom: 14px; }
+}
 
 /* ---------- Øvelsene i friidrett ---------- */
 .ovelsesliste { display: grid; gap: 0; margin: 0; border-top: 1px solid var(--linje-sterk); }

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gausdalsprinten | Gausdal Friidrettsklubb</title>
+  <meta name="description" content="Løp 100 meter for Gausdal FIK i 3D. Trykk venstre og høyre i takt, og slå sju andre klubber til mål.">
+  <meta name="theme-color" content="#fffcfa">
+  <link rel="canonical" href="https://gausdalfriidrett.no/spill.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="nb_NO">
+  <meta property="og:site_name" content="Gausdal Friidrettsklubb">
+  <meta property="og:title" content="Gausdalsprinten">
+  <meta property="og:description" content="Løp 100 meter for Gausdal FIK mot sju andre klubber.">
+  <meta property="og:url" content="https://gausdalfriidrett.no/spill.html">
+  <meta property="og:image" content="https://gausdalfriidrett.no/bilder/gausdalsprinten.jpg">
+  <link rel="icon" href="bilder/logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="bilder/ikon-180.png">
+  <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="stil.css?v=202611251712">
+  <script>document.documentElement.className += " js";</script>
+</head>
+<body>
+  <a class="hopp" href="#innhold">Hopp til innholdet</a>
+
+  <header class="topp">
+    <div class="ramme topp__inn">
+      <a class="merkevare" href="index.html" translate="no">
+        <img src="bilder/logo.svg" width="50" height="50" alt="">
+        <span class="merkevare__navn">Gausdal Friidrettsklubb <span>Stiftet 1898</span></span>
+      </a>
+      <button class="menyknapp" type="button" aria-expanded="false" aria-controls="meny">
+        <span class="menyknapp__ikon" aria-hidden="true"></span>
+        <span class="menyknapp__tekst">Meny</span>
+      </button>
+      <nav class="meny" id="meny" aria-label="Hovedmeny">
+        <ul>
+          <li><a href="index.html#trening">Trening</a></li>
+          <li><a href="sponsorer.html">Sponsorer</a></li>
+          <li><a href="index.html#aktuelt">Aktuelt</a></li>
+          <li><a href="index.html#terminliste">Stevner</a></li>
+          <li><a href="tyrving.html">Kalkulator</a></li>
+          <li><a href="index.html#om">Om klubben</a></li>
+          <li><a href="index.html#trener">Bli trener</a></li>
+          <li><a href="index.html#stott">Støtt klubben</a></li>
+        </ul>
+      </nav>
+      <a class="knapp knapp--rod" href="index.html#bli-medlem">Bli medlem</a>
+    </div>
+  </header>
+
+  <main id="innhold">
+    <section class="del del--spill" aria-labelledby="side-tittel">
+      <div class="ramme">
+        <div class="spillhode">
+          <h1 id="side-tittel">Gausdalsprinten</h1>
+          <p>Løp 100&nbsp;meter for <span translate="no">Gausdal FIK</span> mot sju andre klubber.</p>
+        </div>
+
+        <div class="spill" data-spill>
+          <canvas class="spill__lerret" data-spill-lerret tabindex="0" aria-label="Spillbanen. Trykk venstre og høyre piltast annenhver gang for å løpe."></canvas>
+
+          <p class="spill__feil" data-spill-feil hidden>Spillet trenger 3D-grafikk (WebGL), og det ser ikke ut til å virke i denne nettleseren.</p>
+
+          <div class="spill__hud" data-spill-hud hidden>
+            <div class="spill__topp">
+              <div class="spill__maal"><span>Tid</span><strong class="tall" data-spill-tid>0,00</strong></div>
+              <div class="spill__maal"><span>Fart</span><strong class="tall"><b data-spill-fart>0</b> km/t</strong></div>
+              <div class="spill__maal"><span>Plass</span><strong class="tall" data-spill-plass>–</strong></div>
+            </div>
+            <div class="spill__stripe" data-spill-stripe aria-hidden="true"></div>
+            <ol class="spill__startliste" data-spill-startliste aria-label="Startliste" hidden></ol>
+            <p class="spill__signal" data-spill-signal role="status" aria-live="assertive" hidden></p>
+            <div class="spill__rytmefelt" aria-hidden="true">
+              <p class="spill__melding" data-spill-melding></p>
+              <div class="spill__rytme"><span class="spill__sone" data-spill-sone></span><span class="spill__merke" data-spill-rytme></span></div>
+            </div>
+          </div>
+
+          <div class="spill__taster" data-spill-taster hidden>
+            <button type="button" data-spill-tast="v" aria-label="Venstre bein">Venstre</button>
+            <button type="button" data-spill-tast="h" aria-label="Høyre bein">Høyre</button>
+          </div>
+
+          <div class="spill__panel" data-spill-start>
+            <h2>100 meter</h2>
+            <p>Du løper i bane&nbsp;4. Trykk venstre og høyre annenhver gang, i takt med stegene.</p>
+            <div class="spill__nivaa" role="group" aria-label="Velg nivå">
+              <button type="button" data-spill-nivaa="klubb" aria-pressed="false">Klubbstevne</button>
+              <button type="button" data-spill-nivaa="krets" aria-pressed="true">Kretsmesterskap</button>
+              <button type="button" data-spill-nivaa="nm" aria-pressed="false">NM</button>
+            </div>
+            <button type="button" class="knapp knapp--rod" data-spill-startknapp>Start løpet</button>
+            <p class="spill__rekord" data-spill-rekord hidden></p>
+          </div>
+
+          <div class="spill__panel spill__panel--resultat" data-spill-resultat hidden>
+            <h2 data-spill-resultattittel>Resultat</h2>
+            <p data-spill-resultattekst></p>
+            <ol class="spill__liste" data-spill-liste></ol>
+            <div class="knapperad">
+              <button type="button" class="knapp knapp--rod" data-spill-igjen>Løp igjen</button>
+              <button type="button" class="knapp knapp--stille" data-spill-bytt>Bytt nivå</button>
+            </div>
+          </div>
+
+          <button type="button" class="spill__lyd" data-spill-lyd aria-pressed="true">Lyd på</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="del del--sand" aria-labelledby="slik-tittel">
+      <div class="ramme">
+        <div class="delhode">
+          <h2 id="slik-tittel">Slik spiller du</h2>
+        </div>
+        <div class="kolonner kolonner--tre">
+          <div>
+            <h3>Starten</h3>
+            <p>Vent på skuddet. Trykker du før det smeller, blir det tjuvstart og ny start.</p>
+            <p>Tiden fra skuddet til det første trykket ditt er reaksjonstiden.</p>
+          </div>
+          <div>
+            <h3>Rytmen</h3>
+            <p>Hvert trykk er ett steg. Bruk piltastene eller A og D på PC, og knappene nederst på skjermen på mobil.</p>
+            <p>Du løper fortest når trykkene treffer det grønne feltet på rytmelinja. Å hamre så fort du kan, gir dårligere fart.</p>
+          </div>
+          <div>
+            <h3>Nivåene</h3>
+            <p>Motstanderne er raskere jo høyere nivå du velger. I NM må nesten hvert steg sitte.</p>
+            <p>Den beste tiden din på hvert nivå lagres i nettleseren.</p>
+          </div>
+        </div>
+        <p class="tyrving__kilde">Klubbnavnene i spillet er ekte, men løperne, tidene og draktfargene er oppdiktet. Skiltene langs banen viser klubbens sponsorer.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bunn">
+    <div class="ramme">
+      <div class="bunn__inn">
+        <div class="bunn__merke">
+          <img src="bilder/logo.svg" width="64" height="64" alt="" loading="lazy">
+          <div>
+            <strong translate="no">Gausdal Friidrettsklubb</strong>
+            Linflåa idrettspark, 2651 Østre Gausdal<br>
+            Org.nr. <span class="tall">913&nbsp;738&nbsp;365</span>
+          </div>
+        </div>
+        <nav aria-label="Snarveier">
+          <h2>Snarveier</h2>
+          <ul>
+            <li><a href="index.html#trening">Treningstider</a></li>
+            <li><a href="index.html#bli-medlem">Bli medlem</a></li>
+            <li><a href="index.html#trener">Bli trener</a></li>
+            <li><a href="index.html#stott">Støtt klubben</a></li>
+            <li><a href="index.html#terminliste">Terminliste</a></li>
+            <li><a href="ovelser.html">Øvelsene i friidrett</a></li>
+            <li><a href="forste-stevne.html">Første gang på stevne</a></li>
+            <li><a href="tyrving.html">Tyrvingkalkulator</a></li>
+          <li><a href="spill.html">Gausdalsprinten (spill)</a></li>
+            <li><a href="sponsorer.html">Sponsorer</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h2>Følg oss</h2>
+          <ul>
+            <li><a data-facebook href="https://www.facebook.com/groups/436427656385045/" rel="noopener">Facebook</a></li>
+            <li><a data-instagram href="https://www.instagram.com/gausdal_friidrett/" rel="noopener">Instagram</a></li>
+            <li><a data-spondnett href="https://www.spond.com/no/" rel="noopener">Spond</a></li>
+            <li><a href="bilder/logo.svg" download="gausdal-friidrettsklubb-logo.svg">Last ned logoen (SVG)</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bunn__slutt">
+        <span>© <span data-aar>2026</span> <span translate="no">Gausdal Friidrettsklubb</span></span>
+        <a href="#innhold">Til toppen</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="innhold.js?v=202611251712"></script>
+  <script src="app.js?v=202611251712"></script>
+  <script src="spill.js?v=202611251712"></script>
+</body>
+</html>
