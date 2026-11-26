@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611251712">
+  <link rel="stylesheet" href="stil.css?v=202611262006">
   <script>document.documentElement.className += " js";</script>
 </head>
 <body>
@@ -74,23 +74,27 @@
             <p class="spill__signal" data-spill-signal role="status" aria-live="assertive" hidden></p>
             <div class="spill__rytmefelt" aria-hidden="true">
               <p class="spill__melding" data-spill-melding></p>
-              <div class="spill__rytme"><span class="spill__sone" data-spill-sone></span><span class="spill__merke" data-spill-rytme></span></div>
             </div>
           </div>
 
           <div class="spill__taster" data-spill-taster hidden>
-            <button type="button" data-spill-tast="v" aria-label="Venstre bein">Venstre</button>
-            <button type="button" data-spill-tast="h" aria-label="Høyre bein">Høyre</button>
+            <button type="button" data-spill-tast="v" aria-label="Venstre bein"><span class="spill__ring" aria-hidden="true"></span><kbd aria-hidden="true">←</kbd><span>Venstre</span></button>
+            <button type="button" data-spill-tast="h" aria-label="Høyre bein"><span class="spill__ring" aria-hidden="true"></span><kbd aria-hidden="true">→</kbd><span>Høyre</span></button>
           </div>
 
           <div class="spill__panel" data-spill-start>
             <h2>100 meter</h2>
-            <p>Du løper i bane&nbsp;4. Trykk venstre og høyre annenhver gang, i takt med stegene.</p>
+            <p>Du løper i bane&nbsp;4. Trykk venstre og høyre annenhver gang, akkurat når ringen treffer knappen.</p>
             <div class="spill__nivaa" role="group" aria-label="Velg nivå">
               <button type="button" data-spill-nivaa="klubb" aria-pressed="false">Klubbstevne</button>
               <button type="button" data-spill-nivaa="krets" aria-pressed="true">Kretsmesterskap</button>
               <button type="button" data-spill-nivaa="nm" aria-pressed="false">NM</button>
             </div>
+            <p class="spill__nivaatekst" data-spill-nivaatekst aria-live="polite"></p>
+            <label class="spill__navnfelt" data-spill-navnfelt hidden>
+              <span>Navnet ditt (valgfritt)</span>
+              <input type="text" name="spillernavn" data-spill-navn maxlength="16" autocomplete="given-name" autocapitalize="words" spellcheck="false" placeholder="For eksempel Ola…">
+            </label>
             <button type="button" class="knapp knapp--rod" data-spill-startknapp>Start løpet</button>
             <p class="spill__rekord" data-spill-rekord hidden></p>
           </div>
@@ -122,17 +126,17 @@
             <p>Tiden fra skuddet til det første trykket ditt er reaksjonstiden.</p>
           </div>
           <div>
-            <h3>Rytmen</h3>
+            <h3>Takten</h3>
             <p>Hvert trykk er ett steg. Bruk piltastene eller A og D på PC, og knappene nederst på skjermen på mobil.</p>
-            <p>Du løper fortest når trykkene treffer det grønne feltet på rytmelinja. Å hamre så fort du kan, gir dårligere fart.</p>
+            <p>En ring krymper inn mot knappen du skal trykke. Trykk når ringen treffer kanten. Med lyden på hører du et tikk på hvert slag. Takten er rolig ut av blokka og øker med farten.</p>
           </div>
           <div>
             <h3>Nivåene</h3>
-            <p>Motstanderne er raskere jo høyere nivå du velger. I NM må nesten hvert steg sitte.</p>
-            <p>Den beste tiden din på hvert nivå lagres i nettleseren.</p>
+            <p>I klubbstevnet løper du mot sju klubbkamerater, og du kan skrive inn navnet ditt. I kretsmesterskapet og NM løper du for Gausdal FIK mot andre klubber.</p>
+            <p>Jo høyere nivå, jo raskere motstandere og jo mindre slingring tåler takten. Den beste tiden din på hvert nivå lagres i nettleseren.</p>
           </div>
         </div>
-        <p class="tyrving__kilde">Klubbnavnene i spillet er ekte, men løperne, tidene og draktfargene er oppdiktet. Skiltene langs banen viser klubbens sponsorer.</p>
+        <p class="tyrving__kilde">Klubbnavnene i spillet er ekte, men løperne, tidene og draktfargene er oppdiktet. Det samme gjelder navnene på klubbkameratene i klubbstevnet. Navnet du skriver inn, lagres bare i nettleseren din. Skiltene langs banen viser klubbens sponsorer.</p>
       </div>
     </section>
   </main>
@@ -181,8 +185,8 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="innhold.js?v=202611251712"></script>
-  <script src="app.js?v=202611251712"></script>
-  <script src="spill.js?v=202611251712"></script>
+  <script src="innhold.js?v=202611262006"></script>
+  <script src="app.js?v=202611262006"></script>
+  <script src="spill.js?v=202611262006"></script>
 </body>
 </html>

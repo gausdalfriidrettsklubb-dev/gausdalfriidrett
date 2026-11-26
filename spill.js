@@ -1,6 +1,7 @@
 /* Gausdal Friidrettsklubb – Gausdalsprinten
-   Et 100-meterløp i 3D. Spilleren løper for Gausdal FIK mot sju andre klubber.
-   Styring: trykk venstre og høyre annenhver gang, i takt med stegene.
+   Et 100-meterløp i 3D. Spilleren løper for Gausdal FIK mot sju andre klubber,
+   eller mot sju klubbkamerater i klubbstevnet.
+   Styring: trykk venstre og høyre annenhver gang, i takt med slagene.
    Bygger på three.js (r128), som lastes fra cdnjs i spill.html. */
 (function () {
   "use strict";
@@ -17,8 +18,11 @@
     fart: finn("[data-spill-fart]"),
     plass: finn("[data-spill-plass]"),
     stripe: finn("[data-spill-stripe]"),
-    rytme: finn("[data-spill-rytme]"),
-    sone: finn("[data-spill-sone]"),
+    tastV: finn('[data-spill-tast="v"]'),
+    tastH: finn('[data-spill-tast="h"]'),
+    nivaatekst: finn("[data-spill-nivaatekst]"),
+    navnfelt: finn("[data-spill-navnfelt]"),
+    navn: finn("[data-spill-navn]"),
     melding: finn("[data-spill-melding]"),
     signal: finn("[data-spill-signal]"),
     taster: finn("[data-spill-taster]"),
@@ -57,19 +61,20 @@
   var STARTX = -0.55; // hoftene står bak streken når hendene er ved den
 
   // Motstanderne. Fargene er valgt for å skille løperne fra hverandre og er ikke klubbenes offisielle drakter.
+  // Personnavnene brukes i klubbstevnet og er oppdiktet.
   var KLUBBER = [
-    { navn: "Lillehammer IF", drakt: 0x1f5fbf, shorts: 0x10264d, tid: 10.75 },
-    { navn: "Moelven IL", drakt: 0x1e9e5a, shorts: 0x0f3d26, tid: 11.25 },
-    { navn: "IK Tjalve", drakt: 0xf2f2f2, shorts: 0x1a3c8c, tid: 10.6 },
-    { navn: "IL Tyrving", drakt: 0x39a9e0, shorts: 0xffffff, tid: 10.9 },
-    { navn: "Sandnes IL", drakt: 0xf2c230, shorts: 0x1b1b1b, tid: 11.05 },
-    { navn: "Raufoss IL", drakt: 0xf07c1f, shorts: 0x23252b, tid: 11.5 },
-    { navn: "IL Gular", drakt: 0x7a3fc4, shorts: 0xf2f2f2, tid: 11.8 }
+    { navn: "Lillehammer IF", person: "Jonas Bakken", drakt: 0x1f5fbf, shorts: 0x10264d, tid: 10.75 },
+    { navn: "Moelven IL", person: "Ingrid Haugen", lang: true, drakt: 0x1e9e5a, shorts: 0x0f3d26, tid: 11.25 },
+    { navn: "IK Tjalve", person: "Sander Lien", drakt: 0xf2f2f2, shorts: 0x1a3c8c, tid: 10.6 },
+    { navn: "IL Tyrving", person: "Nora Solberg", lang: true, drakt: 0x39a9e0, shorts: 0xffffff, tid: 10.9 },
+    { navn: "Sandnes IL", person: "Mathias Dahl", drakt: 0xf2c230, shorts: 0x1b1b1b, tid: 11.05 },
+    { navn: "Raufoss IL", person: "Thea Moen", lang: true, drakt: 0xf07c1f, shorts: 0x23252b, tid: 11.5 },
+    { navn: "IL Gular", person: "Emil Brenden", drakt: 0x7a3fc4, shorts: 0xf2f2f2, tid: 11.8 }
   ];
   var NIVAA = {
-    klubb: { navn: "Klubbstevne", faktor: 1.16, slakk: 0.14, gulv: 0.45 },
-    krets: { navn: "Kretsmesterskap", faktor: 1.08, slakk: 0.105, gulv: 0.36 },
-    nm: { navn: "NM", faktor: 1.0, slakk: 0.08, gulv: 0.3 }
+    klubb: { navn: "Klubbstevne", faktor: 1.16, slakk: 0.14, gulv: 0.45, personer: true, tekst: "Du løper mot sju klubbkamerater. Takten tåler litt slingring." },
+    krets: { navn: "Kretsmesterskap", faktor: 1.08, slakk: 0.105, gulv: 0.36, tekst: "Du løper mot sju andre klubber. Her må takten sitte." },
+    nm: { navn: "NM", faktor: 1.0, slakk: 0.08, gulv: 0.3, tekst: "De raskeste motstanderne. Nesten hvert steg må treffe." }
   };
   var HUD = [0xf1c9a5, 0xd9a47a, 0x8d5a3b, 0xe6b98f, 0x6b4226, 0xf3d2b3, 0xc68c5e, 0xa66a43];
   var HAAR = [0x2b1d14, 0xd8b56a, 0x141414, 0x7a4a26, 0x1c1c1c, 0xb5651d, 0x3a2a1c, 0x0f0f0f];
@@ -258,30 +263,76 @@
       lamper.rotation.x = 0.5; lamper.position.set(x, 22.3, bakvegg - 1.7); scene.add(lamper);
     });
 
-    // Publikum sitter i et rutenett, så ingen står oppi hverandre
-    var klaer = [0xd8232a, 0xffffff, 0x1c1413, 0x2f6fb5, 0xf0c94b, 0x3e8f5a, 0x9aa0a6, 0xd8232a, 0xe9e2d6, 0xb0171e];
-    var seter = [[], []];
+    // Seterader i klubbfargen
+    var setebilde = lerretTekstur(64, 64, function (g, w, h) {
+      g.fillStyle = "#6c727b"; g.fillRect(0, 0, w, h);
+      g.fillStyle = "#a3161c"; g.fillRect(5, 6, 54, 54);
+      g.fillStyle = "#c5282e"; g.fillRect(5, 6, 54, 12);
+    });
+    setebilde.wrapS = THREE.RepeatWrapping; setebilde.repeat.set(Math.round(146 / 0.56), 1);
+    var setestoff = new THREE.MeshLambertMaterial({ map: setebilde });
+    for (var sr = 0; sr < trinn; sr++) {
+      var rygg = new THREE.Mesh(new THREE.PlaneGeometry(146, 0.42), setestoff);
+      rygg.position.set(midtX, 0.55 * (sr + 1) + 0.21, start - sr * 1.15 - 0.32); scene.add(rygg);
+    }
+
+    // Publikum: tegnede tilskuere på flater som står vendt mot banen. De sitter i et rutenett.
+    var klaer = ["#d8232a", "#f4f1ea", "#23262b", "#2f6fb5", "#f0c94b", "#3e8f5a", "#9aa0a6", "#b0171e", "#e88a2d", "#7a4fb0", "#3aa7c9", "#d8232a"];
+    var hudtoner = ["#f1c9a5", "#d9a47a", "#8d5a3b", "#e6b98f", "#6b4226", "#f3d2b3"];
+    var haartoner = ["#2b1d14", "#d8b56a", "#141414", "#7a4a26", "#b5651d", "#8a8a8a"];
+    var VARIANTER = 12;
+    function tilskuer(i) {
+      var bilde = lerretTekstur(64, 128, function (g, w, h) {
+        var skjorte = klaer[i % klaer.length], hud = hudtoner[(i * 5 + 1) % 6], haar = haartoner[(i * 7 + 2) % 6];
+        var jubler = i % 4 === 3;
+        g.clearRect(0, 0, w, h);
+        g.lineCap = "round"; g.lineWidth = 11; g.strokeStyle = skjorte;
+        g.beginPath();
+        if (jubler) { g.moveTo(14, 74); g.lineTo(7, 34); g.moveTo(50, 74); g.lineTo(57, 34); }
+        else { g.moveTo(12, 74); g.lineTo(10, 112); g.moveTo(52, 74); g.lineTo(54, 112); }
+        g.stroke();
+        if (jubler) { g.fillStyle = hud; g.beginPath(); g.arc(7, 28, 6, 0, Math.PI * 2); g.arc(57, 28, 6, 0, Math.PI * 2); g.fill(); }
+        g.fillStyle = skjorte;
+        g.beginPath(); g.moveTo(10, h); g.lineTo(10, 76); g.quadraticCurveTo(10, 62, 24, 62); g.lineTo(40, 62); g.quadraticCurveTo(54, 62, 54, 76); g.lineTo(54, h); g.fill();
+        var skygge = g.createLinearGradient(0, 84, 0, h);
+        skygge.addColorStop(0, "rgba(0,0,0,0)"); skygge.addColorStop(1, "rgba(0,0,0,0.28)");
+        g.fillStyle = skygge; g.fillRect(10, 84, 44, h - 84);
+        g.fillStyle = hud; g.fillRect(26, 50, 12, 14);
+        g.beginPath(); g.arc(32, 40, 14, 0, Math.PI * 2); g.fill();
+        g.fillStyle = i % 5 === 0 ? "#b0171e" : haar; // noen har caps i klubbfargen
+        g.beginPath(); g.arc(32, 37, 14.5, Math.PI, 0); g.fill();
+        if (i % 5 === 0) g.fillRect(30, 33, 20, 5);
+      });
+      return new THREE.MeshLambertMaterial({ map: bilde, alphaTest: 0.4 });
+    }
+    var tilskuerstoff = [];
+    for (var tv = 0; tv < VARIANTER; tv++) tilskuerstoff.push(tilskuer(tv));
+    var flate = new THREE.PlaneGeometry(0.52, 1.04);
+    flate.translate(0, 0.52, 0);
+    var seter = [];
+    for (var sg = 0; sg < 2 * VARIANTER; sg++) seter.push([]);
     for (var rad = 0; rad < trinn; rad++) {
-      for (var sx = midtX - 73; sx < midtX + 73; sx += 0.56) {
-        if (Math.random() < 0.84) seter[Math.random() < 0.5 ? 0 : 1].push([sx + (Math.random() - 0.5) * 0.12, rad]);
+      for (var sx = midtX - 72.6; sx < midtX + 72.6; sx += 0.56) {
+        if (Math.random() < 0.86) seter[Math.floor(Math.random() * 2 * VARIANTER)].push([sx, rad]);
       }
     }
-    seter.forEach(function (liste) {
-      var folk = new THREE.InstancedMesh(new THREE.BoxGeometry(0.38, 0.6, 0.3), new THREE.MeshLambertMaterial({ color: 0xffffff }), liste.length);
-      var hoder = new THREE.InstancedMesh(new THREE.SphereGeometry(0.13, 7, 6), new THREE.MeshLambertMaterial({ color: 0xffffff }), liste.length);
-      liste.forEach(function (sete, f) {
-        var hoyde = 0.82 + Math.random() * 0.34, y0 = 0.55 + sete[1] * 0.55, z0 = start - sete[1] * 1.15 + (Math.random() - 0.5) * 0.3;
-        dummy.position.set(sete[0], y0 + 0.3 * hoyde, z0);
-        dummy.rotation.set(0, 0, 0); dummy.scale.set(1, hoyde, 1); dummy.updateMatrix();
-        folk.setMatrixAt(f, dummy.matrix);
-        folk.setColorAt(f, farge.setHex(klaer[Math.floor(Math.random() * klaer.length)]).convertSRGBToLinear());
-        dummy.position.y = y0 + 0.6 * hoyde + 0.11; dummy.scale.set(1, 1, 1); dummy.updateMatrix();
-        hoder.setMatrixAt(f, dummy.matrix);
-        hoder.setColorAt(f, farge.setHex(HUD[Math.floor(Math.random() * HUD.length)]).convertSRGBToLinear());
-      });
-      var gruppe = new THREE.Group(); gruppe.add(folk); gruppe.add(hoder); scene.add(gruppe);
+    for (var pg = 0; pg < 2; pg++) {
+      var gruppe = new THREE.Group();
+      for (var pv = 0; pv < VARIANTER; pv++) {
+        var liste = seter[pg * VARIANTER + pv];
+        if (!liste.length) continue;
+        var folk = new THREE.InstancedMesh(flate, tilskuerstoff[pv], liste.length);
+        for (var pf = 0; pf < liste.length; pf++) {
+          var st = 0.86 + Math.random() * 0.26;
+          dummy.position.set(liste[pf][0] + (Math.random() - 0.5) * 0.1, 0.55 * (liste[pf][1] + 1), start - liste[pf][1] * 1.15 - 0.05 + Math.random() * 0.3);
+          dummy.rotation.set(0, -0.12 - Math.random() * 0.62, 0); dummy.scale.set(st, st, 1); dummy.updateMatrix();
+          folk.setMatrixAt(pf, dummy.matrix);
+        }
+        gruppe.add(folk);
+      }
+      scene.add(gruppe);
       publikum.push(gruppe);
-    });
+    }
 
     // Målportal
     boks(0.18, 4.4, 0.18, 0x23262b, MAL + 0.1, 2.2, bredde / 2 + 0.9, true);
@@ -326,38 +377,107 @@
       }
     });
 
-    // Åser og fjell i bakgrunnen
-    var fjell = [
-      [-60, -230, 150, 42, 0x7f9aa8], [40, -260, 210, 58, 0x6f8b9a], [150, -240, 170, 46, 0x86a0ad],
-      [250, -280, 230, 70, 0x748f9d], [-170, -270, 200, 54, 0x8aa3af], [95, -190, 120, 26, 0x4f7d4c], [-10, -180, 130, 22, 0x5a8853], [200, -185, 140, 24, 0x53824f],
-      [420, -120, 160, 40, 0x7f9aa8], [470, 40, 170, 52, 0x6f8b9a], [430, 190, 150, 36, 0x86a0ad], [330, -60, 90, 16, 0x53824f], [340, 90, 100, 18, 0x5a8853]
-    ];
-    fjell.forEach(function (f2) {
-      var m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshLambertMaterial({ color: lin(f2[4]), flatShading: true }));
-      m.scale.set(f2[2], f2[3], f2[2] * 0.55); m.position.set(f2[0], -1, f2[1]); scene.add(m);
-    });
-    // Trær bak tribunen og ved enden av banen
-    var tre = new THREE.InstancedMesh(new THREE.ConeGeometry(1.6, 6.5, 6), new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true }), 180);
-    var gronn = [0x2f5d3a, 0x356b3f, 0x284f33];
-    for (var q = 0; q < 180; q++) {
-      var bak = q < 110;
-      dummy.position.set(bak ? -60 + Math.random() * 260 : 150 + Math.random() * 80, 3.2, bak ? -34 - Math.random() * 40 : -45 + Math.random() * 90);
-      var sk = 0.8 + Math.random() * 0.9; dummy.scale.set(sk, sk, sk); dummy.position.y = 3.2 * sk; dummy.updateMatrix();
-      tre.setMatrixAt(q, dummy.matrix);
-      tre.setColorAt(q, farge.setHex(gronn[q % 3]).convertSRGBToLinear());
+    // Åser og fjell som lag bak hverandre: skogkledd ås nærmest, blånende fjell bak
+    function aaslag(langsX, fast, grunn, utslag, bolge, fase, fargekode, tagger, steg) {
+      var form = new THREE.Shape(), fra = -720, til = 820;
+      form.moveTo(fra, -2);
+      for (var p = fra; p <= til; p += steg) {
+        var y = grunn + utslag * (0.55 * Math.sin(p / bolge + fase) + 0.3 * Math.sin(p / (bolge * 0.37) + fase * 2.3) + 0.15 * Math.sin(p / (bolge * 0.13) + fase * 4.1));
+        if (tagger) y += tagger * Math.abs(Math.sin(p * 1.9 + fase)); // grantopper
+        form.lineTo(p, y);
+      }
+      form.lineTo(til, -2);
+      var m = new THREE.Mesh(new THREE.ShapeGeometry(form), new THREE.MeshBasicMaterial({ color: lin(fargekode), fog: false, side: THREE.DoubleSide }));
+      if (langsX) m.position.z = fast; else { m.rotation.y = -Math.PI / 2; m.position.x = fast; }
+      scene.add(m);
     }
-    scene.add(tre);
+    aaslag(true, -430, 104, 44, 170, 0.4, 0xc3d1dd, 0, 8);
+    aaslag(true, -340, 66, 26, 105, 1.9, 0x7f97a7, 0, 6);
+    aaslag(true, -245, 34, 11, 64, 3.1, 0x35553f, 1.7, 2.5);
+    aaslag(false, 590, 104, 44, 170, 2.2, 0xc3d1dd, 0, 8);
+    aaslag(false, 490, 66, 26, 105, 0.7, 0x7f97a7, 0, 6);
+    aaslag(false, 395, 34, 11, 64, 4.4, 0x35553f, 1.7, 2.5);
+
+    // Grantrær bak tribunen og ved enden av banen
+    var ANTALL = 320;
+    var grantone = new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true });
+    var nedre = new THREE.InstancedMesh(new THREE.ConeGeometry(2.0, 4.8, 7), grantone, ANTALL);
+    var ovre = new THREE.InstancedMesh(new THREE.ConeGeometry(1.3, 4.2, 7), grantone, ANTALL);
+    var stammer = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.2, 0.26, 1.6, 6), new THREE.MeshLambertMaterial({ color: lin(0x5a4332) }), ANTALL);
+    var gronn = [0x1e4029, 0x25492f, 0x1a3623, 0x2b5235];
+    for (var q = 0; q < ANTALL; q++) {
+      var bak = q < 230;
+      var tx = bak ? -110 + Math.random() * 370 : 165 + Math.random() * 110, tz = bak ? -42 - Math.random() * 100 : -70 + Math.random() * 140;
+      var sk = 0.75 + Math.random() * 0.75;
+      dummy.rotation.set(0, Math.random() * 3, 0); dummy.scale.set(sk, sk, sk);
+      dummy.position.set(tx, 0.8 * sk, tz); dummy.updateMatrix(); stammer.setMatrixAt(q, dummy.matrix);
+      dummy.position.y = 3.6 * sk; dummy.updateMatrix(); nedre.setMatrixAt(q, dummy.matrix);
+      dummy.position.y = 6.3 * sk; dummy.updateMatrix(); ovre.setMatrixAt(q, dummy.matrix);
+      farge.setHex(gronn[q % gronn.length]).convertSRGBToLinear();
+      nedre.setColorAt(q, farge); ovre.setColorAt(q, farge);
+    }
+    scene.add(stammer); scene.add(nedre); scene.add(ovre);
+
+    // Løpsklokke ved mål
+    boks(2.9, 1.25, 0.16, 0x16181c, MAL + 4.2, 1.85, skiltZ + 0.75, true);
+    boks(0.12, 1.3, 0.12, 0x16181c, MAL + 3.2, 0.65, skiltZ + 0.75, true);
+    boks(0.12, 1.3, 0.12, 0x16181c, MAL + 5.2, 0.65, skiltZ + 0.75, true);
+    klokkebilde = lerretTekstur(256, 96, function () {});
+    var tavle = new THREE.Mesh(new THREE.PlaneGeometry(2.7, 1.02), new THREE.MeshBasicMaterial({ map: klokkebilde }));
+    tavle.position.set(MAL + 4.2, 1.85, skiltZ + 0.84); scene.add(tavle);
+  }
+
+  var klokkebilde = null, klokketekst = "";
+  function tegnKlokke(tekst) {
+    if (!klokkebilde || tekst === klokketekst) return;
+    klokketekst = tekst;
+    var g = klokkebilde.image.getContext("2d");
+    g.fillStyle = "#0c0d10"; g.fillRect(0, 0, 256, 96);
+    g.fillStyle = "#ffb52e"; g.font = "700 80px 'Barlow Condensed', 'Arial Narrow', sans-serif";
+    g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(tekst, 128, 53);
+    klokkebilde.needsUpdate = true;
   }
 
   function baneZ(i) { return (i - (BANER - 1) / 2) * BANEBREDDE; }
 
   /* ---------- Løpere ---------- */
-  function lagLoper(nr, farger, navn, erSpiller) {
-    var hud = new THREE.MeshLambertMaterial({ color: lin(HUD[nr % HUD.length]) });
-    var drakt = new THREE.MeshLambertMaterial({ color: lin(farger.drakt) });
-    var shorts = new THREE.MeshLambertMaterial({ color: lin(farger.shorts) });
-    var sko = new THREE.MeshLambertMaterial({ color: lin(erSpiller ? 0xffffff : 0x1d1f24) });
-    var haar = new THREE.MeshLambertMaterial({ color: lin(HAAR[nr % HAAR.length]) });
+  function dreid(punkter, deler) {
+    return new THREE.LatheGeometry(punkter.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), deler || 14);
+  }
+  // Felles former for alle løperne. Målene er i meter for en utøver på omtrent 1,80.
+  var FORM = {
+    kule: new THREE.SphereGeometry(1, 16, 12),
+    hofte: dreid([[0, -0.1], [0.085, -0.09], [0.128, -0.04], [0.134, 0.02], [0.124, 0.09], [0, 0.1]]),
+    kropp: dreid([[0, 0.02], [0.118, 0.04], [0.112, 0.15], [0.118, 0.26], [0.142, 0.38], [0.15, 0.45], [0.132, 0.505], [0.07, 0.535], [0, 0.54]]),
+    stripe: dreid([[0.139, 0.345], [0.1465, 0.385], [0.152, 0.425]]),
+    laar: dreid([[0, 0.03], [0.088, 0], [0.094, -0.09], [0.086, -0.22], [0.068, -0.36], [0.058, -L1], [0, -L1 - 0.01]]),
+    tights: dreid([[0, 0.035], [0.092, 0], [0.098, -0.09], [0.093, -0.19], [0.089, -0.2]]),
+    legg: dreid([[0, 0.01], [0.056, 0], [0.064, -0.09], [0.066, -0.15], [0.052, -0.29], [0.037, -0.41], [0.035, -L2], [0, -L2 - 0.005]]),
+    overarm: dreid([[0, 0.01], [0.05, 0], [0.054, -0.08], [0.046, -0.2], [0.04, -OVERARM], [0, -OVERARM - 0.005]], 12),
+    underarm: dreid([[0, 0.005], [0.041, 0], [0.043, -0.06], [0.034, -0.19], [0.028, -UNDERARM], [0, -UNDERARM - 0.005]], 12),
+    hals: new THREE.CylinderGeometry(0.046, 0.054, 0.11, 12),
+    sokk: new THREE.CylinderGeometry(0.04, 0.037, 0.07, 10),
+    haar: new THREE.SphereGeometry(1, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.56),
+    lapp: new THREE.PlaneGeometry(0.19, 0.14)
+  };
+  var SKO = [0xf4f4f0, 0xd8f23a, 0xff6a3d, 0x35d0c8, 0xff4f9a, 0xf4f4f0, 0xffd23a, 0x7df07d];
+
+  function stoff(hex, ruhet) {
+    return new THREE.MeshStandardMaterial({ color: lin(hex), roughness: ruhet, metalness: 0, side: THREE.DoubleSide });
+  }
+
+  function lagLoper(nr, farger, erSpiller) {
+    var hud = stoff(HUD[nr % HUD.length], 0.62);
+    var drakt = stoff(farger.drakt, 0.84), shorts = stoff(farger.shorts, 0.8);
+    var sko = stoff(erSpiller ? 0xffffff : SKO[nr % SKO.length], 0.5), hvitt = stoff(0xf2f2f2, 0.75);
+    var haar = stoff(HAAR[nr % HAAR.length], 0.92);
+    var lapp = new THREE.MeshLambertMaterial({
+      map: lerretTekstur(128, 96, function (g, w, h) {
+        g.fillStyle = "#fffdf8"; g.fillRect(0, 0, w, h);
+        g.fillStyle = "#1c1413"; g.font = "700 84px 'Barlow Condensed', 'Arial Narrow', sans-serif";
+        g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(String(nr + 1), w / 2, h / 2 + 6);
+      })
+    });
 
     function del(geo, mat, forelder, x, y, z) {
       var m = new THREE.Mesh(geo, mat);
@@ -366,76 +486,91 @@
       forelder.add(m);
       return m;
     }
+    function kule(mat, forelder, x, y, z, sx, sy, sz) {
+      var m = del(FORM.kule, mat, forelder, x, y, z);
+      m.scale.set(sx, sy, sz);
+      return m;
+    }
     function ledd(forelder, x, y, z) {
       var g = new THREE.Group(); g.position.set(x, y, z); forelder.add(g); return g;
     }
-    function lem(forelder, lengde, r1, r2, mat) {
-      return del(new THREE.CylinderGeometry(r1, r2, lengde, 10), mat, forelder, 0, -lengde / 2, 0);
-    }
 
     var gruppe = new THREE.Group();
-    var bekken = ledd(gruppe, 0, 0.95, 0);
-    var hofte = del(new THREE.SphereGeometry(0.135, 12, 10), shorts, bekken, 0, 0, 0);
-    hofte.scale.set(0.95, 0.82, 1.2);
+    var bekken = ledd(gruppe, 0, 0.98, 0);
+    del(FORM.hofte, shorts, bekken).scale.set(0.78, 1, 1.16);
 
     var overkropp = ledd(bekken, 0, 0.02, 0);
-    var bryst = del(new THREE.CylinderGeometry(0.165, 0.125, OVERKROPP, 12), drakt, overkropp, 0, OVERKROPP / 2, 0);
-    bryst.scale.set(0.8, 1, 1.28);
-    del(new THREE.SphereGeometry(0.168, 12, 8), drakt, overkropp, 0, OVERKROPP, 0).scale.set(0.8, 0.5, 1.26);
-    if (erSpiller) { // hvit stripe over brystet, som på klubbdrakta
-      del(new THREE.CylinderGeometry(0.157, 0.15, 0.07, 12), new THREE.MeshLambertMaterial({ color: 0xffffff }), overkropp, 0, OVERKROPP * 0.72, 0).scale.set(0.82, 1, 1.3);
+    del(FORM.kropp, drakt, overkropp).scale.set(0.74, 1, 1.2);
+    if (erSpiller) del(FORM.stripe, hvitt, overkropp).scale.set(0.746, 1, 1.206); // hvit stripe over brystet
+    del(FORM.hals, hud, overkropp, 0.012, OVERKROPP + 0.06, 0);
+    del(FORM.lapp, lapp, overkropp, 0.114, 0.29, 0).rotation.y = Math.PI / 2;
+    del(FORM.lapp, lapp, overkropp, -0.114, 0.33, 0).rotation.y = -Math.PI / 2;
+
+    var hode = ledd(overkropp, 0.02, OVERKROPP + 0.2, 0);
+    kule(hud, hode, 0, 0, 0, 0.1, 0.118, 0.094);
+    kule(hud, hode, 0.034, -0.046, 0, 0.074, 0.076, 0.078);
+    kule(hud, hode, 0.1, -0.014, 0, 0.016, 0.02, 0.016);
+    kule(hud, hode, 0, -0.006, 0.093, 0.014, 0.026, 0.01);
+    kule(hud, hode, 0, -0.006, -0.093, 0.014, 0.026, 0.01);
+    var lugg = del(FORM.haar, haar, hode, -0.008, 0.008, 0);
+    lugg.scale.set(0.106, 0.124, 0.1); lugg.rotation.z = 0.42;
+    if (farger.lang) { // hestehale
+      kule(haar, hode, -0.108, 0.0, 0, 0.04, 0.05, 0.045);
+      kule(haar, hode, -0.15, -0.085, 0, 0.03, 0.085, 0.032).rotation.z = -0.45;
     }
-    del(new THREE.CylinderGeometry(0.05, 0.055, 0.09, 8), hud, overkropp, 0.01, OVERKROPP + 0.09, 0);
-    var hode = ledd(overkropp, 0.02, OVERKROPP + 0.23, 0);
-    del(new THREE.SphereGeometry(0.115, 16, 12), hud, hode, 0, 0, 0).scale.set(1, 1.08, 0.94);
-    var lugg = del(new THREE.SphereGeometry(0.121, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.52), haar, hode, -0.012, 0.012, 0);
-    lugg.rotation.z = 0.35;
 
     function arm(side) {
-      var skulder = ledd(overkropp, 0, OVERKROPP - 0.03, side * 0.215);
-      del(new THREE.SphereGeometry(0.058, 8, 8), drakt, skulder, 0, 0, 0);
-      lem(skulder, OVERARM, 0.052, 0.045, hud);
+      var skulder = ledd(overkropp, 0, OVERKROPP - 0.045, side * 0.19);
+      kule(hud, skulder, 0, 0, 0, 0.058, 0.058, 0.058);
+      del(FORM.overarm, hud, skulder);
       var albue = ledd(skulder, 0, -OVERARM, 0);
-      del(new THREE.SphereGeometry(0.045, 8, 8), hud, albue, 0, 0, 0);
-      lem(albue, UNDERARM, 0.044, 0.035, hud);
-      del(new THREE.SphereGeometry(0.042, 8, 6), hud, albue, 0, -UNDERARM - 0.03, 0).scale.set(1, 1.3, 0.7);
+      kule(hud, albue, 0, 0, 0, 0.042, 0.042, 0.042);
+      del(FORM.underarm, hud, albue);
+      kule(hud, albue, 0, -UNDERARM - 0.04, 0, 0.03, 0.055, 0.022);
       return { skulder: skulder, albue: albue };
     }
     function bein(side) {
-      var h = ledd(bekken, 0, -0.04, side * 0.095);
-      lem(h, L1, 0.094, 0.064, hud);
-      del(new THREE.CylinderGeometry(0.1, 0.09, 0.22, 10), shorts, h, 0, -0.11, 0);
+      var h = ledd(bekken, 0, -0.04, side * 0.088);
+      del(FORM.laar, hud, h);
+      del(FORM.tights, shorts, h);
       var kne = ledd(h, 0, -L1, 0);
-      del(new THREE.SphereGeometry(0.064, 8, 8), hud, kne, 0, 0, 0);
-      lem(kne, L2, 0.064, 0.04, hud);
-      var fot = del(new THREE.BoxGeometry(0.27, 0.08, 0.1), sko, kne, 0.075, -L2 - 0.02, 0);
-      fot.rotation.z = -0.12;
-      return { hofte: h, kne: kne };
+      kule(hud, kne, 0.004, 0, 0, 0.06, 0.062, 0.058);
+      del(FORM.legg, hud, kne);
+      var ankel = ledd(kne, 0, -L2, 0);
+      del(FORM.sokk, hvitt, ankel, 0, 0.005, 0);
+      kule(sko, ankel, 0.07, -0.045, 0, 0.135, 0.05, 0.05);
+      kule(sko, ankel, -0.015, -0.04, 0, 0.055, 0.052, 0.046);
+      kule(hvitt, ankel, 0.065, -0.078, 0, 0.14, 0.018, 0.046);
+      return { hofte: h, kne: kne, ankel: ankel };
     }
     var aV = arm(-1), aH = arm(1), bV = bein(-1), bH = bein(1);
 
-    // Navneskilt over hodet
-    var skilt = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: lerretTekstur(512, 112, function (g, w, h) {
-        g.clearRect(0, 0, w, h);
-        g.fillStyle = erSpiller ? "rgba(176,23,30,0.95)" : "rgba(28,20,19,0.82)";
-        var b = Math.min(w - 8, 60 + navn.length * 27);
-        var x = (w - b) / 2, r = 18;
-        g.beginPath(); g.moveTo(x + r, 8); g.arcTo(x + b, 8, x + b, h - 8, r); g.arcTo(x + b, h - 8, x, h - 8, r); g.arcTo(x, h - 8, x, 8, r); g.arcTo(x, 8, x + b, 8, r); g.fill();
-        g.fillStyle = "#fff"; g.font = "700 58px 'Barlow Condensed', 'Arial Narrow', sans-serif";
-        g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(navn.toUpperCase(), w / 2, h / 2 + 4);
-      }), transparent: true, depthTest: false
-    }));
+    // Navneskilt over hodet. Teksten tegnes på nytt når nivået byttes.
+    var skiltbilde = lerretTekstur(512, 112, function () {});
+    var skilt = new THREE.Sprite(new THREE.SpriteMaterial({ map: skiltbilde, transparent: true, depthTest: false }));
     skilt.scale.set(1.9, 0.42, 1); skilt.position.set(0, 2.25, 0); skilt.renderOrder = 5;
     gruppe.add(skilt);
     scene.add(gruppe);
 
     return {
-      nr: nr, navn: navn, spiller: !!erSpiller, farge: farger.drakt, gruppe: gruppe, bekken: bekken, overkropp: overkropp, hode: hode,
-      aV: aV, aH: aH, bV: bV, bH: bH, skilt: skilt,
+      nr: nr, navn: "", klubb: "", person: "", spiller: !!erSpiller, farge: farger.drakt, gruppe: gruppe, bekken: bekken, overkropp: overkropp, hode: hode,
+      aV: aV, aH: aH, bV: bV, bH: bH, skilt: skilt, skiltbilde: skiltbilde,
       x: STARTX, z: baneZ(nr), v: 0, fase: 0, malfase: 0, sett: 1, klar: 0, andel: 0, jubel: 0,
       ferdig: false, tid: null, reaksjon: null, startet: false
     };
+  }
+
+  function tegnSkilt(l) {
+    var c = l.skiltbilde.image, g = c.getContext("2d"), w = c.width, h = c.height, navn = l.navn;
+    g.clearRect(0, 0, w, h);
+    g.font = "700 58px 'Barlow Condensed', 'Arial Narrow', sans-serif";
+    var b = Math.min(w - 8, g.measureText(navn.toUpperCase()).width + 64);
+    var x = (w - b) / 2, r = 18;
+    g.fillStyle = l.spiller ? "rgba(176,23,30,0.95)" : "rgba(28,20,19,0.82)";
+    g.beginPath(); g.moveTo(x + r, 8); g.arcTo(x + b, 8, x + b, h - 8, r); g.arcTo(x + b, h - 8, x, h - 8, r); g.arcTo(x, h - 8, x, 8, r); g.arcTo(x, 8, x + b, 8, r); g.fill();
+    g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(navn.toUpperCase(), w / 2, h / 2 + 4, w - 40);
+    l.skiltbilde.needsUpdate = true;
   }
 
   // Setter alle ledd ut fra løperens tilstand. «sett» er 1 i startblokka og 0 i fullt løp.
@@ -445,6 +580,7 @@
     var thV = 0.1 + amp * (0.24 + 0.98 * Math.sin(f)), thH = 0.1 + amp * (0.24 + 0.98 * Math.sin(f + Math.PI));
     var knV = 0.14 + 2.15 * amp * Math.pow(Math.max(0, Math.cos(f - 0.35)), 1.15);
     var knH = 0.14 + 2.15 * amp * Math.pow(Math.max(0, Math.cos(f + Math.PI - 0.35)), 1.15);
+    var anV = -0.3 + 0.3 * Math.max(0, Math.sin(f)), anH = -0.3 + 0.3 * Math.max(0, Math.sin(f + Math.PI));
     var skV = -1.05 * amp * Math.sin(f) + 0.05, skH = -1.05 * amp * Math.sin(f + Math.PI) + 0.05;
     var alV = 1.5 + 0.35 * amp * Math.max(0, -Math.sin(f)), alH = 1.5 + 0.35 * amp * Math.max(0, Math.sin(f));
     var lut = lerp(1.0, 0.2, myk(l.andel * 1.05));
@@ -461,6 +597,7 @@
       var lutS = lerp(1.32, 1.72, k);
       thV = lerp(thV, lerp(1.7, 1.5, k), s); knV = lerp(knV, lerp(2.2, 1.75, k), s);
       thH = lerp(thH, lerp(0.5, 0.8, k), s); knH = lerp(knH, lerp(1.9, 1.45, k), s);
+      anV = lerp(anV, -0.55, s); anH = lerp(anH, -0.55, s);
       skV = lerp(skV, lutS, s); skH = lerp(skH, lutS, s);
       alV = lerp(alV, 0.06, s); alH = lerp(alH, 0.06, s);
       lut = lerp(lut, lutS, s); hodeV = lerp(hodeV, lerp(-0.2, -0.5, k), s);
@@ -468,6 +605,7 @@
 
     l.bV.hofte.rotation.z = thV; l.bH.hofte.rotation.z = thH;
     l.bV.kne.rotation.z = -knV; l.bH.kne.rotation.z = -knH;
+    l.bV.ankel.rotation.z = anV; l.bH.ankel.rotation.z = anH;
     l.aV.skulder.rotation.z = skV; l.aH.skulder.rotation.z = skH;
     l.aV.albue.rotation.z = alV; l.aH.albue.rotation.z = alH;
     l.overkropp.rotation.z = -lut;
@@ -476,8 +614,8 @@
 
     // Hoftehøyden følger det beinet som rekker lengst ned, så en fot alltid er nær bakken
     var rekkV = L1 * Math.cos(thV) + L2 * Math.cos(thV - knV), rekkH = L1 * Math.cos(thH) + L2 * Math.cos(thH - knH);
-    var svev = (1 - myk(l.sett)) * 0.05 * l.andel * Math.abs(Math.sin(f * 1.0 + 0.6));
-    l.bekken.position.y = Math.max(rekkV, rekkH) + 0.09 + svev;
+    var svev = (1 - myk(l.sett)) * 0.05 * l.andel * Math.abs(Math.sin(f + 0.6));
+    l.bekken.position.y = Math.max(rekkV, rekkH) + 0.095 + svev;
     l.gruppe.position.set(l.x, 0, l.z);
     l.skilt.visible = l.spiller || smal;
   }
@@ -510,21 +648,25 @@
   var tilstand = "meny"; // meny | plass | klar | lop | mal
   var nivaa = "krets";
   var klokke = 0, fasetid = 0, klarVent = 0, tjuv = 0;
-  var sisteTrykk = -1, sisteSide = "", kraft = 0, rytmeTekstTid = 0;
+  var sisteTrykk = -1, kraft = 0, rytmeTekstTid = 0;
+  var nesteSlag = 0, nesteSide = "", forrigeSlag = -9, tikket = false, flyt = 0; // takten: ett slag per steg
+  var spillernavn = "";
   var malTid = 0, resultatVist = false;
   var smal = false; // stående skjerm: kameraet følger bak løperen
   var kamPos = new THREE.Vector3(8, 1.6, 7), kamSe = new THREE.Vector3(0, 1, 0), kamFov = 32;
-  var REKORD = "gfik-sprint-rekord";
+  var REKORD = "gfik-sprint-rekord", NAVN = "gfik-sprint-navn";
 
   function hentRekord() { try { return JSON.parse(localStorage.getItem(REKORD) || "{}") || {}; } catch (e) { return {}; } }
   function lagreRekord(r) { try { localStorage.setItem(REKORD, JSON.stringify(r)); } catch (e) { /* privat modus */ } }
 
-  function idealTid(v) { return 0.31 - 0.095 * klem(v / 11, 0, 1); } // sekunder mellom stegene
+  function idealTid(v) { return 0.36 - 0.1 * klem(v / 11, 0, 1); } // sekunder mellom slagene: roligst i starten
 
   function stillOpp() {
-    var faktor = NIVAA[nivaa].faktor;
+    var faktor = NIVAA[nivaa].faktor, personer = !!NIVAA[nivaa].personer;
     var klubb = 0;
     lopere.forEach(function (l) {
+      var navn = l.spiller ? (personer ? (spillernavn || "Du") : l.klubb) : (personer ? l.person : l.klubb);
+      if (navn !== l.navn) { l.navn = navn; tegnSkilt(l); }
       l.x = STARTX; l.v = 0; l.fase = 0; l.malfase = 0; l.sett = 1; l.klar = 0; l.andel = 0; l.jubel = 0;
       l.ferdig = false; l.tid = null; l.reaksjon = null; l.startet = false;
       l.skilt.material.opacity = 1;
@@ -536,10 +678,13 @@
       }
       pose(l);
     });
-    klokke = 0; kraft = 0; sisteTrykk = -1; sisteSide = ""; resultatVist = false; malTid = 0;
+    klokke = 0; kraft = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
+    resultatVist = false; malTid = 0;
     el.tid.textContent = "0,00"; el.fart.textContent = "0"; el.plass.textContent = "–";
-    el.rytme.style.left = "0%";
+    tegnStartliste();
+    tegnKlokke("0,0");
     tegnStripe();
+    tegnRytme();
   }
 
   function startSekvens() {
@@ -581,27 +726,79 @@
     if (tilstand === "meny" || tilstand === "mal") return;
     if (tilstand === "plass" || tilstand === "klar") { if (tjuv <= 0 && fasetid > 0.25) tjuvstart(); return; }
     if (spiller.ferdig) return;
-    var na = klokke;
-    if (!spiller.startet) {
+    var na = klokke, annen = side === "v" ? "h" : "v";
+    if (!spiller.startet) { // første steg ut av blokka setter takten i gang
       spiller.startet = true; spiller.reaksjon = na;
-      kraft = 0.7; sisteTrykk = na; sisteSide = side; spiller.malfase += Math.PI;
+      kraft = 0.7; sisteTrykk = na; spiller.malfase += Math.PI;
+      nesteSlag = na + idealTid(0); nesteSide = annen; tikket = false;
       stoy(0.03, 0.12, 1800);
+      blink(side, 1);
       return;
     }
-    if (side === sisteSide) { // samme bein to ganger: ute av rytme
-      kraft *= 0.62; spiller.v *= 0.94;
+    if (side !== nesteSide) { // samme bein to ganger: ute av takt
+      kraft *= 0.7; spiller.v *= 0.95; flyt = 0;
+      blink(side, 0);
       melding("Annenhver gang!");
       return;
     }
-    var dt = na - sisteTrykk, ideal = idealTid(spiller.v);
-    var avvik = (dt - ideal) / NIVAA[nivaa].slakk; // hvor mye slingring nivået tåler
-    var kval = Math.max(NIVAA[nivaa].gulv, Math.exp(-avvik * avvik));
-    if (dt < ideal * 0.55) kval = 0.25;
-    kraft += (kval - kraft) * 0.6;
-    sisteTrykk = na; sisteSide = side;
+    // Trykket måles mot slaget som kommer. Kom det rett etter at et slag glapp, regnes det som for sent.
+    var ideal = idealTid(spiller.v);
+    var avvik = na - nesteSlag, sen = false;
+    if (avvik < 0 && na - forrigeSlag < ideal * 0.8) { avvik = na - forrigeSlag; sen = true; }
+    var rel = avvik / NIVAA[nivaa].slakk; // hvor mye slingring nivået tåler
+    var kval = Math.max(NIVAA[nivaa].gulv, Math.exp(-rel * rel));
+    if (!sen && avvik < -ideal * 0.5) kval = 0.25;
+    if (!sen) { kraft += (kval - kraft) * 0.6; nesteSlag += ideal; } // et for sent trykk er alt trukket for
+    flyt = kval > 0.6 ? flyt + 1 : 0;
+    sisteTrykk = na;
     spiller.malfase += Math.PI;
+    if (nesteSlag > na + ideal * 1.6 || nesteSlag < na + ideal * 0.35) nesteSlag = na + ideal;
+    nesteSide = annen; forrigeSlag = -9; tikket = false;
     stoy(0.03, 0.1, 1500 + 900 * kval);
-    melding(kval > 0.86 ? "Perfekt" : kval > 0.6 ? "Bra" : dt < ideal ? "For tidlig" : "For sent");
+    blink(side, kval);
+    melding((kval > 0.86 ? "Perfekt" : kval > 0.6 ? "Bra" : avvik < 0 ? "For tidlig" : "For sent") + (flyt >= 4 ? " ×" + flyt : ""));
+  }
+
+  // Kort blink på knappen: grønn for treff, rød for bom
+  function blink(side, kval) {
+    var k = side === "v" ? el.tastV : el.tastH;
+    if (!k) return;
+    k.classList.remove("er-traff", "er-bom");
+    void k.offsetWidth; // starter animasjonen på nytt
+    k.classList.add(kval > 0.6 ? "er-traff" : "er-bom");
+  }
+
+  // Ringen krymper inn mot knappen og treffer kanten akkurat på slaget
+  function tegnRytme() {
+    var iLop = tilstand === "lop" && !spiller.ferdig;
+    var neste = !iLop ? "" : !spiller.startet ? "vh" : nesteSide;
+    var ideal = idealTid(spiller.v);
+    var t = iLop && spiller.startet ? 1 - (nesteSlag - klokke) / ideal : 1;
+    [["v", el.tastV], ["h", el.tastH]].forEach(function (par) {
+      var k = par[1];
+      if (!k) return;
+      var er = neste.indexOf(par[0]) >= 0, ring = k.firstElementChild;
+      k.classList.toggle("er-neste", er);
+      k.classList.toggle("er-naa", er && spiller.startet && Math.abs(nesteSlag - klokke) < NIVAA[nivaa].slakk * 0.7);
+      if (!ring) return;
+      ring.style.opacity = er ? klem(0.2 + t * 0.8, 0, 1).toFixed(2) : "0";
+      ring.style.transform = "scale(" + klem(1.75 - 0.75 * t, 0.8, 1.75).toFixed(3) + ")";
+    });
+  }
+
+  function tegnStartliste() {
+    if (!el.startliste) return;
+    while (el.startliste.firstChild) el.startliste.removeChild(el.startliste.firstChild);
+    lopere.forEach(function (l) {
+      var li = document.createElement("li");
+      if (l.spiller) li.className = "er-spiller";
+      var nr = document.createElement("span"); nr.className = "spill__nr"; nr.textContent = String(l.nr + 1);
+      var prikk = document.createElement("span"); prikk.className = "spill__drakt";
+      prikk.style.backgroundColor = "#" + ("000000" + l.farge.toString(16)).slice(-6);
+      var navn = document.createElement("span"); navn.textContent = l.navn;
+      li.appendChild(nr); li.appendChild(prikk); li.appendChild(navn);
+      el.startliste.appendChild(li);
+    });
   }
 
   function plassering() {
@@ -638,7 +835,7 @@
     var plass = liste.indexOf(spiller) + 1;
     var rekorder = hentRekord(), gammel = rekorder[nivaa], ny = spiller.tid !== null && (!gammel || spiller.tid < gammel);
     if (ny) { rekorder[nivaa] = Math.round(spiller.tid * 100) / 100; lagreRekord(rekorder); }
-    el.resultatTittel.textContent = spiller.tid === null ? "Tiden gikk ut" : plass === 1 ? "Seier til Gausdal!" : plass + ". plass";
+    el.resultatTittel.textContent = spiller.tid === null ? "Tiden gikk ut" : plass === 1 ? (NIVAA[nivaa].personer ? "Du vant klubbstevnet!" : "Seier til Gausdal!") : plass + ". plass";
     var tekst = spiller.tid === null ? "Du kom ikke i mål innen tiden."
       : "Tiden din ble " + tidTekst(spiller.tid) + ", med reaksjonstid " + tidTekst(spiller.reaksjon || 0) + "." + (ny ? " Det er ny personlig rekord i " + NIVAA[nivaa].navn.toLowerCase() + "." : gammel ? " Rekorden din er " + tidTekst(gammel) + "." : "");
     el.resultatTekst.textContent = tekst;
@@ -661,8 +858,14 @@
     klokke += dt;
     // Spilleren: kraften fra rytmen bestemmer toppfarten
     if (spiller.startet && !spiller.ferdig) {
-      // Kraften holder seg mellom stegene og faller først når neste steg uteblir
-      if (klokke - sisteTrykk > idealTid(spiller.v) * 1.45) kraft *= Math.exp(-dt / 0.55);
+      // Takten går videre selv om et slag glipper. Da faller kraften, og samme bein får neste slag.
+      var takt = idealTid(spiller.v);
+      if (!tikket && klokke >= nesteSlag) { tikket = true; tone(1500, 0.04, 0.05); }
+      if (klokke > nesteSlag + takt * 0.5) {
+        kraft *= 0.84; flyt = 0;
+        forrigeSlag = nesteSlag; nesteSlag += takt; tikket = false;
+        melding("Bom");
+      }
       var slit = spiller.x > 65 ? 1 - 0.05 * Math.pow((spiller.x - 65) / 35, 2) * (1.3 - kraft) : 1;
       var mal = TOPPFART * kraft * slit;
       spiller.v += (mal - spiller.v) * dt / 1.22;
@@ -689,7 +892,7 @@
           l.v = Math.max(1.4, l.v - dt * 3.2);
         }
         l.x += l.v * dt;
-        l.fase += dt * Math.PI * (2.0 + 2.7 * klem(l.v / 11, 0, 1));
+        l.fase += dt * Math.PI / idealTid(l.v);
         l.sett = Math.max(0, l.sett - dt / 0.42);
       }
       l.andel = klem(l.v / 10.5, 0, 1);
@@ -709,14 +912,14 @@
       el.tid.textContent = tidTekst(klokke);
       el.fart.textContent = String(Math.round(spiller.v * 3.6));
       el.plass.textContent = plassering() + ". plass";
-      var andel = sisteTrykk < 0 ? 0 : (klokke - sisteTrykk) / idealTid(spiller.v);
-      el.rytme.style.left = klem(andel / 1.8, 0, 1) * 100 + "%";
-      el.sone.style.left = (1 / 1.8) * 100 + "%";
     } else {
       el.tid.textContent = tidTekst(spiller.tid);
       el.plass.textContent = plassering() + ". plass";
     }
     tegnStripe();
+    var beste = null;
+    lopere.forEach(function (l) { if (l.tid !== null && (beste === null || l.tid < beste)) beste = l.tid; });
+    tegnKlokke(beste !== null ? tidTekst(beste) : klokke.toFixed(1).replace(".", ","));
 
     if (rytmeTekstTid > 0) { rytmeTekstTid -= dt; if (rytmeTekstTid <= 0) el.melding.textContent = ""; }
 
@@ -754,6 +957,7 @@
         pose(l);
       });
     }
+    tegnRytme();
     oppdaterKamera(dt);
   }
 
@@ -821,40 +1025,47 @@
   var klubbNr = 0;
   for (var i = 0; i < BANER; i++) {
     if (i === SPILLERBANE) {
-      spiller = lagLoper(i, { drakt: 0xd8232a, shorts: 0x1c1413 }, "Gausdal FIK", true);
+      spiller = lagLoper(i, { drakt: 0xd8232a, shorts: 0x1c1413 }, true);
+      spiller.klubb = "Gausdal FIK";
       lopere.push(spiller);
     } else {
-      var k = KLUBBER[klubbNr++];
-      lopere.push(lagLoper(i, k, k.navn, false));
+      var k = KLUBBER[klubbNr++], motstander = lagLoper(i, k, false);
+      motstander.klubb = k.navn; motstander.person = k.person;
+      lopere.push(motstander);
     }
   }
-  if (el.startliste) {
-    lopere.forEach(function (l) {
-      var li = document.createElement("li");
-      if (l.spiller) li.className = "er-spiller";
-      var nr = document.createElement("span"); nr.className = "spill__nr"; nr.textContent = String(l.nr + 1);
-      var prikk = document.createElement("span"); prikk.className = "spill__drakt";
-      prikk.style.backgroundColor = "#" + ("000000" + l.farge.toString(16)).slice(-6);
-      var navn = document.createElement("span"); navn.textContent = l.navn;
-      li.appendChild(nr); li.appendChild(prikk); li.appendChild(navn);
-      el.startliste.appendChild(li);
-    });
+  try { spillernavn = (localStorage.getItem(NAVN) || "").slice(0, 16); } catch (e) { spillernavn = ""; }
+  if (el.navn) el.navn.value = spillernavn;
+
+  function visNivaa() {
+    if (el.nivaatekst) el.nivaatekst.textContent = NIVAA[nivaa].tekst;
+    if (el.navnfelt) el.navnfelt.hidden = !NIVAA[nivaa].personer;
+    visRekord();
+    if (tilstand === "meny") stillOpp();
   }
   stillOpp();
   tilpass();
-  visRekord();
+  visNivaa();
   if (window.ResizeObserver) new ResizeObserver(tilpass).observe(rot); else window.addEventListener("resize", tilpass);
   document.addEventListener("visibilitychange", function () { aktiv = !document.hidden; });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { /* skiltene bruker skriften når den er lastet */ });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { lopere.forEach(tegnSkilt); var kt = klokketekst; klokketekst = ""; tegnKlokke(kt || "0,0"); });
 
   // Nivåvalg
   Array.prototype.forEach.call(rot.querySelectorAll("[data-spill-nivaa]"), function (knapp) {
     knapp.addEventListener("click", function () {
       nivaa = knapp.getAttribute("data-spill-nivaa");
       Array.prototype.forEach.call(rot.querySelectorAll("[data-spill-nivaa]"), function (b) { b.setAttribute("aria-pressed", b === knapp ? "true" : "false"); });
-      visRekord();
+      visNivaa();
     });
   });
+  if (el.navn) {
+    el.navn.addEventListener("input", function () {
+      spillernavn = el.navn.value.replace(/\s+/g, " ").trim().slice(0, 16);
+      try { localStorage.setItem(NAVN, spillernavn); } catch (e) { /* privat modus */ }
+      if (tilstand === "meny") stillOpp();
+    });
+    el.navn.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); startSekvens(); } });
+  }
   el.startknapp.addEventListener("click", startSekvens);
   el.igjen.addEventListener("click", startSekvens);
   var bytt = finn("[data-spill-bytt]");
@@ -888,7 +1099,8 @@
   // For testing: lar en automatisk løper trykke i en gitt takt
   window.GFIKSPILL = {
     tilstand: function () { return { tilstand: tilstand, klokke: klokke, x: spiller.x, v: spiller.v, kraft: kraft, tid: spiller.tid, plass: plassering() }; },
-    trykk: trykk, start: startSekvens, ideal: function () { return idealTid(spiller.v); }
+    trykk: trykk, start: startSekvens, ideal: function () { return idealTid(spiller.v); },
+    slag: function () { return { tid: nesteSlag, side: nesteSide, startet: spiller.startet }; }
   };
 
   window.requestAnimationFrame(ramme);

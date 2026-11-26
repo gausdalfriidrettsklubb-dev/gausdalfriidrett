@@ -626,7 +626,7 @@ a:hover > .pil { transform: translateX(3px); }
 }
 .spill.er-i-gang { touch-action: none; }
 @media (max-width: 899px) { .spill { aspect-ratio: 4 / 3; } }
-@media (max-width: 700px) { .spill { aspect-ratio: 9 / 14; } }
+@media (max-width: 700px) { .spill { aspect-ratio: 9 / 15; } }
 .spill__lerret { display: block; width: 100%; height: 100%; outline-offset: -3px; }
 .spill__feil { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; background: var(--natt); text-align: center; font-size: 1.12rem; }
 .spill__feil[hidden] { display: none; }
@@ -652,18 +652,27 @@ a:hover > .pil { transform: translateX(3px); }
 .spill__signal[hidden] { display: none; }
 .spill__signal.er-skudd { background: var(--rod); }
 .spill__signal.er-feil { background: #fff; color: var(--rod-dyp); font-size: clamp(1.3rem, 4.4vw, 2.2rem); }
-.spill__rytmefelt { position: absolute; left: 50%; bottom: 18px; width: min(46%, 380px); transform: translateX(-50%); text-align: center; }
-.spill__melding { min-height: 1.5em; margin: 0 0 6px; font: 700 1.25rem/1.2 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55); }
-.spill__rytme { position: relative; height: 14px; border-radius: 7px; background: rgba(28, 20, 19, 0.7); }
-.spill__sone { position: absolute; top: 0; bottom: 0; width: 22%; margin-left: -11%; border-radius: 7px; background: #46c36f; }
-.spill__merke { position: absolute; top: -4px; width: 6px; height: 22px; margin-left: -3px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 2px rgba(28, 20, 19, 0.6); }
+.spill__rytmefelt { position: absolute; left: 50%; bottom: 128px; width: min(72%, 380px); transform: translateX(-50%); text-align: center; }
+.spill__melding { min-height: 1.3em; margin: 0; font: 700 1.35rem/1.2 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
 .spill__taster { display: none; }
+.spill__taster:not([hidden]) { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; gap: 72px; pointer-events: none; }
+.spill__taster button { position: relative; pointer-events: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 92px; height: 92px; padding: 0; border: 3px solid rgba(255, 255, 255, 0.55); border-radius: 50%; background: rgba(28, 20, 19, 0.6); color: #fff; font: 700 0.82rem/1 var(--font-tittel); letter-spacing: 0.08em; text-transform: uppercase; touch-action: none; cursor: pointer; transition: background-color 0.08s, border-color 0.08s; }
+.spill__taster kbd { font: 700 1.7rem/1 var(--font); }
+.spill__taster button.er-neste { border-color: #fff; background: rgba(176, 23, 30, 0.9); }
+.spill__taster button.er-naa { background: #1f9d55; }
+.spill__ring { position: absolute; inset: -3px; border: 4px solid #fff; border-radius: inherit; opacity: 0; pointer-events: none; will-change: transform, opacity; }
+.spill__taster button.er-naa .spill__ring { border-color: #b9f5cf; }
+.spill__taster button.er-traff { animation: spill-traff 0.22s ease-out; }
+.spill__taster button.er-bom { animation: spill-bom 0.22s ease-out; }
+@keyframes spill-traff { from { box-shadow: 0 0 0 0 rgba(70, 195, 111, 0.95), inset 0 0 0 60px rgba(70, 195, 111, 0.85); } to { box-shadow: 0 0 0 16px rgba(70, 195, 111, 0), inset 0 0 0 60px rgba(70, 195, 111, 0); } }
+@keyframes spill-bom { from { box-shadow: inset 0 0 0 60px rgba(20, 16, 15, 0.9); } to { box-shadow: inset 0 0 0 60px rgba(20, 16, 15, 0); } }
 @media (pointer: coarse) {
-  .spill__taster:not([hidden]) { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; gap: 12px; padding: 12px; pointer-events: none; }
-  .spill__rytmefelt { bottom: 124px; width: min(72%, 380px); }
+  .spill__taster:not([hidden]) { bottom: 0; justify-content: space-between; gap: 12px; padding: 14px; }
+  .spill__taster button { width: 34%; max-width: 170px; height: 104px; border-radius: 22px; font-size: 1.15rem; }
+  .spill__taster kbd { display: none; }
+  .spill__rytmefelt { bottom: 132px; }
 }
-.spill__taster button { pointer-events: auto; width: 31%; max-width: 150px; min-height: 96px; border: 2px solid rgba(255, 255, 255, 0.9); border-radius: 16px; background: rgba(176, 23, 30, 0.82); color: #fff; font: 700 1.3rem/1 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; touch-action: none; }
-.spill__taster button:active { background: #fff; color: var(--rod-dyp); }
+@media (prefers-reduced-motion: reduce) { .spill__taster button.er-traff, .spill__taster button.er-bom { animation: none; } }
 .spill__panel { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(92%, 440px); max-height: 94%; overflow-y: auto; overscroll-behavior: contain; padding: clamp(18px, 3vw, 28px); border-radius: var(--radius); background: rgba(255, 252, 250, 0.96); color: var(--blekk); box-shadow: var(--skygge-loft); --fokus: #1c1413; }
 .spill__panel[hidden] { display: none; }
 @media (min-width: 900px) { .spill__panel { left: auto; right: 3.5%; transform: translateY(-50%); width: min(40%, 420px); } }
@@ -676,6 +685,10 @@ a:hover > .pil { transform: translateX(3px); }
 .spill__nivaa button:hover { background: var(--rod-lys); color: var(--rod-dyp); }
 .spill__nivaa button[aria-pressed="true"] { background: var(--blekk); color: #fff; }
 .spill__rekord { font-size: 0.97rem; }
+.spill__panel .spill__nivaatekst { margin-top: 10px; font-size: 0.97rem; }
+.spill__navnfelt { display: block; margin-top: 14px; font-weight: 600; font-size: 0.97rem; color: var(--blekk); }
+.spill__navnfelt[hidden] { display: none; }
+.spill__navnfelt input { display: block; width: 100%; min-height: 44px; margin-top: 6px; padding: 8px 12px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: #fff; color: var(--blekk); font: 400 1rem/1.3 var(--font); -webkit-user-select: text; user-select: text; }
 .spill__liste { margin: 14px 0 0; padding: 0; list-style: none; border-top: 2px solid var(--blekk); font-variant-numeric: tabular-nums; }
 .spill__liste li { display: flex; gap: 10px; padding: 6px 8px; border-bottom: 1px solid var(--linje); }
 .spill__liste li.er-spiller { background: var(--rod); color: #fff; font-weight: 600; border-radius: 4px; }
@@ -698,8 +711,8 @@ a:hover > .pil { transform: translateX(3px); }
 }
 @media (max-height: 520px) and (orientation: landscape) {
   .spill { max-height: 96vh; max-height: 96svh; }
-  .spill__taster button { min-height: 72px; }
-  .spill__rytmefelt { bottom: 14px; }
+  .spill__taster button { height: 76px; }
+  .spill__rytmefelt { bottom: 100px; }
 }
 
 /* ---------- Øvelsene i friidrett ---------- */
