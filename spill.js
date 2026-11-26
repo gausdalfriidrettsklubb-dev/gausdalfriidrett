@@ -62,21 +62,22 @@
 
   // Motstanderne. Fargene er valgt for å skille løperne fra hverandre og er ikke klubbenes offisielle drakter.
   // Personnavnene brukes i klubbstevnet og er oppdiktet.
+  // «navn» er klubben i NM. «krets» er klubben i kretsmesterskapet, og alle der hører til Innlandet friidrettskrets.
   var KLUBBER = [
-    { navn: "Lillehammer IF", person: "Jonas Bakken", drakt: 0x1f5fbf, shorts: 0x10264d, tid: 10.75 },
-    { navn: "Moelven IL", person: "Ingrid Haugen", lang: true, drakt: 0x1e9e5a, shorts: 0x0f3d26, tid: 11.25 },
-    { navn: "IK Tjalve", person: "Sander Lien", drakt: 0xf2f2f2, shorts: 0x1a3c8c, tid: 10.6 },
-    { navn: "IL Tyrving", person: "Nora Solberg", lang: true, drakt: 0x39a9e0, shorts: 0xffffff, tid: 10.9 },
-    { navn: "Sandnes IL", person: "Mathias Dahl", drakt: 0xf2c230, shorts: 0x1b1b1b, tid: 11.05 },
-    { navn: "Raufoss IL", person: "Thea Moen", lang: true, drakt: 0xf07c1f, shorts: 0x23252b, tid: 11.5 },
-    { navn: "IL Gular", person: "Emil Brenden", drakt: 0x7a3fc4, shorts: 0xf2f2f2, tid: 11.8 }
+    { navn: "Lillehammer IF", krets: "Lillehammer IF", person: "Jonas Bakken", drakt: 0x1f5fbf, shorts: 0x10264d, tid: 10.75 },
+    { navn: "Moelven IL", krets: "Moelven IL", person: "Ingrid Haugen", lang: true, drakt: 0x1e9e5a, shorts: 0x0f3d26, tid: 11.25 },
+    { navn: "IK Tjalve", krets: "Hamar IL", person: "Sander Lien", drakt: 0xf2f2f2, shorts: 0x1a3c8c, tid: 10.6 },
+    { navn: "IL Tyrving", krets: "FIK Orion", person: "Nora Solberg", lang: true, drakt: 0x39a9e0, shorts: 0xffffff, tid: 10.9 },
+    { navn: "Sandnes IL", krets: "Løten Friidrett", person: "Mathias Dahl", drakt: 0xf2c230, shorts: 0x1b1b1b, tid: 11.05 },
+    { navn: "Raufoss IL", krets: "Raufoss IL", person: "Thea Moen", lang: true, drakt: 0xf07c1f, shorts: 0x23252b, tid: 11.5 },
+    { navn: "IL Gular", krets: "Veldre Friidrett", person: "Emil Brenden", drakt: 0x7a3fc4, shorts: 0xf2f2f2, tid: 11.8 }
   ];
   var NIVAA = {
     klubb: { navn: "Klubbstevne", faktor: 1.16, slakk: 0.14, gulv: 0.45, personer: true, tekst: "Du løper mot sju klubbkamerater. Takten tåler litt slingring." },
-    krets: { navn: "Kretsmesterskap", faktor: 1.08, slakk: 0.105, gulv: 0.36, tekst: "Du løper mot sju andre klubber. Her må takten sitte." },
+    krets: { navn: "Kretsmesterskap", faktor: 1.08, slakk: 0.105, gulv: 0.36, krets: true, tekst: "Du løper mot sju klubber i Innlandet friidrettskrets. Her må takten sitte." },
     nm: { navn: "NM", faktor: 1.0, slakk: 0.08, gulv: 0.3, tekst: "De raskeste motstanderne. Nesten hvert steg må treffe." }
   };
-  var HUD = [0xf1c9a5, 0xd9a47a, 0x8d5a3b, 0xe6b98f, 0x6b4226, 0xf3d2b3, 0xc68c5e, 0xa66a43];
+  var HUD = [0xe3b08a, 0xd9a47a, 0x8d5a3b, 0xdca57c, 0x6b4226, 0xe8b993, 0xc68c5e, 0xa66a43];
   var HAAR = [0x2b1d14, 0xd8b56a, 0x141414, 0x7a4a26, 0x1c1c1c, 0xb5651d, 0x3a2a1c, 0x0f0f0f];
 
   var rolig = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -466,7 +467,20 @@
     return new THREE.MeshStandardMaterial({ color: lin(hex), roughness: ruhet, metalness: 0, side: THREE.DoubleSide });
   }
 
+  // Løperne bygges først av enkle former, så spillet virker med en gang. Når 3D-modellene
+  // i assets/runners er lastet, bytter runners.js ut kroppen og beholder de samme leddene.
   function lagLoper(nr, farger, erSpiller) {
+    var l = lagGrunnloper(nr, farger, erSpiller);
+    if (window.GausdalRunners) {
+      window.GausdalRunners.attach(l, farger, {
+        skin: HUD[nr % HUD.length], hair: HAAR[nr % HAAR.length],
+        shoe: erSpiller ? 0xffffff : SKO[nr % SKO.length]
+      }).then(function () { pose(l); }, function (feil) { if (window.console) console.warn("Kunne ikke laste 3D-løper", feil); });
+    }
+    return l;
+  }
+
+  function lagGrunnloper(nr, farger, erSpiller) {
     var hud = stoff(HUD[nr % HUD.length], 0.62);
     var drakt = stoff(farger.drakt, 0.84), shorts = stoff(farger.shorts, 0.8);
     var sko = stoff(erSpiller ? 0xffffff : SKO[nr % SKO.length], 0.5), hvitt = stoff(0xf2f2f2, 0.75);
@@ -618,6 +632,7 @@
     l.bekken.position.y = Math.max(rekkV, rekkH) + 0.095 + svev;
     l.gruppe.position.set(l.x, 0, l.z);
     l.skilt.visible = l.spiller || smal;
+    l.skilt.position.y = 2.25 + 0.34 * myk(l.jubel); // over hendene når vinneren jubler
   }
 
   /* ---------- Lyd ---------- */
@@ -662,10 +677,10 @@
   function idealTid(v) { return 0.36 - 0.1 * klem(v / 11, 0, 1); } // sekunder mellom slagene: roligst i starten
 
   function stillOpp() {
-    var faktor = NIVAA[nivaa].faktor, personer = !!NIVAA[nivaa].personer;
+    var faktor = NIVAA[nivaa].faktor, personer = !!NIVAA[nivaa].personer, krets = !!NIVAA[nivaa].krets;
     var klubb = 0;
     lopere.forEach(function (l) {
-      var navn = l.spiller ? (personer ? (spillernavn || "Du") : l.klubb) : (personer ? l.person : l.klubb);
+      var navn = l.spiller ? (personer ? (spillernavn || "Du") : l.klubb) : (personer ? l.person : krets ? l.kretsklubb : l.klubb);
       if (navn !== l.navn) { l.navn = navn; tegnSkilt(l); }
       l.x = STARTX; l.v = 0; l.fase = 0; l.malfase = 0; l.sett = 1; l.klar = 0; l.andel = 0; l.jubel = 0;
       l.ferdig = false; l.tid = null; l.reaksjon = null; l.startet = false;
@@ -1030,7 +1045,7 @@
       lopere.push(spiller);
     } else {
       var k = KLUBBER[klubbNr++], motstander = lagLoper(i, k, false);
-      motstander.klubb = k.navn; motstander.person = k.person;
+      motstander.klubb = k.navn; motstander.kretsklubb = k.krets; motstander.person = k.person;
       lopere.push(motstander);
     }
   }
