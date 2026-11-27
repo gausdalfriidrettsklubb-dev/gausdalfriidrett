@@ -588,7 +588,7 @@
     return {
       nr: nr, navn: "", klubb: "", person: "", spiller: !!erSpiller, farge: farger.drakt, gruppe: gruppe, bekken: bekken, overkropp: overkropp, hode: hode,
       aV: aV, aH: aH, bV: bV, bH: bH, skilt: skilt, skiltbilde: skiltbilde,
-      x: STARTX, z: baneZ(nr), v: 0, fase: 0, malfase: 0, sett: 1, klar: 0, andel: 0, jubel: 0,
+      x: STARTX, z: baneZ(nr), v: 0, fase: 0, malfase: 0, sett: 1, klar: 0, andel: 0, jubel: 0, reist: 0,
       ferdig: false, tid: null, reaksjon: null, startet: false
     };
   }
@@ -620,6 +620,11 @@
     var hodeV = lerp(0.4, 0.05, myk(l.andel * 1.05));
     var vri = 0.16 * amp * Math.sin(f) * (1 - myk(l.sett));
 
+    if (l.reist > 0) { // etter målstreken retter løperen seg opp mens farten faller
+      var opp = myk(l.reist);
+      lut = lerp(lut, 0.04, opp); hodeV = lerp(hodeV, 0, opp);
+      alV = lerp(alV, 0.75, opp); alH = lerp(alH, 0.75, opp); // armene henger roligere ned
+    }
     if (l.jubel > 0) { // armene i været etter seier
       var j = myk(l.jubel);
       skV = lerp(skV, 2.75, j); skH = lerp(skH, 2.75, j); alV = lerp(alV, 0.25, j); alH = lerp(alH, 0.25, j);
@@ -706,7 +711,7 @@
     lopere.forEach(function (l) {
       var navn = l.spiller ? (personer ? (spillernavn || "Du") : l.klubb) : (personer ? l.person : krets ? l.kretsklubb : l.klubb);
       if (navn !== l.navn) { l.navn = navn; tegnSkilt(l); }
-      l.x = STARTX; l.v = 0; l.fase = 0; l.malfase = 0; l.sett = 1; l.klar = 0; l.andel = 0; l.jubel = 0;
+      l.x = STARTX; l.v = 0; l.fase = 0; l.malfase = 0; l.sett = 1; l.klar = 0; l.andel = 0; l.jubel = 0; l.reist = 0;
       l.ferdig = false; l.tid = null; l.reaksjon = null; l.startet = false;
       l.skilt.material.opacity = 1;
       if (!l.spiller) {
@@ -978,6 +983,7 @@
         l.tid = klokke - (l.x - MAL) / Math.max(l.v, 0.1);
         if (l.spiller) { malTid = 0; tone(880, 0.12, 0.25); }
       }
+      if (l.ferdig) l.reist = Math.min(1, l.reist + dt * 2.2);
       l.skilt.material.opacity = Math.max(l.spiller ? 0.85 : 0, l.skilt.material.opacity - dt * 1.4);
       pose(l);
     });
