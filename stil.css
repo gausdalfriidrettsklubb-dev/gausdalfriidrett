@@ -629,7 +629,7 @@ a:hover > .pil { transform: translateX(3px); }
 }
 .spill.er-i-gang { touch-action: none; }
 @media (max-width: 899px) { .spill { aspect-ratio: 4 / 3; } }
-@media (max-width: 700px) { .spill { aspect-ratio: 9 / 15; } }
+@media (max-width: 700px) { .spill { aspect-ratio: 9 / 16; } }
 .spill__lerret { display: block; width: 100%; height: 100%; outline-offset: -3px; }
 .spill__feil { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; background: var(--natt); text-align: center; font-size: 1.12rem; }
 .spill__feil[hidden] { display: none; }
@@ -682,9 +682,10 @@ a:hover > .pil { transform: translateX(3px); }
 .spill__panel h2 { font-size: clamp(2rem, 5vw, 2.8rem); text-transform: uppercase; line-height: 0.95; }
 .spill__panel p { margin: 10px 0 0; color: var(--blekk-2); }
 .spill__panel .knapp { margin-top: 18px; }
+.spill__panel .knapp[hidden] { display: none; }
 .spill__panel .knapperad { gap: 10px; }
 .spill__nivaa { display: flex; gap: 4px; margin-top: 16px; padding: 4px; border: 1px solid var(--linje-sterk); border-radius: var(--radius-s); background: var(--flate); }
-.spill__nivaa button { flex: 1; min-height: 44px; padding: 8px 6px; border: 0; border-radius: 5px; background: none; color: var(--blekk); font: 600 0.97rem/1.15 var(--font); cursor: pointer; }
+.spill__nivaa button { flex: 1 1 auto; min-height: 44px; padding: 8px 6px; border: 0; border-radius: 5px; background: none; color: var(--blekk); font: 600 0.97rem/1.15 var(--font); cursor: pointer; }
 .spill__nivaa button:hover { background: var(--rod-lys); color: var(--rod-dyp); }
 .spill__nivaa button[aria-pressed="true"] { background: var(--blekk); color: #fff; }
 .spill__rekord { font-size: 0.97rem; }
@@ -710,7 +711,15 @@ a:hover > .pil { transform: translateX(3px); }
   .spill__panel p { margin-top: 6px; font-size: 0.97rem; }
   .spill__liste { margin-top: 10px; }
   .spill__liste li { padding: 4px 8px; }
-  .spill__panel .knapp { margin-top: 12px; }
+  .spill__panel .knapp { margin-top: 12px; padding-left: 16px; padding-right: 16px; }
+  /* Startpanelet står øverst, så lydknappen får plass under det */
+  .spill__panel:not(.spill__panel--resultat) { top: 10px; transform: translateX(-50%); max-height: calc(100% - 78px); }
+  .spill__panel:not(.spill__panel--resultat) h2 { display: none; }
+  .spill__nivaa { margin-top: 10px; }
+  .spill__nivaa:first-of-type { margin-top: 0; }
+  .spill__navnfelt { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .spill__navnfelt span { flex: 0 0 96px; line-height: 1.25; }
+  .spill__navnfelt input { flex: 1; min-width: 0; margin-top: 0; }
 }
 @media (max-height: 520px) and (orientation: landscape) {
   .spill { max-height: 96vh; max-height: 96svh; }

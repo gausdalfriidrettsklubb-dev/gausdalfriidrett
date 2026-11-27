@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611271537">
+  <link rel="stylesheet" href="stil.css?v=202611271650">
   <script>document.documentElement.className += " js";</script>
 </head>
 <body>
@@ -84,11 +84,16 @@
 
           <div class="spill__panel" data-spill-start>
             <h2>100 meter</h2>
-            <p>Du løper i bane&nbsp;4. Trykk venstre og høyre annenhver gang, akkurat når ringen treffer knappen.</p>
+            <div class="spill__nivaa" role="group" aria-label="Velg spillmåte">
+              <button type="button" data-spill-modus="takt" aria-pressed="true">Takt</button>
+              <button type="button" data-spill-modus="klassisk" aria-pressed="false">Klassisk</button>
+            </div>
+            <p class="spill__nivaatekst" data-spill-modustekst aria-live="polite">Trykk venstre og høyre annenhver gang, akkurat når ringen treffer knappen.</p>
             <div class="spill__nivaa" role="group" aria-label="Velg nivå">
+              <button type="button" data-spill-nivaa="forsok" aria-pressed="false">Forsøk</button>
               <button type="button" data-spill-nivaa="klubb" aria-pressed="false">Klubbstevne</button>
-              <button type="button" data-spill-nivaa="krets" aria-pressed="true">Kretsmesterskap</button>
-              <button type="button" data-spill-nivaa="nm" aria-pressed="false">NM</button>
+              <button type="button" data-spill-nivaa="krets" aria-pressed="true" aria-label="Kretsmesterskap">KM</button>
+              <button type="button" data-spill-nivaa="nm" aria-pressed="false" aria-label="Norgesmesterskap">NM</button>
             </div>
             <p class="spill__nivaatekst" data-spill-nivaatekst aria-live="polite"></p>
             <label class="spill__navnfelt" data-spill-navnfelt hidden>
@@ -104,6 +109,7 @@
             <p data-spill-resultattekst></p>
             <ol class="spill__liste" data-spill-liste></ol>
             <div class="knapperad">
+              <button type="button" class="knapp knapp--rod" data-spill-videre hidden>Til klubbstevnet</button>
               <button type="button" class="knapp knapp--rod" data-spill-igjen>Løp igjen</button>
               <button type="button" class="knapp knapp--stille" data-spill-bytt>Bytt nivå</button>
             </div>
@@ -122,18 +128,20 @@
         <div class="kolonner kolonner--tre">
           <div>
             <h3>Starten</h3>
-            <p>Vent på skuddet. Trykker du før det smeller, blir det tjuvstart og ny start.</p>
+            <p>Du løper i bane&nbsp;4, i rød drakt. Vent på skuddet. Trykker du før det smeller, blir det tjuvstart og ny start.</p>
             <p>Tiden fra skuddet til det første trykket ditt er reaksjonstiden.</p>
+            <p>Bruk piltastene eller A og D på PC, og knappene nederst på skjermen på mobil.</p>
           </div>
           <div>
-            <h3>Takten</h3>
-            <p>Hvert trykk er ett steg. Bruk piltastene eller A og D på PC, og knappene nederst på skjermen på mobil.</p>
-            <p>En ring krymper inn mot knappen du skal trykke. Trykk når ringen treffer kanten. Med lyden på hører du et tikk på hvert slag. Takten er rolig ut av blokka og øker med farten.</p>
+            <h3>To spillmåter</h3>
+            <p><strong>Takt:</strong> En ring krymper inn mot knappen du skal trykke. Trykk når ringen treffer kanten. Med lyden på hører du et tikk på hvert slag. Takten er rolig ut av blokka og øker med farten.</p>
+            <p><strong>Klassisk:</strong> Trykk venstre og høyre annenhver gang så fort du klarer. Jo raskere du trykker, jo fortere løper du.</p>
           </div>
           <div>
             <h3>Nivåene</h3>
-            <p>I klubbstevnet løper du mot sju klubbkamerater, og du kan skrive inn navnet ditt. I kretsmesterskapet løper du for Gausdal FIK mot sju klubber i Innlandet friidrettskrets, og i NM mot klubber fra hele landet.</p>
-            <p>Jo høyere nivå, jo raskere motstandere og jo mindre slingring tåler takten. Den beste tiden din på hvert nivå lagres i nettleseren.</p>
+            <p>Begynn gjerne med forsøket. Det er en øvingsrunde med rolige motstandere, der takten tåler mye slingring. Kommer du blant de fire første, går du videre til klubbstevnet.</p>
+            <p>I forsøket og klubbstevnet løper du mot sju klubbkamerater, og du kan skrive inn navnet ditt. I kretsmesterskapet (KM) løper du for Gausdal FIK mot sju klubber i Innlandet friidrettskrets, og i NM mot klubber fra hele landet.</p>
+            <p>Jo høyere nivå, jo raskere motstandere og jo mer kreves det av deg. Den beste tiden din lagres i nettleseren, for hvert nivå og hver spillmåte.</p>
           </div>
         </div>
         <p class="tyrving__kilde">Klubbnavnene i spillet er ekte, men løperne, tidene og draktfargene er oppdiktet. Det samme gjelder navnene på klubbkameratene i klubbstevnet. Navnet du skriver inn, lagres bare i nettleseren din. Skiltene langs banen viser klubbens sponsorer. Løperfigurene bygger på frie modeller fra MakeHuman.</p>
@@ -185,11 +193,11 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="innhold.js?v=202611271537"></script>
-  <script src="app.js?v=202611271537"></script>
+  <script src="innhold.js?v=202611271650"></script>
+  <script src="app.js?v=202611271650"></script>
   <script src="assets/runners/vendor/GLTFLoader.js"></script>
   <script src="assets/runners/vendor/SkeletonUtils.js"></script>
-  <script src="assets/runners/runners.js?v=202611271537"></script>
-  <script src="spill.js?v=202611271537"></script>
+  <script src="assets/runners/runners.js?v=202611271650"></script>
+  <script src="spill.js?v=202611271650"></script>
 </body>
 </html>

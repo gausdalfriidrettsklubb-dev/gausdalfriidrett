@@ -1,7 +1,8 @@
 /* Gausdal Friidrettsklubb – Gausdalsprinten
    Et 100-meterløp i 3D. Spilleren løper for Gausdal FIK mot sju andre klubber,
    eller mot sju klubbkamerater i klubbstevnet.
-   Styring: trykk venstre og høyre annenhver gang, i takt med slagene.
+   To spillmåter: «takt», der trykkene skal treffe slagene, og «klassisk», der farten
+   følger hvor fort det trykkes. Forsøket er en øvingsrunde før klubbstevnet.
    Bygger på three.js (r128), som lastes fra cdnjs i spill.html. */
 (function () {
   "use strict";
@@ -21,6 +22,9 @@
     tastV: finn('[data-spill-tast="v"]'),
     tastH: finn('[data-spill-tast="h"]'),
     nivaatekst: finn("[data-spill-nivaatekst]"),
+    modustekst: finn("[data-spill-modustekst]"),
+    videre: finn("[data-spill-videre]"),
+    bytt: finn("[data-spill-bytt]"),
     navnfelt: finn("[data-spill-navnfelt]"),
     navn: finn("[data-spill-navn]"),
     melding: finn("[data-spill-melding]"),
@@ -72,10 +76,25 @@
     { navn: "Raufoss IL", krets: "Raufoss IL", person: "Thea Moen", lang: true, drakt: 0xf07c1f, shorts: 0x23252b, tid: 11.5 },
     { navn: "IL Gular", krets: "Veldre Friidrett", person: "Emil Brenden", drakt: 0x7a3fc4, shorts: 0xf2f2f2, tid: 11.8 }
   ];
+  // faktor: hvor mye tregere motstanderne er. slakk, gulv, bom og feil styrer hvor streng takten er.
+  // mos: hvor mange trykk i sekundet som gir full fart i klassisk spillmåte.
   var NIVAA = {
-    klubb: { navn: "Klubbstevne", faktor: 1.16, slakk: 0.14, gulv: 0.45, personer: true, tekst: "Du løper mot sju klubbkamerater. Takten tåler litt slingring." },
-    krets: { navn: "Kretsmesterskap", faktor: 1.08, slakk: 0.105, gulv: 0.36, krets: true, tekst: "Du løper mot sju klubber i Innlandet friidrettskrets. Her må takten sitte." },
-    nm: { navn: "NM", faktor: 1.0, slakk: 0.08, gulv: 0.3, tekst: "De raskeste motstanderne. Nesten hvert steg må treffe." }
+    forsok: { navn: "Forsøk", faktor: 1.36, slakk: 0.2, gulv: 0.6, bom: 0.93, feil: 0.85, mos: 7.5, personer: true, forsok: true,
+      tekst: "Øvingsrunde mot rolige motstandere. Takten tåler mye slingring, og de fire første går videre.",
+      tekstK: "Øvingsrunde mot rolige motstandere. De fire første går videre." },
+    klubb: { navn: "Klubbstevne", faktor: 1.16, slakk: 0.14, gulv: 0.45, mos: 8.5, personer: true,
+      tekst: "Du løper mot sju klubbkamerater. Takten tåler litt slingring.",
+      tekstK: "Du løper mot sju klubbkamerater. Her holder det med jevn og rask trykking." },
+    krets: { navn: "Kretsmesterskap", faktor: 1.08, slakk: 0.105, gulv: 0.36, mos: 9.5, krets: true,
+      tekst: "Du løper mot sju klubber i Innlandet friidrettskrets. Her må takten sitte.",
+      tekstK: "Du løper mot sju klubber i Innlandet friidrettskrets. Her må du trykke fort hele veien." },
+    nm: { navn: "NM", faktor: 1.0, slakk: 0.08, gulv: 0.3, mos: 10.5,
+      tekst: "De raskeste motstanderne. Nesten hvert steg må treffe.",
+      tekstK: "De raskeste motstanderne. Du må trykke så fort du klarer helt til mål." }
+  };
+  var MODUS = {
+    takt: "Trykk venstre og høyre annenhver gang, akkurat når ringen treffer knappen.",
+    klassisk: "Trykk venstre og høyre annenhver gang så fort du klarer. Jo raskere du trykker, jo fortere løper du."
   };
   var HUD = [0xe3b08a, 0xd9a47a, 0x8d5a3b, 0xdca57c, 0x6b4226, 0xe8b993, 0xc68c5e, 0xa66a43];
   var HAAR = [0x2b1d14, 0xd8b56a, 0x141414, 0x7a4a26, 0x1c1c1c, 0xb5651d, 0x3a2a1c, 0x0f0f0f];
@@ -662,6 +681,8 @@
   var lopere = [], spiller = null;
   var tilstand = "meny"; // meny | plass | klar | lop | mal
   var nivaa = "krets";
+  var modus = "takt"; // takt: treff slagene. klassisk: trykk så fort du klarer.
+  var frekv = 0; // klassisk: trykk i sekundet, glattet
   var klokke = 0, fasetid = 0, klarVent = 0, tjuv = 0;
   var sisteTrykk = -1, kraft = 0, rytmeTekstTid = 0;
   var nesteSlag = 0, nesteSide = "", forrigeSlag = -9, tikket = false, flyt = 0; // takten: ett slag per steg
@@ -669,10 +690,13 @@
   var malTid = 0, resultatVist = false;
   var smal = false; // stående skjerm: kameraet følger bak løperen
   var kamPos = new THREE.Vector3(8, 1.6, 7), kamSe = new THREE.Vector3(0, 1, 0), kamFov = 32;
-  var REKORD = "gfik-sprint-rekord", NAVN = "gfik-sprint-navn";
+  var REKORD = "gfik-sprint-rekord", NAVN = "gfik-sprint-navn", VALG = "gfik-sprint-valg";
 
   function hentRekord() { try { return JSON.parse(localStorage.getItem(REKORD) || "{}") || {}; } catch (e) { return {}; } }
   function lagreRekord(r) { try { localStorage.setItem(REKORD, JSON.stringify(r)); } catch (e) { /* privat modus */ } }
+  // Rekordene i takt ligger under nivånavnet, slik de gjorde før klassisk kom til
+  function rekordnokkel() { return modus === "klassisk" ? "k-" + nivaa : nivaa; }
+  function rekordnavn() { return NIVAA[nivaa].navn.toLowerCase() + (modus === "klassisk" ? " (klassisk)" : ""); }
 
   function idealTid(v) { return 0.36 - 0.1 * klem(v / 11, 0, 1); } // sekunder mellom slagene: roligst i starten
 
@@ -693,7 +717,7 @@
       }
       pose(l);
     });
-    klokke = 0; kraft = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
+    klokke = 0; kraft = 0; frekv = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
     resultatVist = false; malTid = 0;
     el.tid.textContent = "0,00"; el.fart.textContent = "0"; el.plass.textContent = "–";
     tegnStartliste();
@@ -746,12 +770,28 @@
       spiller.startet = true; spiller.reaksjon = na;
       kraft = 0.7; sisteTrykk = na; spiller.malfase += Math.PI;
       nesteSlag = na + idealTid(0); nesteSide = annen; tikket = false;
+      frekv = 5;
       stoy(0.03, 0.12, 1800);
       blink(side, 1);
       return;
     }
+    if (modus === "klassisk") { // farten følger hvor fort det trykkes
+      if (side !== nesteSide) { // samme knapp to ganger teller ikke
+        frekv *= 0.85;
+        blink(side, 0);
+        melding("Annenhver gang!");
+        return;
+      }
+      frekv += (Math.min(1 / Math.max(na - sisteTrykk, 0.04), 16) - frekv) * 0.3;
+      sisteTrykk = na; nesteSide = annen;
+      var styrke = frekv / NIVAA[nivaa].mos;
+      stoy(0.03, 0.1, 1500 + 900 * klem(styrke, 0, 1));
+      blink(side, 1);
+      melding(styrke >= 1 ? "Toppfart!" : styrke > 0.82 ? "Bra fart" : "Fortere!");
+      return;
+    }
     if (side !== nesteSide) { // samme bein to ganger: ute av takt
-      kraft *= 0.7; spiller.v *= 0.95; flyt = 0;
+      kraft *= NIVAA[nivaa].feil || 0.7; spiller.v *= 0.95; flyt = 0;
       blink(side, 0);
       melding("Annenhver gang!");
       return;
@@ -787,16 +827,16 @@
   function tegnRytme() {
     var iLop = tilstand === "lop" && !spiller.ferdig;
     var neste = !iLop ? "" : !spiller.startet ? "vh" : nesteSide;
-    var ideal = idealTid(spiller.v);
+    var ideal = idealTid(spiller.v), takt = modus === "takt";
     var t = iLop && spiller.startet ? 1 - (nesteSlag - klokke) / ideal : 1;
     [["v", el.tastV], ["h", el.tastH]].forEach(function (par) {
       var k = par[1];
       if (!k) return;
       var er = neste.indexOf(par[0]) >= 0, ring = k.firstElementChild;
       k.classList.toggle("er-neste", er);
-      k.classList.toggle("er-naa", er && spiller.startet && Math.abs(nesteSlag - klokke) < NIVAA[nivaa].slakk * 0.7);
+      k.classList.toggle("er-naa", takt && er && spiller.startet && Math.abs(nesteSlag - klokke) < NIVAA[nivaa].slakk * 0.7);
       if (!ring) return;
-      ring.style.opacity = er ? klem(0.2 + t * 0.8, 0, 1).toFixed(2) : "0";
+      ring.style.opacity = er && takt ? klem(0.2 + t * 0.8, 0, 1).toFixed(2) : "0"; // klassisk har ingen ring
       ring.style.transform = "scale(" + klem(1.75 - 0.75 * t, 0.8, 1.75).toFixed(3) + ")";
     });
   }
@@ -836,35 +876,46 @@
 
   function visResultat() {
     resultatVist = true;
-    var liste = lopere.slice().sort(function (a, b) { return (a.tid === null ? 99 : a.tid) - (b.tid === null ? 99 : b.tid); });
+    // Motstandere som ikke har rukket i mål når lista vises, får tiden de ligger an til
+    function slutt(l) { return l.tid !== null ? l.tid : (l.spiller || l.v < 1 ? null : klokke + (MAL - l.x) / l.v); }
+    var liste = lopere.slice().sort(function (a, b) { var ta = slutt(a), tb = slutt(b); return (ta === null ? 99 : ta) - (tb === null ? 99 : tb); });
     while (el.liste.firstChild) el.liste.removeChild(el.liste.firstChild);
     liste.forEach(function (l, i) {
       var li = document.createElement("li");
       if (l.spiller) li.className = "er-spiller";
       var nr = document.createElement("span"); nr.className = "spill__nr"; nr.textContent = (i + 1) + ".";
       var navn = document.createElement("span"); navn.className = "spill__navn"; navn.textContent = l.navn;
-      var tid = document.createElement("span"); tid.className = "spill__ltid"; tid.textContent = l.tid === null ? "ikke i mål" : tidTekst(l.tid);
+      var tid = document.createElement("span"); tid.className = "spill__ltid"; tid.textContent = slutt(l) === null ? "ikke i mål" : tidTekst(slutt(l));
       li.appendChild(nr); li.appendChild(navn); li.appendChild(tid);
       el.liste.appendChild(li);
     });
     var plass = liste.indexOf(spiller) + 1;
-    var rekorder = hentRekord(), gammel = rekorder[nivaa], ny = spiller.tid !== null && (!gammel || spiller.tid < gammel);
-    if (ny) { rekorder[nivaa] = Math.round(spiller.tid * 100) / 100; lagreRekord(rekorder); }
-    el.resultatTittel.textContent = spiller.tid === null ? "Tiden gikk ut" : plass === 1 ? (NIVAA[nivaa].personer ? "Du vant klubbstevnet!" : "Seier til Gausdal!") : plass + ". plass";
+    var nokkel = rekordnokkel(), forsok = !!NIVAA[nivaa].forsok;
+    var rekorder = hentRekord(), gammel = rekorder[nokkel], ny = spiller.tid !== null && (!gammel || spiller.tid < gammel);
+    if (ny) { rekorder[nokkel] = Math.round(spiller.tid * 100) / 100; lagreRekord(rekorder); }
+    var videre = forsok && spiller.tid !== null && plass <= 4; // de fire første i forsøket går videre
+    el.resultatTittel.textContent = spiller.tid === null ? "Tiden gikk ut"
+      : forsok ? (videre ? "Du er videre!" : plass + ". plass")
+      : plass === 1 ? (NIVAA[nivaa].personer ? "Du vant klubbstevnet!" : "Seier til Gausdal!") : plass + ". plass";
     var tekst = spiller.tid === null ? "Du kom ikke i mål innen tiden."
-      : "Tiden din ble " + tidTekst(spiller.tid) + ", med reaksjonstid " + tidTekst(spiller.reaksjon || 0) + "." + (ny ? " Det er ny personlig rekord i " + NIVAA[nivaa].navn.toLowerCase() + "." : gammel ? " Rekorden din er " + tidTekst(gammel) + "." : "");
+      : "Tiden din ble " + tidTekst(spiller.tid) + ", med reaksjonstid " + tidTekst(spiller.reaksjon || 0) + "." + (ny ? " Det er ny personlig rekord i " + rekordnavn() + "." : gammel ? " Rekorden din er " + tidTekst(gammel) + "." : "");
+    if (forsok && spiller.tid !== null) tekst += videre ? " Du er klar for klubbstevnet." : " De fire første går videre. Prøv en gang til.";
     el.resultatTekst.textContent = tekst;
+    // Etter et godkjent forsøk er klubbstevnet neste steg
+    if (el.videre) el.videre.hidden = !videre;
+    if (el.bytt) el.bytt.hidden = videre;
+    el.igjen.classList.toggle("knapp--rod", !videre); el.igjen.classList.toggle("knapp--stille", videre);
     el.resultat.hidden = false; el.taster.hidden = true; el.hud.hidden = true;
     rot.classList.remove("er-i-gang");
     visRekord();
-    if (plass === 1 && spiller.tid !== null) { tone(523, 0.18, 0.3); tone(659, 0.18, 0.3, 0.16); tone(784, 0.4, 0.3, 0.32); }
-    window.setTimeout(function () { if (!el.resultat.hidden) el.igjen.focus({ preventScroll: true }); }, 60);
+    if ((plass === 1 || videre) && spiller.tid !== null) { tone(523, 0.18, 0.3); tone(659, 0.18, 0.3, 0.16); tone(784, 0.4, 0.3, 0.32); }
+    window.setTimeout(function () { if (!el.resultat.hidden) (videre && el.videre ? el.videre : el.igjen).focus({ preventScroll: true }); }, 60);
   }
 
   function visRekord() {
     if (!el.rekord) return;
-    var r = hentRekord()[nivaa];
-    el.rekord.textContent = r ? "Din rekord i " + NIVAA[nivaa].navn.toLowerCase() + ": " + tidTekst(r) : "";
+    var r = hentRekord()[rekordnokkel()];
+    el.rekord.textContent = r ? "Din rekord i " + rekordnavn() + ": " + tidTekst(r) : "";
     el.rekord.hidden = !r;
   }
 
@@ -873,18 +924,26 @@
     klokke += dt;
     // Spilleren: kraften fra rytmen bestemmer toppfarten
     if (spiller.startet && !spiller.ferdig) {
-      // Takten går videre selv om et slag glipper. Da faller kraften, og samme bein får neste slag.
       var takt = idealTid(spiller.v);
-      if (!tikket && klokke >= nesteSlag) { tikket = true; tone(1500, 0.04, 0.05); }
-      if (klokke > nesteSlag + takt * 0.5) {
-        kraft *= 0.84; flyt = 0;
-        forrigeSlag = nesteSlag; nesteSlag += takt; tikket = false;
-        melding("Bom");
+      if (modus === "klassisk") {
+        // Stopper trykkingen, faller frekvensen med en gang. Beina går i takt med farten, ikke med hvert trykk.
+        var stille = klokke - sisteTrykk;
+        if (stille * frekv > 1.25) frekv = Math.min(frekv, 1.25 / stille);
+        kraft = Math.min(1.03, Math.pow(frekv / NIVAA[nivaa].mos, 0.85));
+        spiller.malfase += dt * Math.PI / takt * klem(spiller.v / 2, 0.25, 1);
+      } else {
+        // Takten går videre selv om et slag glipper. Da faller kraften, og samme bein får neste slag.
+        if (!tikket && klokke >= nesteSlag) { tikket = true; tone(1500, 0.04, 0.05); }
+        if (klokke > nesteSlag + takt * 0.5) {
+          kraft *= NIVAA[nivaa].bom || 0.84; flyt = 0;
+          forrigeSlag = nesteSlag; nesteSlag += takt; tikket = false;
+          melding("Bom");
+        }
+        if (klokke - sisteTrykk > 0.45) spiller.malfase += dt * spiller.v * 0.7;
       }
       var slit = spiller.x > 65 ? 1 - 0.05 * Math.pow((spiller.x - 65) / 35, 2) * (1.3 - kraft) : 1;
       var mal = TOPPFART * kraft * slit;
       spiller.v += (mal - spiller.v) * dt / 1.22;
-      if (klokke - sisteTrykk > 0.45) spiller.malfase += dt * spiller.v * 0.7;
     } else if (spiller.ferdig) {
       spiller.v = Math.max(1.4, spiller.v - dt * 3.2);
       spiller.malfase += dt * (2 + spiller.v * 1.1);
@@ -1053,11 +1112,32 @@
   if (el.navn) el.navn.value = spillernavn;
 
   function visNivaa() {
-    if (el.nivaatekst) el.nivaatekst.textContent = NIVAA[nivaa].tekst;
+    if (el.nivaatekst) el.nivaatekst.textContent = modus === "klassisk" ? NIVAA[nivaa].tekstK : NIVAA[nivaa].tekst;
+    if (el.modustekst) el.modustekst.textContent = MODUS[modus];
     if (el.navnfelt) el.navnfelt.hidden = !NIVAA[nivaa].personer;
     visRekord();
     if (tilstand === "meny") stillOpp();
   }
+  function merk(attributt, verdi) {
+    Array.prototype.forEach.call(rot.querySelectorAll("[" + attributt + "]"), function (b) { b.setAttribute("aria-pressed", b.getAttribute(attributt) === verdi ? "true" : "false"); });
+  }
+  // Valgene huskes til neste besøk
+  function velg(nyModus, nyttNivaa) {
+    if (nyModus && MODUS[nyModus]) modus = nyModus;
+    if (nyttNivaa && NIVAA[nyttNivaa]) nivaa = nyttNivaa;
+    merk("data-spill-modus", modus); merk("data-spill-nivaa", nivaa);
+    try { localStorage.setItem(VALG, JSON.stringify({ modus: modus, nivaa: nivaa })); } catch (e) { /* privat modus */ }
+    visNivaa();
+  }
+  // Nye spillere begynner i forsøket. De som har rekorder fra før, begynner der de pleide.
+  (function () {
+    var lagret = null, harRekord = false, r = hentRekord();
+    try { lagret = JSON.parse(localStorage.getItem(VALG) || "null"); } catch (e) { lagret = null; }
+    for (var n in r) if (Object.prototype.hasOwnProperty.call(r, n)) harRekord = true;
+    if (lagret && MODUS[lagret.modus] && NIVAA[lagret.nivaa]) { modus = lagret.modus; nivaa = lagret.nivaa; }
+    else nivaa = harRekord ? "krets" : "forsok";
+    merk("data-spill-modus", modus); merk("data-spill-nivaa", nivaa);
+  })();
   stillOpp();
   tilpass();
   visNivaa();
@@ -1067,11 +1147,10 @@
 
   // Nivåvalg
   Array.prototype.forEach.call(rot.querySelectorAll("[data-spill-nivaa]"), function (knapp) {
-    knapp.addEventListener("click", function () {
-      nivaa = knapp.getAttribute("data-spill-nivaa");
-      Array.prototype.forEach.call(rot.querySelectorAll("[data-spill-nivaa]"), function (b) { b.setAttribute("aria-pressed", b === knapp ? "true" : "false"); });
-      visNivaa();
-    });
+    knapp.addEventListener("click", function () { velg("", knapp.getAttribute("data-spill-nivaa")); });
+  });
+  Array.prototype.forEach.call(rot.querySelectorAll("[data-spill-modus]"), function (knapp) {
+    knapp.addEventListener("click", function () { velg(knapp.getAttribute("data-spill-modus"), ""); });
   });
   if (el.navn) {
     el.navn.addEventListener("input", function () {
@@ -1083,8 +1162,8 @@
   }
   el.startknapp.addEventListener("click", startSekvens);
   el.igjen.addEventListener("click", startSekvens);
-  var bytt = finn("[data-spill-bytt]");
-  if (bytt) bytt.addEventListener("click", function () {
+  if (el.videre) el.videre.addEventListener("click", function () { velg("", "klubb"); startSekvens(); });
+  if (el.bytt) el.bytt.addEventListener("click", function () {
     el.resultat.hidden = true; el.hud.hidden = true; el.start.hidden = false; if (el.startliste) el.startliste.hidden = true; tilstand = "meny"; stillOpp(); signal("");
     el.startknapp.focus({ preventScroll: true });
   });
@@ -1113,8 +1192,8 @@
 
   // For testing: lar en automatisk løper trykke i en gitt takt
   window.GFIKSPILL = {
-    tilstand: function () { return { tilstand: tilstand, klokke: klokke, x: spiller.x, v: spiller.v, kraft: kraft, tid: spiller.tid, plass: plassering() }; },
-    trykk: trykk, start: startSekvens, ideal: function () { return idealTid(spiller.v); },
+    tilstand: function () { return { tilstand: tilstand, modus: modus, nivaa: nivaa, klokke: klokke, x: spiller.x, v: spiller.v, kraft: kraft, frekv: frekv, tid: spiller.tid, plass: plassering() }; },
+    trykk: trykk, start: startSekvens, velg: velg, ideal: function () { return idealTid(spiller.v); },
     slag: function () { return { tid: nesteSlag, side: nesteSide, startet: spiller.startet }; }
   };
 
