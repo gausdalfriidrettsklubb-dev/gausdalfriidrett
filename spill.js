@@ -29,6 +29,7 @@
     navn: finn("[data-spill-navn]"),
     melding: finn("[data-spill-melding]"),
     kraft: finn("[data-spill-kraft]"),
+    taktlinje: finn("[data-spill-taktlinje]"),
     signal: finn("[data-spill-signal]"),
     taster: finn("[data-spill-taster]"),
     start: finn("[data-spill-start]"),
@@ -93,9 +94,9 @@
       tekst: "De raskeste motstanderne. Nesten hvert steg må treffe.",
       tekstK: "De raskeste motstanderne. Du må trykke så fort du klarer helt til mål." }
   };
-  var HINT = { takt: "Trykk når ringen treffer knappen", klassisk: "Trykk annenhver knapp så fort du kan" };
+  var HINT = { takt: "Trykk hver gang en prikk når midten", klassisk: "Trykk annenhver knapp så fort du kan" };
   var MODUS = {
-    takt: "Trykk venstre og høyre annenhver gang, hver gang ringen treffer knappen. Treff fyller kraftmåleren og gir fart.",
+    takt: "Trykk venstre og høyre annenhver gang i jevn takt, hver gang en prikk når midten av taktlinja. Treff fyller kraftmåleren og gir fart.",
     klassisk: "Trykk venstre og høyre annenhver gang så fort du klarer. Rask trykking fyller kraftmåleren og gir fart."
   };
   var HUD = [0xe3b08a, 0xd9a47a, 0x8d5a3b, 0xdca57c, 0x6b4226, 0xe8b993, 0xc68c5e, 0xa66a43];
@@ -690,6 +691,7 @@
   var nivaa = "krets";
   var modus = "takt"; // takt: treff slagene. klassisk: trykk så fort du klarer.
   var frekv = 0; // klassisk: trykk i sekundet, glattet
+  var slagNr = 0; // antall slag siden start
   var slagFase = 0; // stegfasen beina skal ha nådd på neste slag, så foten lander på slaget
   var klokke = 0, fasetid = 0, klarVent = 0, tjuv = 0;
   var sisteTrykk = -1, kraft = 0, rytmeTekstTid = 0;
@@ -706,7 +708,10 @@
   function rekordnokkel() { return modus === "klassisk" ? "k-" + nivaa : nivaa; }
   function rekordnavn() { return NIVAA[nivaa].navn.toLowerCase() + (modus === "klassisk" ? " (klassisk)" : ""); }
 
-  function idealTid(v) { return 0.36 - 0.1 * klem(v / 11, 0, 1); } // sekunder mellom slagene: roligst i starten
+  var TAKT = 0.3; // sekunder mellom slagene i takt-spillet. Den er lik gjennom hele løpet og på alle nivåer.
+  var FRISTEG = 4; // de første slagene etter start tåler at takten ikke sitter
+  var SYN = 4; // så mange slag fram i tid viser taktlinja
+  function idealTid(v) { return 0.36 - 0.1 * klem(v / 11, 0, 1); } // stegtid for motstanderne og i klassisk
 
   function stillOpp() {
     var faktor = NIVAA[nivaa].faktor, personer = !!NIVAA[nivaa].personer, krets = !!NIVAA[nivaa].krets;
@@ -725,7 +730,7 @@
       }
       pose(l);
     });
-    klokke = 0; kraft = 0; frekv = 0; slagFase = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
+    klokke = 0; kraft = 0; frekv = 0; slagFase = 0; slagNr = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
     resultatVist = false; malTid = 0;
     el.tid.textContent = "0,00"; el.fart.textContent = "0"; el.plass.textContent = "–";
     tegnStartliste();
@@ -741,7 +746,7 @@
     klarVent = tilfeldig(1.3, 2.4);
     el.start.hidden = true; el.resultat.hidden = true; el.hud.hidden = false; el.taster.hidden = false;
     signal("Innta plassene");
-    el.melding.textContent = HINT[modus]; rytmeTekstTid = 1.6; // blir stående til litt etter skuddet
+    el.melding.textContent = HINT[modus]; rytmeTekstTid = 0; // blir stående til «Klar»
     if (el.startliste) el.startliste.hidden = false;
     rot.classList.add("er-i-gang");
     el.lerret.focus({ preventScroll: true });
@@ -756,6 +761,7 @@
 
   function skudd() {
     tilstand = "lop"; klokke = 0;
+    el.melding.textContent = "Trykk!"; rytmeTekstTid = 0; // står til første trykk
     if (el.startliste) el.startliste.hidden = true;
     signal("Løp!", "er-skudd");
     stoy(0.28, 0.9, 2600); tone(90, 0.25, 0.5);
@@ -771,18 +777,20 @@
 
   function trykk(side) {
     if (tilstand === "meny" || tilstand === "mal") return;
-    if (tilstand === "plass" || tilstand === "klar") { if (tjuv <= 0 && fasetid > 0.25) tjuvstart(); return; }
+    if (tilstand === "plass") return; // trykk før «Klar» teller ikke
+    if (tilstand === "klar") { if (tjuv <= 0) tjuvstart(); return; }
     if (spiller.ferdig) return;
     var na = klokke, annen = side === "v" ? "h" : "v";
     if (!spiller.startet) { // første steg ut av blokka setter takten i gang
       spiller.startet = true; spiller.reaksjon = na;
       kraft = 0.7; sisteTrykk = na;
-      nesteSlag = na + idealTid(0); nesteSide = annen; tikket = false;
+      nesteSlag = na + TAKT; nesteSide = annen; tikket = false; slagNr = 0;
       slagFase = (annen === "v" ? Math.PI : 2 * Math.PI) - 0.7;
       spiller.malfase = spiller.fase = slagFase - Math.PI;
       frekv = 5;
       stoy(0.03, 0.12, 1800);
       blink(side, 1);
+      melding(na < 0.25 ? "God start!" : "I gang!");
       return;
     }
     if (modus === "klassisk") { // farten følger hvor fort det trykkes
@@ -800,20 +808,21 @@
       melding(styrke >= 1 ? "Toppfart!" : styrke > 0.82 ? "Bra fart" : "Fortere!");
       return;
     }
-    if (side !== nesteSide) { // samme bein to ganger: ute av takt
-      kraft *= NIVAA[nivaa].feil || 0.7; spiller.v *= 0.95; flyt = 0;
+    if (side !== nesteSide) { // samme knapp to ganger: ute av takt
+      kraft *= slagNr < FRISTEG ? 0.95 : (NIVAA[nivaa].feil || 0.7); spiller.v *= 0.95; flyt = 0;
       blink(side, 0);
       melding("Annenhver gang!");
       return;
     }
     // Trykket måles mot slaget som kommer. Kom det rett etter at et slag glapp, regnes det som for sent.
-    var ideal = idealTid(spiller.v);
+    var ideal = TAKT;
     var avvik = na - nesteSlag, sen = false;
     if (avvik < 0 && na - forrigeSlag < ideal * 0.8) { avvik = na - forrigeSlag; sen = true; }
     var rel = avvik / NIVAA[nivaa].slakk; // hvor mye slingring nivået tåler
     var kval = Math.max(NIVAA[nivaa].gulv, Math.exp(-rel * rel));
     if (!sen && avvik < -ideal * 0.5) kval = 0.25;
-    if (!sen) { kraft += (kval - kraft) * 0.6; nesteSlag += ideal; slagFase += Math.PI; } // et for sent trykk er alt trukket for
+    var gir = slagNr < FRISTEG ? Math.max(kval, 0.8) : kval; // ut av blokka holder det å trykke annenhver gang
+    if (!sen) { kraft += (gir - kraft) * 0.6; nesteSlag += ideal; slagFase += Math.PI; slagNr++; } // et for sent trykk er alt trukket for
     flyt = kval > 0.6 ? flyt + 1 : 0;
     sisteTrykk = na;
     if (nesteSlag > na + ideal * 1.6 || nesteSlag < na + ideal * 0.35) nesteSlag = na + ideal;
@@ -841,18 +850,38 @@
     }
     var iLop = tilstand === "lop" && !spiller.ferdig;
     var neste = !iLop ? "" : !spiller.startet ? "vh" : nesteSide;
-    var ideal = idealTid(spiller.v), takt = modus === "takt";
+    var ideal = TAKT, takt = modus === "takt";
+    tegnTaktlinje(iLop && takt && spiller.startet);
     var t = iLop && spiller.startet ? 1 - (nesteSlag - klokke) / ideal : 1;
     [["v", el.tastV], ["h", el.tastH]].forEach(function (par) {
       var k = par[1];
       if (!k) return;
       var er = neste.indexOf(par[0]) >= 0, ring = k.firstElementChild;
       k.classList.toggle("er-neste", er);
+      k.classList.toggle("er-start", iLop && !spiller.startet); // skuddet har gått: trykk for å starte
       k.classList.toggle("er-naa", takt && er && spiller.startet && Math.abs(nesteSlag - klokke) < NIVAA[nivaa].slakk * 0.7);
       if (!ring) return;
       ring.style.opacity = er && takt ? klem(0.2 + t * 0.8, 0, 1).toFixed(2) : "0"; // klassisk har ingen ring
       ring.style.transform = "scale(" + klem(1.75 - 0.75 * t, 0.8, 1.75).toFixed(3) + ")";
     });
+  }
+
+  // Taktlinja: prikker kommer inn fra venstre og høyre og møtes på midten akkurat på slaget
+  var taktprikker = [];
+  function tegnTaktlinje(vis) {
+    if (!el.taktlinje) return;
+    if (!taktprikker.length) {
+      for (var n = 0; n < SYN + 1; n++) { var prikk = document.createElement("b"); el.taktlinje.appendChild(prikk); taktprikker.push(prikk); }
+    }
+    for (var i = 0; i < taktprikker.length; i++) {
+      var p = taktprikker[i], igjen = (nesteSlag + i * TAKT - klokke) / (SYN * TAKT); // 0 på midten, 1 ytterst
+      if (!vis || igjen > 1) { p.style.opacity = "0"; continue; }
+      var venstre = (i % 2 === 0) === (nesteSide === "v");
+      igjen = Math.max(igjen, -0.04);
+      p.style.left = (50 + (venstre ? -50 : 50) * igjen).toFixed(2) + "%";
+      p.style.opacity = klem(1.25 - igjen, 0.35, 1).toFixed(2);
+      p.className = i === 0 ? (Math.abs(nesteSlag - klokke) < NIVAA[nivaa].slakk * 0.7 ? "er-naa" : "er-neste") : "";
+    }
   }
 
   function tegnStartliste() {
@@ -938,7 +967,7 @@
     klokke += dt;
     // Spilleren: kraften fra rytmen bestemmer toppfarten
     if (spiller.startet && !spiller.ferdig) {
-      var takt = idealTid(spiller.v);
+      var takt = modus === "klassisk" ? idealTid(spiller.v) : TAKT;
       if (modus === "klassisk") {
         // Stopper trykkingen, faller frekvensen med en gang. Beina går i takt med farten, ikke med hvert trykk.
         var stille = klokke - sisteTrykk;
@@ -947,10 +976,10 @@
         spiller.malfase += dt * Math.PI / takt * klem(spiller.v / 2, 0.25, 1);
       } else {
         // Takten går videre selv om et slag glipper. Da faller kraften, og samme bein får neste slag.
-        if (!tikket && klokke >= nesteSlag) { tikket = true; tone(1500, 0.04, 0.05); }
+        if (!tikket && klokke >= nesteSlag) { tikket = true; tone(nesteSide === "v" ? 1150 : 1550, 0.05, 0.1); } // lys tone for høyre, mørkere for venstre
         if (klokke > nesteSlag + takt * 0.5) {
-          kraft *= NIVAA[nivaa].bom || 0.84; flyt = 0;
-          forrigeSlag = nesteSlag; nesteSlag += takt; slagFase += Math.PI; tikket = false;
+          kraft *= slagNr < FRISTEG ? 0.97 : (NIVAA[nivaa].bom || 0.84); flyt = 0;
+          forrigeSlag = nesteSlag; nesteSlag += takt; slagFase += Math.PI; slagNr++; tikket = false;
           melding("Bom");
         }
         // Beina går jevnt, ett steg per slag, og foten lander idet ringen treffer knappen
@@ -1027,7 +1056,7 @@
     if (tilstand === "plass" || tilstand === "klar") {
       fasetid += dt;
       if (tjuv > 0) { tjuv -= dt; if (tjuv <= 0) signal("Innta plassene"); }
-      if (tilstand === "plass" && fasetid > 1.5) { tilstand = "klar"; fasetid = 0.26; signal("Klar"); tone(660, 0.12, 0.2); }
+      if (tilstand === "plass" && fasetid > 1.5) { tilstand = "klar"; fasetid = 0.26; signal("Klar"); el.melding.textContent = "Vent på skuddet"; tone(660, 0.12, 0.2); }
       if (tilstand === "klar") {
         lopere.forEach(function (l) { l.klar = Math.min(1, l.klar + dt * 3.2); pose(l); });
         if (fasetid > klarVent) skudd();
@@ -1130,6 +1159,7 @@
   function visNivaa() {
     if (el.nivaatekst) el.nivaatekst.textContent = modus === "klassisk" ? NIVAA[nivaa].tekstK : NIVAA[nivaa].tekst;
     if (el.modustekst) el.modustekst.textContent = MODUS[modus];
+    rot.classList.toggle("er-klassisk", modus === "klassisk");
     if (el.navnfelt) el.navnfelt.hidden = !NIVAA[nivaa].personer;
     visRekord();
     if (tilstand === "meny") stillOpp();
@@ -1209,7 +1239,7 @@
   // For testing: lar en automatisk løper trykke i en gitt takt
   window.GFIKSPILL = {
     tilstand: function () { return { tilstand: tilstand, modus: modus, nivaa: nivaa, klokke: klokke, x: spiller.x, v: spiller.v, kraft: kraft, frekv: frekv, tid: spiller.tid, plass: plassering() }; },
-    trykk: trykk, start: startSekvens, velg: velg, ideal: function () { return idealTid(spiller.v); },
+    trykk: trykk, start: startSekvens, velg: velg, ideal: function () { return modus === "klassisk" ? idealTid(spiller.v) : TAKT; },
     slag: function () { return { tid: nesteSlag, side: nesteSide, startet: spiller.startet }; }
   };
 

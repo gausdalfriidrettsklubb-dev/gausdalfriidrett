@@ -657,6 +657,15 @@ a:hover > .pil { transform: translateX(3px); }
 .spill__signal.er-feil { background: #fff; color: var(--rod-dyp); font-size: clamp(1.3rem, 4.4vw, 2.2rem); }
 .spill__rytmefelt { position: absolute; left: 50%; bottom: 128px; width: min(72%, 380px); transform: translateX(-50%); text-align: center; }
 .spill__melding { min-height: 1.3em; margin: 0; font: 700 1.35rem/1.2 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+.spill__taktlinje { position: relative; height: 28px; margin-top: 8px; border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 14px; background: rgba(28, 20, 19, 0.6); overflow: hidden; }
+.spill.er-klassisk .spill__taktlinje { display: none; }
+.spill__taktlinje i { position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border: 3px solid #fff; border-radius: 50%; box-sizing: border-box; }
+.spill__taktlinje b { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #fff; opacity: 0; will-change: left, opacity; }
+.spill__taktlinje b.er-neste { background: #ffd23a; }
+.spill__taktlinje b.er-naa { background: #2fbf6b; box-shadow: 0 0 0 3px rgba(47, 191, 107, 0.45); }
+.spill__taster button.er-start { animation: spill-start 0.42s ease-in-out infinite alternate; }
+@keyframes spill-start { from { transform: scale(1); } to { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.35); } }
+@media (prefers-reduced-motion: reduce) { .spill__taster button.er-start { animation: none; box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.5); } }
 .spill__kraft { display: flex; align-items: center; gap: 10px; margin-top: 8px; font: 700 0.8rem/1 var(--font-tittel); letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
 .spill__kraftbane { flex: 1; height: 12px; border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 8px; background: rgba(28, 20, 19, 0.55); overflow: hidden; }
 .spill__kraftbane i { display: block; height: 100%; background: #e2574c; transform: scaleX(0); transform-origin: left center; transition: transform 0.12s linear, background-color 0.2s; }
