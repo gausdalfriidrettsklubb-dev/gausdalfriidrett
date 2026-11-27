@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" href="bilder/ikon-180.png">
   <link rel="preload" href="fonter/barlow-condensed-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonter/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="stil.css?v=202611271734">
+  <link rel="stylesheet" href="stil.css?v=202611271745">
   <script>document.documentElement.className += " js";</script>
 </head>
 <body>
@@ -74,6 +74,7 @@
             <p class="spill__signal" data-spill-signal role="status" aria-live="assertive" hidden></p>
             <div class="spill__rytmefelt" aria-hidden="true">
               <p class="spill__melding" data-spill-melding></p>
+              <div class="spill__kraft"><span>Kraft</span><div class="spill__kraftbane"><i data-spill-kraft></i></div></div>
             </div>
           </div>
 
@@ -88,7 +89,7 @@
               <button type="button" data-spill-modus="takt" aria-pressed="true">Takt</button>
               <button type="button" data-spill-modus="klassisk" aria-pressed="false">Klassisk</button>
             </div>
-            <p class="spill__nivaatekst" data-spill-modustekst aria-live="polite">Trykk venstre og høyre annenhver gang, akkurat når ringen treffer knappen.</p>
+            <p class="spill__nivaatekst" data-spill-modustekst aria-live="polite">Trykk venstre og høyre annenhver gang, hver gang ringen treffer knappen. Treff fyller kraftmåleren og gir fart.</p>
             <div class="spill__nivaa" role="group" aria-label="Velg nivå">
               <button type="button" data-spill-nivaa="forsok" aria-pressed="false">Forsøk</button>
               <button type="button" data-spill-nivaa="klubb" aria-pressed="false">Klubbstevne</button>
@@ -134,8 +135,9 @@
           </div>
           <div>
             <h3>To spillmåter</h3>
-            <p><strong>Takt:</strong> En ring krymper inn mot knappen du skal trykke. Trykk når ringen treffer kanten. Med lyden på hører du et tikk på hvert slag. Takten er rolig ut av blokka og øker med farten.</p>
+            <p><strong>Takt:</strong> En ring krymper inn mot knappen du skal trykke. Trykk når ringen treffer kanten, samtidig som foten lander. Med lyden på hører du et tikk på hvert slag. Takten er rolig ut av blokka og øker med farten.</p>
             <p><strong>Klassisk:</strong> Trykk venstre og høyre annenhver gang så fort du klarer. Jo raskere du trykker, jo fortere løper du.</p>
+            <p>Kraftmåleren over knappene viser hvor mye fart du lager. Full måler gir toppfart. Bom, feil knapp eller pause tapper den.</p>
           </div>
           <div>
             <h3>Nivåene</h3>
@@ -193,11 +195,11 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="innhold.js?v=202611271734"></script>
-  <script src="app.js?v=202611271734"></script>
+  <script src="innhold.js?v=202611271745"></script>
+  <script src="app.js?v=202611271745"></script>
   <script src="assets/runners/vendor/GLTFLoader.js"></script>
   <script src="assets/runners/vendor/SkeletonUtils.js"></script>
-  <script src="assets/runners/runners.js?v=202611271734"></script>
-  <script src="spill.js?v=202611271734"></script>
+  <script src="assets/runners/runners.js?v=202611271745"></script>
+  <script src="spill.js?v=202611271745"></script>
 </body>
 </html>

@@ -28,6 +28,7 @@
     navnfelt: finn("[data-spill-navnfelt]"),
     navn: finn("[data-spill-navn]"),
     melding: finn("[data-spill-melding]"),
+    kraft: finn("[data-spill-kraft]"),
     signal: finn("[data-spill-signal]"),
     taster: finn("[data-spill-taster]"),
     start: finn("[data-spill-start]"),
@@ -92,9 +93,10 @@
       tekst: "De raskeste motstanderne. Nesten hvert steg må treffe.",
       tekstK: "De raskeste motstanderne. Du må trykke så fort du klarer helt til mål." }
   };
+  var HINT = { takt: "Trykk når ringen treffer knappen", klassisk: "Trykk annenhver knapp så fort du kan" };
   var MODUS = {
-    takt: "Trykk venstre og høyre annenhver gang, akkurat når ringen treffer knappen.",
-    klassisk: "Trykk venstre og høyre annenhver gang så fort du klarer. Jo raskere du trykker, jo fortere løper du."
+    takt: "Trykk venstre og høyre annenhver gang, hver gang ringen treffer knappen. Treff fyller kraftmåleren og gir fart.",
+    klassisk: "Trykk venstre og høyre annenhver gang så fort du klarer. Rask trykking fyller kraftmåleren og gir fart."
   };
   var HUD = [0xe3b08a, 0xd9a47a, 0x8d5a3b, 0xdca57c, 0x6b4226, 0xe8b993, 0xc68c5e, 0xa66a43];
   var HAAR = [0x2b1d14, 0xd8b56a, 0x141414, 0x7a4a26, 0x1c1c1c, 0xb5651d, 0x3a2a1c, 0x0f0f0f];
@@ -688,6 +690,7 @@
   var nivaa = "krets";
   var modus = "takt"; // takt: treff slagene. klassisk: trykk så fort du klarer.
   var frekv = 0; // klassisk: trykk i sekundet, glattet
+  var slagFase = 0; // stegfasen beina skal ha nådd på neste slag, så foten lander på slaget
   var klokke = 0, fasetid = 0, klarVent = 0, tjuv = 0;
   var sisteTrykk = -1, kraft = 0, rytmeTekstTid = 0;
   var nesteSlag = 0, nesteSide = "", forrigeSlag = -9, tikket = false, flyt = 0; // takten: ett slag per steg
@@ -722,7 +725,7 @@
       }
       pose(l);
     });
-    klokke = 0; kraft = 0; frekv = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
+    klokke = 0; kraft = 0; frekv = 0; slagFase = 0; sisteTrykk = -1; nesteSide = ""; nesteSlag = 0; forrigeSlag = -9; tikket = false; flyt = 0;
     resultatVist = false; malTid = 0;
     el.tid.textContent = "0,00"; el.fart.textContent = "0"; el.plass.textContent = "–";
     tegnStartliste();
@@ -738,7 +741,7 @@
     klarVent = tilfeldig(1.3, 2.4);
     el.start.hidden = true; el.resultat.hidden = true; el.hud.hidden = false; el.taster.hidden = false;
     signal("Innta plassene");
-    melding("");
+    el.melding.textContent = HINT[modus]; rytmeTekstTid = 1.6; // blir stående til litt etter skuddet
     if (el.startliste) el.startliste.hidden = false;
     rot.classList.add("er-i-gang");
     el.lerret.focus({ preventScroll: true });
@@ -773,8 +776,10 @@
     var na = klokke, annen = side === "v" ? "h" : "v";
     if (!spiller.startet) { // første steg ut av blokka setter takten i gang
       spiller.startet = true; spiller.reaksjon = na;
-      kraft = 0.7; sisteTrykk = na; spiller.malfase += Math.PI;
+      kraft = 0.7; sisteTrykk = na;
       nesteSlag = na + idealTid(0); nesteSide = annen; tikket = false;
+      slagFase = (annen === "v" ? Math.PI : 2 * Math.PI) - 0.7;
+      spiller.malfase = spiller.fase = slagFase - Math.PI;
       frekv = 5;
       stoy(0.03, 0.12, 1800);
       blink(side, 1);
@@ -808,10 +813,9 @@
     var rel = avvik / NIVAA[nivaa].slakk; // hvor mye slingring nivået tåler
     var kval = Math.max(NIVAA[nivaa].gulv, Math.exp(-rel * rel));
     if (!sen && avvik < -ideal * 0.5) kval = 0.25;
-    if (!sen) { kraft += (kval - kraft) * 0.6; nesteSlag += ideal; } // et for sent trykk er alt trukket for
+    if (!sen) { kraft += (kval - kraft) * 0.6; nesteSlag += ideal; slagFase += Math.PI; } // et for sent trykk er alt trukket for
     flyt = kval > 0.6 ? flyt + 1 : 0;
     sisteTrykk = na;
-    spiller.malfase += Math.PI;
     if (nesteSlag > na + ideal * 1.6 || nesteSlag < na + ideal * 0.35) nesteSlag = na + ideal;
     nesteSide = annen; forrigeSlag = -9; tikket = false;
     stoy(0.03, 0.1, 1500 + 900 * kval);
@@ -830,6 +834,11 @@
 
   // Ringen krymper inn mot knappen og treffer kanten akkurat på slaget
   function tegnRytme() {
+    if (el.kraft) { // måleren viser hvor mye fart trykkene gir akkurat nå
+      var fylt = tilstand === "lop" && spiller.startet && !spiller.ferdig ? klem(kraft, 0, 1) : 0;
+      el.kraft.style.transform = "scaleX(" + fylt.toFixed(3) + ")";
+      el.kraft.style.backgroundColor = fylt > 0.85 ? "#2fbf6b" : fylt > 0.6 ? "#f2c230" : "#e2574c";
+    }
     var iLop = tilstand === "lop" && !spiller.ferdig;
     var neste = !iLop ? "" : !spiller.startet ? "vh" : nesteSide;
     var ideal = idealTid(spiller.v), takt = modus === "takt";
@@ -941,10 +950,11 @@
         if (!tikket && klokke >= nesteSlag) { tikket = true; tone(1500, 0.04, 0.05); }
         if (klokke > nesteSlag + takt * 0.5) {
           kraft *= NIVAA[nivaa].bom || 0.84; flyt = 0;
-          forrigeSlag = nesteSlag; nesteSlag += takt; tikket = false;
+          forrigeSlag = nesteSlag; nesteSlag += takt; slagFase += Math.PI; tikket = false;
           melding("Bom");
         }
-        if (klokke - sisteTrykk > 0.45) spiller.malfase += dt * spiller.v * 0.7;
+        // Beina går jevnt, ett steg per slag, og foten lander idet ringen treffer knappen
+        if (spiller.v > 0.8) spiller.malfase = Math.max(spiller.malfase, slagFase - Math.PI * klem((nesteSlag - klokke) / takt, -0.5, 1));
       }
       var slit = spiller.x > 65 ? 1 - 0.05 * Math.pow((spiller.x - 65) / 35, 2) * (1.3 - kraft) : 1;
       var mal = TOPPFART * kraft * slit;
@@ -954,7 +964,7 @@
       spiller.malfase += dt * (2 + spiller.v * 1.1);
     }
     spiller.x += spiller.v * dt;
-    spiller.fase += (spiller.malfase - spiller.fase) * Math.min(1, dt * 16);
+    spiller.fase += (spiller.malfase - spiller.fase) * Math.min(1, dt * 30);
     spiller.andel = klem(spiller.v / 10.5, 0, 1);
     if (spiller.startet) spiller.sett = Math.max(0, spiller.sett - dt / 0.42);
 

@@ -657,6 +657,10 @@ a:hover > .pil { transform: translateX(3px); }
 .spill__signal.er-feil { background: #fff; color: var(--rod-dyp); font-size: clamp(1.3rem, 4.4vw, 2.2rem); }
 .spill__rytmefelt { position: absolute; left: 50%; bottom: 128px; width: min(72%, 380px); transform: translateX(-50%); text-align: center; }
 .spill__melding { min-height: 1.3em; margin: 0; font: 700 1.35rem/1.2 var(--font-tittel); letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+.spill__kraft { display: flex; align-items: center; gap: 10px; margin-top: 8px; font: 700 0.8rem/1 var(--font-tittel); letter-spacing: 0.12em; text-transform: uppercase; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6); }
+.spill__kraftbane { flex: 1; height: 12px; border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 8px; background: rgba(28, 20, 19, 0.55); overflow: hidden; }
+.spill__kraftbane i { display: block; height: 100%; background: #e2574c; transform: scaleX(0); transform-origin: left center; transition: transform 0.12s linear, background-color 0.2s; }
+@media (prefers-reduced-motion: reduce) { .spill__kraftbane i { transition: none; } }
 .spill__taster { display: none; }
 .spill__taster:not([hidden]) { position: absolute; left: 0; right: 0; bottom: 18px; display: flex; justify-content: center; gap: 72px; pointer-events: none; }
 .spill__taster button { position: relative; pointer-events: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 92px; height: 92px; padding: 0; border: 3px solid rgba(255, 255, 255, 0.55); border-radius: 50%; background: rgba(28, 20, 19, 0.6); color: #fff; font: 700 0.82rem/1 var(--font-tittel); letter-spacing: 0.08em; text-transform: uppercase; touch-action: none; cursor: pointer; transition: background-color 0.08s, border-color 0.08s; }
